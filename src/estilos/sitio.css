@@ -1,0 +1,339 @@
+/* ───────────────────────────────────────────────────────────────────
+ * Estilos del sitio.
+ *
+ * tokens.css lo genera marca/tokens.mjs y NO se edita a mano.
+ * Este archivo sí: aquí van los patrones que usan esos tokens.
+ * ─────────────────────────────────────────────────────────────────── */
+
+/* ── Revelado al hacer scroll ────────────────────────────────────────
+ *
+ * El elemento arranca desplazado y transparente; lib/revelar.ts le pone
+ * .visible cuando entra en pantalla.
+ *
+ * Importante: si el JS no llega a ejecutarse (error, bloqueador), el
+ * contenido quedaría invisible para siempre. Por eso .sin-js lo fuerza
+ * visible, y main.ts quita esa clase solo cuando ya está observando.
+ */
+[data-revelar] {
+  opacity: 0;
+  transform: translateY(20px);
+  transition:
+    opacity var(--mov-lento) var(--mov-curva-entrada),
+    transform var(--mov-lento) var(--mov-curva-entrada);
+  will-change: opacity, transform;
+}
+[data-revelar='izquierda'] {
+  transform: translateX(-24px);
+}
+[data-revelar='derecha'] {
+  transform: translateX(24px);
+}
+[data-revelar='escala'] {
+  transform: scale(0.96);
+}
+[data-revelar].visible {
+  opacity: 1;
+  transform: none;
+  will-change: auto;
+}
+
+/* Sin JavaScript, todo visible. El contenido nunca depende de una animación. */
+.no-js [data-revelar] {
+  opacity: 1;
+  transform: none;
+}
+
+/* ── Contenedores ────────────────────────────────────────────────────*/
+.contenedor {
+  width: 100%;
+  max-width: var(--contenedor-max);
+  margin-inline: auto;
+  padding-inline: var(--spacing-md);
+}
+@media (min-width: 768px) {
+  .contenedor {
+    padding-inline: var(--spacing-lg);
+  }
+}
+
+.seccion {
+  padding-block: var(--seccion-y);
+}
+
+/* Longitud de línea legible para texto largo. Por encima de ~70 caracteres
+   el ojo pierde el renglón al volver. */
+.prosa {
+  max-width: var(--contenedor-texto-max);
+}
+
+/* ── Navegación ──────────────────────────────────────────────────────*/
+.navbar {
+  position: sticky;
+  top: 0;
+  z-index: 40;
+  background: transparent;
+  transition:
+    background-color var(--mov-normal) var(--mov-curva),
+    border-color var(--mov-normal) var(--mov-curva);
+  border-bottom: 1px solid transparent;
+}
+.navbar.compacta {
+  background: color-mix(in srgb, var(--pagina-fondo) 88%, transparent);
+  border-bottom-color: var(--linea);
+  backdrop-filter: blur(8px);
+}
+
+/* ── Botones ─────────────────────────────────────────────────────────
+ *
+ * Un solo primario visible por vista. Si hay dos, uno está mal
+ * clasificado. Altura mínima 44px en cualquier pantalla: es el objetivo
+ * táctil por debajo del cual la gente falla el toque.
+ */
+.boton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-2xs);
+  min-height: var(--boton-alto);
+  padding-inline: var(--boton-padding-x);
+  border-radius: var(--radius-md);
+  font-weight: 600;
+  line-height: 1;
+  text-align: center;
+  cursor: pointer;
+  transition:
+    background-color var(--mov-rapido) var(--mov-curva),
+    border-color var(--mov-rapido) var(--mov-curva),
+    transform var(--mov-rapido) var(--mov-curva);
+}
+.boton:active {
+  transform: translateY(1px);
+}
+.boton:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.boton-primario {
+  background: var(--accion);
+  color: var(--texto-sobre-accion);
+  border: var(--borde-ancho) solid transparent;
+}
+.boton-primario:hover:not(:disabled) {
+  background: var(--accion-hover);
+}
+
+.boton-secundario {
+  background: transparent;
+  color: var(--texto-principal);
+  border: var(--borde-ancho) solid var(--linea);
+}
+.boton-secundario:hover:not(:disabled) {
+  background: var(--tarjeta-fondo);
+}
+
+/* ── Tarjetas ────────────────────────────────────────────────────────
+ * Prohibida la tarjeta dentro de tarjeta: un solo nivel de elevación
+ * por región, o el ojo deja de saber qué es lo importante.
+ */
+.tarjeta {
+  background: var(--tarjeta-fondo);
+  border: var(--borde-ancho) solid var(--linea);
+  border-radius: var(--radius-lg);
+  padding: var(--tarjeta-padding);
+}
+@media (min-width: 768px) {
+  .tarjeta {
+    padding: var(--tarjeta-padding-lg);
+  }
+}
+
+/* Solo las tarjetas que son clicables se elevan al pasar el ratón: si una
+   tarjeta se mueve y no lleva a ningún sitio, es una promesa falsa. */
+.tarjeta-enlace {
+  transition:
+    border-color var(--mov-normal) var(--mov-curva),
+    transform var(--mov-normal) var(--mov-curva);
+}
+.tarjeta-enlace:hover {
+  border-color: var(--accion);
+  transform: translateY(-2px);
+}
+
+/* ── Formulario ──────────────────────────────────────────────────────*/
+.campo {
+  width: 100%;
+  min-height: var(--campo-alto);
+  padding: var(--spacing-2xs) var(--spacing-xs);
+  background: var(--elevado-fondo);
+  border: var(--borde-ancho) solid var(--linea);
+  border-radius: var(--radius-sm);
+  color: var(--texto-principal);
+  font: inherit;
+  transition: border-color var(--mov-rapido) var(--mov-curva);
+}
+.campo:hover {
+  border-color: color-mix(in srgb, var(--linea) 60%, var(--texto-secundario));
+}
+.campo[aria-invalid='true'] {
+  border-color: var(--estado-error);
+}
+
+.etiqueta-campo {
+  display: block;
+  margin-bottom: var(--spacing-3xs);
+  font-size: 14px;
+  font-weight: 600;
+}
+
+/* El error va DEBAJO del campo y dice cómo arreglarlo, no solo que está mal. */
+.error-campo {
+  margin-top: var(--spacing-3xs);
+  font-size: 14px;
+  color: var(--estado-error);
+}
+
+/* ── Los cuatro estados ──────────────────────────────────────────────*/
+[data-estado] {
+  margin-top: var(--spacing-sm);
+  padding: var(--spacing-xs) var(--spacing-sm);
+  border-radius: var(--radius-md);
+  font-size: 15px;
+}
+[data-estado='cargando'] {
+  background: var(--tarjeta-fondo);
+  color: var(--texto-secundario);
+}
+[data-estado='exito'] {
+  background: color-mix(in srgb, var(--estado-exito) 12%, transparent);
+  color: var(--estado-exito);
+  font-weight: 600;
+}
+[data-estado='error'] {
+  background: color-mix(in srgb, var(--estado-error) 10%, transparent);
+  color: var(--estado-error);
+}
+
+/* Spinner del botón mientras envía */
+[aria-busy='true'] .indicador-carga {
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  border: 2px solid currentColor;
+  border-top-color: transparent;
+  border-radius: 50%;
+  animation: girar 700ms linear infinite;
+}
+.indicador-carga {
+  display: none;
+}
+@keyframes girar {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* ── Preguntas frecuentes ────────────────────────────────────────────*/
+[data-faq] details {
+  border-bottom: var(--borde-ancho) solid var(--linea);
+}
+[data-faq] summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--spacing-sm);
+  padding-block: var(--spacing-sm);
+  min-height: var(--boton-alto);
+  font-weight: 600;
+  cursor: pointer;
+  list-style: none;
+}
+[data-faq] summary::-webkit-details-marker {
+  display: none;
+}
+[data-faq] summary::after {
+  content: '+';
+  flex-shrink: 0;
+  font-size: 22px;
+  font-weight: 400;
+  color: var(--texto-secundario);
+  transition: transform var(--mov-normal) var(--mov-curva);
+}
+[data-faq] details[open] summary::after {
+  transform: rotate(45deg);
+}
+[data-faq] details > div {
+  padding-bottom: var(--spacing-sm);
+  color: var(--texto-secundario);
+}
+
+/* ── Hero ────────────────────────────────────────────────────────────
+ * En móvil NO se sirve el vídeo: se sirve el póster. Es de donde sale la
+ * mayor parte de la puntuación de rendimiento en móvil, que es donde
+ * está el tráfico.
+ */
+.hero-media {
+  display: none;
+}
+@media (min-width: 768px) {
+  .hero-media {
+    display: block;
+  }
+}
+
+/* ── Sólo para lectores de pantalla ──────────────────────────────────*/
+.solo-lectores {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* Saltar al contenido: primer tabulador de la página. Obligatorio para
+   quien navega por teclado y no quiere recorrer el menú cada vez. */
+.saltar-contenido {
+  position: absolute;
+  left: var(--spacing-sm);
+  top: -100px;
+  z-index: 100;
+  padding: var(--spacing-2xs) var(--spacing-sm);
+  background: var(--accion);
+  color: var(--texto-sobre-accion);
+  border-radius: var(--radius-sm);
+  transition: top var(--mov-rapido) var(--mov-curva);
+}
+.saltar-contenido:focus {
+  top: var(--spacing-sm);
+}
+
+/* ── Publicidad ──────────────────────────────────────────────────────
+ * El contenedor reserva la altura ANTES de que cargue el anuncio. Sin
+ * esto el anuncio empuja el contenido al aparecer y el CLS se dispara.
+ */
+.anuncio {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  margin-block: var(--spacing-lg);
+  overflow: hidden;
+}
+.anuncio::before {
+  content: 'Publicidad';
+  position: absolute;
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--texto-secundario);
+  opacity: 0.5;
+}
+.anuncio > * {
+  position: relative;
+  z-index: 1;
+}

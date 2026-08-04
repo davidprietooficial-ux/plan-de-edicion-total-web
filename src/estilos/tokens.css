@@ -1,0 +1,158 @@
+/* ───────────────────────────────────────────────────────────────
+ * Variables de diseño generadas a partir del contrato de marca del
+ * proyecto. Se regeneran completas cada vez que cambia un token.
+ * Proyecto: Plan de Edición Total — clase gratis · nivel t1
+ * ─────────────────────────────────────────────────────────────── */
+
+@import 'tailwindcss';
+@import 'tailwind-animations';
+
+@theme {
+  /* ── Responsive en 3 etapas ──────────────────────────────────
+   * Se borran TODOS los breakpoints por defecto y se declaran dos.
+   * Resultado: `sm:`, `xl:` y `2xl:` no existen. Usarlos no compila.
+   *   base  0-767px    móvil
+   *   md:   768-1023px tablet
+   *   lg:   1024px+    escritorio y TV
+   * ────────────────────────────────────────────────────────── */
+  --breakpoint-*: initial;
+  --breakpoint-md: 768px;
+  --breakpoint-lg: 1024px;
+
+  /* ── Nivel 1 · Colores primitivos ─────────────────────────── */
+  --color-primario: #E8873B; /* Ámbar de señal */
+  --color-primario-hover: #F5A55C; /* Ámbar encendido */
+  --color-acento: #7FB069; /* Verde eléctrico apagado */
+  --color-fondo: #121110; /* Negro de humo */
+  --color-superficie: #1E1C1A; /* Carbón */
+  --color-superficie-elevada: #2A2725; /* Carbón elevado */
+  --color-borde: #3A3634; /* Ceniza */
+  --color-texto: #F5F1EA; /* Hueso sobre negro */
+  --color-texto-suave: #A9A19A; /* Humo claro */
+  --color-exito: #6BBF8A; /* Verde de confirmación */
+  --color-error: #E8756F; /* Rojo de error */
+  --color-aviso: #E0B155; /* Ámbar de aviso */
+
+  /* ── Tipografía ───────────────────────────────────────────── */
+  --font-display: 'Anton', Georgia, serif;
+  --font-cuerpo: 'Inter Tight', system-ui, -apple-system, sans-serif;
+
+  /* ── Forma · máximo 3 radios en todo el sistema ───────────── */
+  --radius-sm: 0px;
+  --radius-md: 2px;
+  --radius-lg: 4px;
+
+  /* ── Espaciado · base 8px ─────────────────────────────── */
+  --spacing-3xs: 4px;
+  --spacing-2xs: 8px;
+  --spacing-xs: 12px;
+  --spacing-sm: 16px;
+  --spacing-md: 24px;
+  --spacing-lg: 32px;
+  --spacing-xl: 48px;
+  --spacing-2xl: 64px;
+  --spacing-3xl: 96px;
+
+  /* ── Sombras · derivadas de materialidad=2 ──────────── */
+  --shadow-sutil: 0 1px 2px rgb(245 241 234 / 0.05);
+  --shadow-media: 0 2px 4px rgb(245 241 234 / 0.05), 0 4px 12px rgb(245 241 234 / 0.034999999999999996);
+  --shadow-alta: 0 4px 8px rgb(245 241 234 / 0.05), 0 12px 32px rgb(245 241 234 / 0.04000000000000001);
+}
+
+:root {
+  /* ── Nivel 2 · Semánticos ─────────────────────────────────────
+   * Los componentes usan ESTOS, no los primitivos. Cambiar la marca
+   * sin tocar un solo componente pasa por aquí.
+   * ────────────────────────────────────────────────────────── */
+  --accion: var(--color-primario);
+  --accion-hover: var(--color-primario-hover);
+  --accion-texto: var(--color-fondo); /* contraste 7.15:1 */
+  --enlace: var(--color-primario);
+  --foco: var(--color-primario);
+
+  --pagina-fondo: var(--color-fondo);
+  --tarjeta-fondo: var(--color-superficie);
+  --elevado-fondo: var(--color-superficie-elevada);
+  --linea: var(--color-borde);
+
+  --texto-principal: var(--color-texto);
+  --texto-secundario: var(--color-texto-suave);
+  --texto-sobre-accion: var(--accion-texto);
+
+  --estado-exito: var(--color-exito);
+  --estado-error: var(--color-error);
+  --estado-aviso: var(--color-aviso);
+
+  /* ── Movimiento · cuatro duraciones con nombre ────────────── */
+  --mov-instante: 80ms;
+  --mov-rapido: 160ms;
+  --mov-normal: 280ms;
+  --mov-lento: 480ms;
+  --mov-curva: cubic-bezier(0.4, 0, 0.2, 1);
+  --mov-curva-entrada: cubic-bezier(0, 0, 0.2, 1);
+  --mov-curva-salida: cubic-bezier(0.4, 0, 1, 1);
+
+  /* ── Nivel 3 · Componente ─────────────────────────────────── */
+  --boton-alto: 44px;              /* objetivo táctil mínimo */
+  --boton-padding-x: 24px;
+  --campo-alto: 44px;
+  --tarjeta-padding: 16px;
+  --tarjeta-padding-lg: 24px;
+  --contenedor-max: 1200px;
+  --contenedor-texto-max: 68ch;    /* longitud de línea legible */
+  --seccion-y: 64px;
+  --navbar-alto: 64px;
+  --foco-grosor: 3px;
+  --foco-halo: rgb(232 135 59 / 0.35);
+  --sombra-tarjeta: var(--shadow-sutil);
+  --borde-ancho: 1px;
+}
+
+/* El aire vertical crece con la pantalla. Es la única medida que
+   cambia en los tres cortes, y por eso vive aquí y no en cada sección. */
+@media (min-width: 768px) {
+  :root { --seccion-y: 96px; }
+}
+@media (min-width: 1024px) {
+  :root { --seccion-y: 128px; }
+}
+
+/* Verificación 9 del gate. No es opcional. */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    -webkit-text-size-adjust: 100%;
+  }
+  body {
+    background-color: var(--pagina-fondo);
+    color: var(--texto-principal);
+    font-family: var(--font-cuerpo);
+    font-size: 17px;
+    line-height: 1.65;
+    -webkit-font-smoothing: antialiased;
+  }
+  h1, h2, h3 {
+    font-family: var(--font-display);
+    line-height: 1.12;
+    text-wrap: balance;
+  }
+  p { text-wrap: pretty; }
+  /* Foco visible SIEMPRE. Quitar el outline sin reemplazo rompe
+     la navegación por teclado y es fallo de accesibilidad. */
+  :focus-visible {
+    outline: var(--foco-grosor) solid var(--foco);
+    outline-offset: 2px;
+    border-radius: var(--radius-sm);
+  }
+  /* Imágenes sin dimensiones son la causa número uno de CLS. */
+  img, video { max-width: 100%; height: auto; }
+}

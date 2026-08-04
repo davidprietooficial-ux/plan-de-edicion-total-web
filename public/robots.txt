@@ -1,0 +1,8 @@
+User-agent: *
+Allow: /
+
+# Nada que ocultar en una landing, pero sí conviene que no indexen
+# el endpoint del formulario ni los legales duplicados.
+Disallow: /formulario.php
+
+Sitemap: https://EJEMPLO.com/sitemap.xml
