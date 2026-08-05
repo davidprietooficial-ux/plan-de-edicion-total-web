@@ -49,30 +49,6 @@ function iniciarVideosEfecto(): void {
   videos.forEach((v) => observador.observe(v));
 }
 
-// ── Toggle "Instrucciones / más información" ────────────────────────────
-// Revela el bloque de video, oculto por defecto. El botón sigue siendo
-// enfocable y accesible con aria-expanded aunque el JS falle en cargar —
-// en ese caso el panel simplemente queda visible (sin el atributo
-// `hidden` no hay nada que abrir, así que no es una trampa sin salida).
-function iniciarToggleVideo(): void {
-  const boton = document.querySelector<HTMLButtonElement>('[data-toggle-video]');
-  const panel = document.querySelector<HTMLElement>('[data-panel-video]');
-  if (!boton || !panel) return;
-
-  panel.hidden = true;
-  boton.setAttribute('aria-expanded', 'false');
-
-  boton.addEventListener('click', () => {
-    const abierto = boton.getAttribute('aria-expanded') === 'true';
-    boton.setAttribute('aria-expanded', String(!abierto));
-    panel.hidden = abierto;
-    if (!abierto) {
-      const sinMovimiento = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-      panel.scrollIntoView({ behavior: sinMovimiento ? 'auto' : 'smooth', block: 'start' });
-    }
-  });
-}
-
 // ── Cupos disponibles — simulados ────────────────────────────────────────
 // El cliente pidió un contador de cupos que arranca ~100 y baja de forma
 // progresiva y aleatoria. Es urgencia simulada, no un inventario real —
@@ -124,7 +100,6 @@ function iniciar(): void {
   iniciarConsentimiento();
 
   iniciarMotion();
-  iniciarToggleVideo();
   iniciarCuposSimulados();
   iniciarVideosEfecto();
   iniciarFormulario();

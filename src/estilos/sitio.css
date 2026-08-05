@@ -127,19 +127,6 @@
     color: var(--texto-secundario);
   }
 
-  /* ── Toggle "Instrucciones / Más información" ────────────────────────────
- * Revela el bloque de video, que empieza oculto. Sin JS el <button> sigue
- * siendo un enlace ancla normal por el href="#video" del <a> subyacente,
- * así que nunca es una trampa sin salida.
- */
-  .toggle-instrucciones[aria-expanded='true'] .toggle-instrucciones__icono {
-    transform: rotate(180deg);
-  }
-  .toggle-instrucciones__icono {
-    display: inline-flex;
-    transition: transform var(--mov-normal) var(--mov-curva);
-  }
-
   /* ── Carrusel de efectos ──────────────────────────────────────────────── */
   .tarjeta-efecto {
     position: relative;
@@ -254,7 +241,7 @@
     right: var(--spacing-sm);
     bottom: max(var(--spacing-sm), env(safe-area-inset-bottom));
     z-index: 30;
-    max-width: 460px;
+    max-width: 552px; /* 460px + 20%, como pidió el cliente */
     margin-inline: auto;
     display: flex;
     flex-direction: column;

@@ -202,31 +202,22 @@
             class="mt-[var(--spacing-lg)] flex flex-row flex-wrap items-center justify-center gap-[var(--spacing-sm)]"
           >
             <a href="#registro" class="boton boton-primario">Reservar mi cupo</a>
-            <button
-              type="button"
-              class="boton boton-secundario toggle-instrucciones"
-              data-toggle-video
-              aria-expanded="false"
-              aria-controls="video-instrucciones"
-            >
-              Instrucciones / Más información
-              <span class="toggle-instrucciones__icono" aria-hidden="true">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <path d="M6 9l6 6 6-6" />
-                </svg>
-              </span>
-            </button>
+            <a href="#video-instrucciones" class="boton boton-secundario">Más información</a>
           </div>
         </div>
       </section>
 
-      <!-- ══ 2. Video de presentación ═════════════════════════════════
-           Oculto por defecto (lo abre el botón de instrucciones del
-           hero) — si el JS no llega a correr, se queda visible: nunca
-           queda un contenido atrapado detrás de un botón roto.
+      <!-- ══ 2. Video de presentación + herramientas ═══════════════════
+           El cliente pidió que el video esté SIEMPRE visible (nada de
+           abrir/cerrar con JS) y que la fila de herramientas quede
+           integrada justo debajo, como un solo bloque — por eso viven en
+           la misma <section>, sin el padding-block completo de .seccion
+           entre ellos. "Más información" ya no es un botón que oculta o
+           muestra nada: es un ancla normal que baja con scroll suave
+           nativo del navegador, cero JS de por medio.
       -->
-      <section id="video-instrucciones" class="seccion" data-panel-video>
-        <div class="contenedor max-w-[48rem]" data-motion="reveal">
+      <section id="video-instrucciones" class="seccion">
+        <div class="contenedor" data-motion="reveal">
           <div
             class="marco-offset relative w-full overflow-hidden rounded-[var(--radius-lg)] border border-[var(--linea)] bg-[var(--tarjeta-fondo)] pt-[56.25%]"
           >
@@ -243,15 +234,7 @@
             </div>
           </div>
         </div>
-      </section>
-
-      <!-- ══ 3. Programas que vas a dominar ═══════════════════════════
-           Mismo margen que el video (contenedor max-w-[48rem]) — antes
-           quedaba pegado a la izquierda del ancho completo de página,
-           desalineado con el bloque de video de arriba.
-      -->
-      <section class="seccion">
-        <div class="contenedor max-w-[48rem]">
+        <div class="contenedor mt-[var(--spacing-lg)]">
           <div class="marquee-pista py-[var(--spacing-md)]">
             <div class="marquee-fila">
               <span class="etiqueta-herramienta">Premiere Pro</span>
@@ -542,12 +525,18 @@
            un solo clic al grupo de WhatsApp.
       -->
       <section id="registro" class="seccion bg-[var(--tarjeta-fondo)]">
-        <div class="contenedor max-w-[22rem]" data-motion="reveal">
-          <h2 class="font-display text-center text-[1.75rem] uppercase md:text-[2.25rem]">Reserva tu cupo gratis</h2>
-          <p class="prosa mt-[var(--spacing-2xs)] text-center text-[var(--texto-secundario)]">
+        <div class="contenedor text-center" data-motion="reveal">
+          <h2 class="font-display text-[1.75rem] uppercase md:text-[2.25rem]">Reserva tu cupo gratis</h2>
+          <p class="prosa mx-auto mt-[var(--spacing-2xs)] text-[var(--texto-secundario)]">
             Cupos limitados a <span data-cupos>100</span> personas por clase.
           </p>
+        </div>
 
+        <!-- Solo el formulario va restringido — el título y el párrafo de
+             arriba usan el ancho normal de sección. 26.4rem = 22rem (lo
+             que pidió el cliente en la vuelta anterior) + 20% más, como
+             pidió ahora. -->
+        <div class="contenedor max-w-[26.4rem]">
           <form
             class="tarjeta mt-[var(--spacing-lg)]"
             data-formulario
