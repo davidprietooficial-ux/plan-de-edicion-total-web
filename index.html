@@ -2,12 +2,18 @@
 <!--
   BORRADOR T2 — landing CORTA de registro para la clase gratuita en vivo de
   "Plan de Edición Total" (Juan Camilo Pérez Moreno), viernes, cupo
-  limitado. Tercera vuelta de corrección con feedback directo del cliente
-  (2026-08-05): sin header/navbar, barra flotante tipo vidrio esmerilado
-  (única excepción de glassmorphism del sitio, pedida con referencia
-  propia), favicon sin verde, formulario más angosto, y el carrusel de
-  efectos ya usa los 5 videos reales de VIDEOS EFECTOS PAG PET
-  (comprimidos en public/efectos/) en vez de placeholders.
+  limitado. Quinta vuelta (2026-08-05): se arregló un bug real de cascada
+  CSS — .contenedor vivía SIN @layer en sitio.css, así que le ganaba a
+  cualquier max-w-[...] de Tailwind sin importar el orden (Tailwind v4
+  mete sus utilidades en @layer utilities, y una regla sin layer le gana
+  a CUALQUIER regla con layer). Por eso el formulario de registro se veía
+  a 1200px en vez de a su max-w declarado — no era un valor mal puesto,
+  era el layer. Ahora todo sitio.css vive en @layer components y las
+  utilidades de Tailwind vuelven a poder sobreescribirlo. Además: botones
+  del hero en fila (antes apilados), barra flotante con columnas
+  centradas y espacio regular (antes space-between con hueco enorme en
+  medio), video real de fondo en el hero, currícula corregida a solo
+  Premiere Pro y CapCut.
 
   Pendiente real del cliente (no inventar, no adivinar):
     - Enlace del grupo de WhatsApp VIP (el flujo actual usa un enlace de
@@ -15,10 +21,9 @@
       clic). Placeholder: https://[ENLACE_GRUPO_WHATSAPP_PENDIENTE]
     - Hora exacta de la clase del viernes (se puso 19:00 COP como
       provisional en data-cuenta-hasta — solo confirmó "el día viernes").
-    - Video de fondo del hero (en bucle, b-roll de edición) — el cliente
-      dijo que lo manda luego. Pidió explícitamente que no aparezca
-      ninguna mujer en ese clip.
     - Más videos de efectos por venir, para sumar al carrusel.
+    - Confirmar si "Accede a nuestro grupo de WhatsApp VIP" (columna 2 de
+      la barra flotante) es el texto exacto que quiere el cliente.
     - Textos legales de las 4 páginas del pie: son borrador, no revisión
       legal.
 
@@ -193,7 +198,9 @@
             Quedan <span data-cupos>100</span> cupos disponibles
           </p>
 
-          <div class="mt-[var(--spacing-lg)] flex flex-col items-center gap-[var(--spacing-sm)]">
+          <div
+            class="mt-[var(--spacing-lg)] flex flex-row flex-wrap items-center justify-center gap-[var(--spacing-sm)]"
+          >
             <a href="#registro" class="boton boton-primario">Reservar mi cupo</a>
             <button
               type="button"
@@ -535,7 +542,7 @@
            un solo clic al grupo de WhatsApp.
       -->
       <section id="registro" class="seccion bg-[var(--tarjeta-fondo)]">
-        <div class="contenedor max-w-[24rem]" data-motion="reveal">
+        <div class="contenedor max-w-[22rem]" data-motion="reveal">
           <h2 class="font-display text-center text-[1.75rem] uppercase md:text-[2.25rem]">Reserva tu cupo gratis</h2>
           <p class="prosa mt-[var(--spacing-2xs)] text-center text-[var(--texto-secundario)]">
             Cupos limitados a <span data-cupos>100</span> personas por clase.

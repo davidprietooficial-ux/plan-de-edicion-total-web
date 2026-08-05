@@ -5,25 +5,36 @@
  * Este archivo sí: aquí van los patrones que usan esos tokens.
  * ─────────────────────────────────────────────────────────────────── */
 
-/* ── Textura de ruido ──────────────────────────────────────────────────
+/* Todo lo de abajo vive en @layer components: Tailwind v4 mete sus
+ * utilidades (incluidas las de valor arbitrario, como max-w-[24rem]) en
+ * @layer utilities. Una regla SIN layer le gana a CUALQUIER regla con
+ * layer sin importar el orden de aparición — así que .contenedor sin
+ * layer bloqueaba silenciosamente cualquier max-w-[...] puesto junto a
+ * él en el HTML (el formulario de registro se veía a 1200px en vez de a
+ * 24rem). Metiendo este archivo en @layer components, las utilidades de
+ * Tailwind vuelven a poder sobreescribirlo, que es el comportamiento
+ * esperado.
+ */
+@layer components {
+  /* ── Textura de ruido ──────────────────────────────────────────────────
  * El cliente pidió "componentes de ruido" para reforzar el look neón
  * sobre fondo oscuro. SVG con feTurbulence en vez de una imagen: cero
  * peso de red, se repite en mosaico. mix-blend-mode:overlay hace que sea
  * casi imperceptible como imagen suelta y se lea como grano de cámara.
  * pointer-events:none para que nunca capture un clic ni un foco.
  */
-body::after {
-  content: '';
-  position: fixed;
-  inset: 0;
-  z-index: 999;
-  pointer-events: none;
-  opacity: 0.05;
-  mix-blend-mode: overlay;
-  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='180' height='180'><filter id='r'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%25' height='100%25' filter='url(%23r)'/></svg>");
-}
+  body::after {
+    content: '';
+    position: fixed;
+    inset: 0;
+    z-index: 999;
+    pointer-events: none;
+    opacity: 0.05;
+    mix-blend-mode: overlay;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='180' height='180'><filter id='r'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%25' height='100%25' filter='url(%23r)'/></svg>");
+  }
 
-/* ── Motion T2 ────────────────────────────────────────────────────────
+  /* ── Motion T2 ────────────────────────────────────────────────────────
  *
  * lib/motion.ts anima con la Web Animations API, no con clases CSS: los
  * elementos [data-motion] no llevan ningún estado oculto por defecto, así
@@ -31,141 +42,141 @@ body::after {
  * el contenido ya está visible tal cual está en el HTML.
  */
 
-/* Anillo pulsante del botón de play en el hero. */
-.play-pulso {
-  position: relative;
-  display: flex;
-  height: 64px;
-  width: 64px;
-  align-items: center;
-  justify-content: center;
-  border-radius: 9999px;
-  background: var(--accion);
-  color: var(--texto-sobre-accion);
-}
-.play-pulso::after {
-  content: '';
-  position: absolute;
-  inset: -8px;
-  border-radius: inherit;
-  border: 2px solid var(--accion);
-  animation: pulso 1.8s ease-out infinite;
-}
-@keyframes pulso {
-  0% {
-    opacity: 0.6;
-    transform: scale(1);
+  /* Anillo pulsante del botón de play en el hero. */
+  .play-pulso {
+    position: relative;
+    display: flex;
+    height: 64px;
+    width: 64px;
+    align-items: center;
+    justify-content: center;
+    border-radius: 9999px;
+    background: var(--accion);
+    color: var(--texto-sobre-accion);
   }
-  100% {
-    opacity: 0;
-    transform: scale(1.3);
+  .play-pulso::after {
+    content: '';
+    position: absolute;
+    inset: -8px;
+    border-radius: inherit;
+    border: 2px solid var(--accion);
+    animation: pulso 1.8s ease-out infinite;
   }
-}
+  @keyframes pulso {
+    0% {
+      opacity: 0.6;
+      transform: scale(1);
+    }
+    100% {
+      opacity: 0;
+      transform: scale(1.3);
+    }
+  }
 
-/* Punto de urgencia del badge de cupos — el mismo tipo de indicador que
+  /* Punto de urgencia del badge de cupos — el mismo tipo de indicador que
    ya usa .play-pulso, a escala de badge. */
-.punto-urgencia {
-  position: relative;
-  display: inline-block;
-  height: 8px;
-  width: 8px;
-  border-radius: 9999px;
-  background: var(--accion);
-}
-.punto-urgencia::after {
-  content: '';
-  position: absolute;
-  inset: -3px;
-  border-radius: inherit;
-  border: 1.5px solid var(--accion);
-  animation: pulso 1.6s ease-out infinite;
-}
+  .punto-urgencia {
+    position: relative;
+    display: inline-block;
+    height: 8px;
+    width: 8px;
+    border-radius: 9999px;
+    background: var(--accion);
+  }
+  .punto-urgencia::after {
+    content: '';
+    position: absolute;
+    inset: -3px;
+    border-radius: inherit;
+    border: 1.5px solid var(--accion);
+    animation: pulso 1.6s ease-out infinite;
+  }
 
-/* ── Cuenta regresiva gigante ────────────────────────────────────────────
+  /* ── Cuenta regresiva gigante ────────────────────────────────────────────
  * lib/motion.ts la actualiza cada segundo leyendo data-cuenta-hasta. Cada
  * unidad es un bloque con número en Anton + resplandor de texto (glow de
  * neón real, no una sombra decorativa) y su etiqueta debajo.
  */
-.contador-cuenta {
-  display: flex;
-  justify-content: center;
-  gap: var(--spacing-sm);
-}
-.contador-unidad {
-  display: flex;
-  min-width: 64px;
-  flex-direction: column;
-  align-items: center;
-  gap: 2px;
-}
-.contador-unidad__numero {
-  font-family: var(--font-display);
-  font-size: clamp(2.25rem, 6vw, 3.5rem);
-  line-height: 1;
-  color: var(--accion);
-  text-shadow:
-    0 0 12px color-mix(in srgb, var(--accion) 70%, transparent),
-    0 0 32px color-mix(in srgb, var(--accion) 40%, transparent);
-  font-variant-numeric: tabular-nums;
-}
-.contador-unidad__etiqueta {
-  font-size: 11px;
-  font-weight: 600;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: var(--texto-secundario);
-}
+  .contador-cuenta {
+    display: flex;
+    justify-content: center;
+    gap: var(--spacing-sm);
+  }
+  .contador-unidad {
+    display: flex;
+    min-width: 64px;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+  }
+  .contador-unidad__numero {
+    font-family: var(--font-display);
+    font-size: clamp(2.25rem, 6vw, 3.5rem);
+    line-height: 1;
+    color: var(--accion);
+    text-shadow:
+      0 0 12px color-mix(in srgb, var(--accion) 70%, transparent),
+      0 0 32px color-mix(in srgb, var(--accion) 40%, transparent);
+    font-variant-numeric: tabular-nums;
+  }
+  .contador-unidad__etiqueta {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--texto-secundario);
+  }
 
-/* ── Toggle "Instrucciones / Más información" ────────────────────────────
+  /* ── Toggle "Instrucciones / Más información" ────────────────────────────
  * Revela el bloque de video, que empieza oculto. Sin JS el <button> sigue
  * siendo un enlace ancla normal por el href="#video" del <a> subyacente,
  * así que nunca es una trampa sin salida.
  */
-.toggle-instrucciones[aria-expanded='true'] .toggle-instrucciones__icono {
-  transform: rotate(180deg);
-}
-.toggle-instrucciones__icono {
-  display: inline-flex;
-  transition: transform var(--mov-normal) var(--mov-curva);
-}
+  .toggle-instrucciones[aria-expanded='true'] .toggle-instrucciones__icono {
+    transform: rotate(180deg);
+  }
+  .toggle-instrucciones__icono {
+    display: inline-flex;
+    transition: transform var(--mov-normal) var(--mov-curva);
+  }
 
-/* ── Carrusel de efectos ──────────────────────────────────────────────── */
-.tarjeta-efecto {
-  position: relative;
-  flex-shrink: 0;
-  width: 220px;
-  aspect-ratio: 4 / 5;
-  overflow: hidden;
-  border-radius: var(--radius-lg);
-  border: var(--borde-ancho) solid color-mix(in srgb, var(--accion) 35%, var(--linea));
-  background: var(--tarjeta-fondo);
-  box-shadow: 0 0 18px color-mix(in srgb, var(--accion) 20%, transparent);
-}
-/* El póster llena la tarjeta desde el HTML (fail-open: si el video no
+  /* ── Carrusel de efectos ──────────────────────────────────────────────── */
+  .tarjeta-efecto {
+    position: relative;
+    flex-shrink: 0;
+    width: 220px;
+    aspect-ratio: 4 / 5;
+    overflow: hidden;
+    border-radius: var(--radius-lg);
+    border: var(--borde-ancho) solid color-mix(in srgb, var(--accion) 35%, var(--linea));
+    background: var(--tarjeta-fondo);
+    box-shadow: 0 0 18px color-mix(in srgb, var(--accion) 20%, transparent);
+  }
+  /* El póster llena la tarjeta desde el HTML (fail-open: si el video no
    llega a reproducirse, la imagen ya cuenta el efecto). object-fit:cover
    recorta el 9:16 original al 4:5 de la tarjeta sin deformarlo. */
-.tarjeta-efecto__video {
-  height: 100%;
-  width: 100%;
-  object-fit: cover;
-}
-.tarjeta-efecto__etiqueta {
-  position: absolute;
-  inset-inline: 0;
-  bottom: 0;
-  padding: var(--spacing-2xs);
-  font-size: 12px;
-  font-weight: 700;
-  text-align: center;
-  color: var(--texto-principal);
-  background: linear-gradient(
-    to top,
-    color-mix(in srgb, var(--tarjeta-fondo) 92%, transparent),
-    transparent
-  );
-}
+  .tarjeta-efecto__video {
+    height: 100%;
+    width: 100%;
+    object-fit: cover;
+  }
+  .tarjeta-efecto__etiqueta {
+    position: absolute;
+    inset-inline: 0;
+    bottom: 0;
+    padding: var(--spacing-2xs);
+    font-size: 12px;
+    font-weight: 700;
+    text-align: center;
+    color: var(--texto-principal);
+    background: linear-gradient(
+      to top,
+      color-mix(in srgb, var(--tarjeta-fondo) 92%, transparent),
+      transparent
+    );
+  }
 
-/* ── Marquee — CSS puro, sin JS ─────────────────────────────────────────
+  /* ── Marquee — CSS puro, sin JS ─────────────────────────────────────────
  * Antes usaba la Web Animations API con un cálculo de ancho en JS que
  * REBOTABA (direction:'alternate'): iba y volvía, no daba la sensación de
  * cinta continua. El patrón real (rieles de logos, avatares girando) es
@@ -176,54 +187,60 @@ body::after {
  * layout, y `prefers-reduced-motion` ya lo apaga por la regla global de
  * tokens.css sin necesitar guard aquí.
  */
-.marquee-pista {
-  overflow: hidden;
-  mask-image: linear-gradient(to right, transparent, black 8%, black 92%, transparent);
-  -webkit-mask-image: linear-gradient(to right, transparent, black 8%, black 92%, transparent);
-}
-.marquee-fila {
-  display: flex;
-  width: max-content;
-  flex-shrink: 0;
-  align-items: center;
-  gap: var(--spacing-sm);
-  animation: desplazar-izq 32s linear infinite;
-}
-.marquee-pista--rapida .marquee-fila {
-  animation-duration: 22s;
-}
-.marquee-pista--derecha .marquee-fila {
-  animation-name: desplazar-der;
-}
-@keyframes desplazar-izq {
-  to {
-    transform: translateX(-50%);
+  .marquee-pista {
+    overflow: hidden;
+    mask-image: linear-gradient(to right, transparent, black 8%, black 92%, transparent);
+    -webkit-mask-image: linear-gradient(
+      to right,
+      transparent,
+      black 8%,
+      black 92%,
+      transparent
+    );
   }
-}
-@keyframes desplazar-der {
-  from {
-    transform: translateX(-50%);
+  .marquee-fila {
+    display: flex;
+    width: max-content;
+    flex-shrink: 0;
+    align-items: center;
+    gap: var(--spacing-sm);
+    animation: desplazar-izq 32s linear infinite;
   }
-  to {
-    transform: translateX(0);
+  .marquee-pista--rapida .marquee-fila {
+    animation-duration: 22s;
   }
-}
+  .marquee-pista--derecha .marquee-fila {
+    animation-name: desplazar-der;
+  }
+  @keyframes desplazar-izq {
+    to {
+      transform: translateX(-50%);
+    }
+  }
+  @keyframes desplazar-der {
+    from {
+      transform: translateX(-50%);
+    }
+    to {
+      transform: translateX(0);
+    }
+  }
 
-/* ── Marquee de herramientas ────────────────────────────────────────── */
-.etiqueta-herramienta {
-  flex-shrink: 0;
-  border: var(--borde-ancho) solid color-mix(in srgb, var(--accion) 45%, var(--linea));
-  border-radius: var(--radius-md);
-  padding: var(--spacing-2xs) var(--spacing-sm);
-  font-size: 14px;
-  font-weight: 600;
-  color: var(--accion);
-  white-space: nowrap;
-  box-shadow: 0 0 10px color-mix(in srgb, var(--accion) 25%, transparent);
-}
+  /* ── Marquee de herramientas ────────────────────────────────────────── */
+  .etiqueta-herramienta {
+    flex-shrink: 0;
+    border: var(--borde-ancho) solid color-mix(in srgb, var(--accion) 45%, var(--linea));
+    border-radius: var(--radius-md);
+    padding: var(--spacing-2xs) var(--spacing-sm);
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--accion);
+    white-space: nowrap;
+    box-shadow: 0 0 10px color-mix(in srgb, var(--accion) 25%, transparent);
+  }
 
-/* ── CTA flotante — móvil ───────────────────────────────────────────── */
-/* Barra flotante permanente — el cliente pasó una referencia (bloque
+  /* ── CTA flotante — móvil ───────────────────────────────────────────── */
+  /* Barra flotante permanente — el cliente pasó una referencia (bloque
    redondeado, con margen respecto al borde de pantalla, cristal
    esmerilado con un halo de luz alrededor) y pidió replicar ese
    tratamiento. Es la ÚNICA excepción de glassmorphism en todo el sitio —
@@ -231,618 +248,623 @@ body::after {
    pero aquí es un pedido explícito y puntual sobre un solo componente
    flotante, no un patrón repetido por la página. Cuenta regresiva a la
    izquierda, mensaje + botón a la derecha, sublínea debajo. */
-.cta-flotante {
-  position: fixed;
-  left: var(--spacing-sm);
-  right: var(--spacing-sm);
-  bottom: max(var(--spacing-sm), env(safe-area-inset-bottom));
-  z-index: 30;
-  max-width: 640px;
-  margin-inline: auto;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: var(--spacing-xs);
-  padding: var(--spacing-sm) var(--spacing-md);
-  border-radius: 28px;
-  background: color-mix(in srgb, var(--pagina-fondo) 55%, transparent);
-  border: var(--borde-ancho) solid color-mix(in srgb, var(--accion) 40%, var(--linea));
-  backdrop-filter: blur(18px) saturate(150%);
-  -webkit-backdrop-filter: blur(18px) saturate(150%);
-  box-shadow:
-    0 0 28px color-mix(in srgb, var(--accion) 22%, transparent),
-    0 8px 24px rgb(0 0 0 / 0.45);
-}
-@media (min-width: 480px) {
   .cta-flotante {
-    flex-direction: row;
+    position: fixed;
+    left: var(--spacing-sm);
+    right: var(--spacing-sm);
+    bottom: max(var(--spacing-sm), env(safe-area-inset-bottom));
+    z-index: 30;
+    max-width: 460px;
+    margin-inline: auto;
+    display: flex;
+    flex-direction: column;
     align-items: center;
-    justify-content: space-between;
+    gap: var(--spacing-xs);
+    padding: var(--spacing-sm) var(--spacing-md);
+    border-radius: 28px;
+    background: color-mix(in srgb, var(--pagina-fondo) 55%, transparent);
+    border: var(--borde-ancho) solid color-mix(in srgb, var(--accion) 40%, var(--linea));
+    backdrop-filter: blur(18px) saturate(150%);
+    -webkit-backdrop-filter: blur(18px) saturate(150%);
+    box-shadow:
+      0 0 28px color-mix(in srgb, var(--accion) 22%, transparent),
+      0 8px 24px rgb(0 0 0 / 0.45);
   }
-}
-/* Dos columnas — igual a la referencia: columna 1 lo que ahí es precio,
+  /* Columnas centradas con un espacio fijo entre ellas — antes era
+   space-between dentro de una barra de 640px, que las empujaba a los
+   bordes y dejaba un hueco enorme en medio. */
+  @media (min-width: 480px) {
+    .cta-flotante {
+      flex-direction: row;
+      align-items: center;
+      justify-content: center;
+      gap: var(--spacing-xl);
+    }
+  }
+  /* Dos columnas — igual a la referencia: columna 1 lo que ahí es precio,
    aquí la cuenta regresiva completa; columna 2 el botón grande y a dónde
    lleva, cada una con su etiqueta debajo. */
-.cta-flotante__columna {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: var(--spacing-3xs);
-}
-@media (min-width: 480px) {
-  .cta-flotante__columna--cta {
-    align-items: flex-end;
+  .cta-flotante__columna {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--spacing-3xs);
   }
-}
-.cta-flotante__etiqueta {
-  font-size: 11px;
-  font-weight: 600;
-  color: var(--texto-secundario);
-  text-align: center;
-  white-space: nowrap;
-}
-@media (min-width: 480px) {
-  .cta-flotante__columna--cta .cta-flotante__etiqueta {
-    text-align: right;
+  @media (min-width: 480px) {
+    .cta-flotante__columna--cta {
+      align-items: flex-end;
+    }
   }
-}
+  .cta-flotante__etiqueta {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--texto-secundario);
+    text-align: center;
+    white-space: nowrap;
+  }
+  @media (min-width: 480px) {
+    .cta-flotante__columna--cta .cta-flotante__etiqueta {
+      text-align: right;
+    }
+  }
 
-/* Cuenta regresiva a escala de barra — mismo componente que la del hero
+  /* Cuenta regresiva a escala de barra — mismo componente que la del hero
    (.contador-cuenta), solo más chico. */
-.contador-cuenta--mini {
-  gap: var(--spacing-xs);
-}
-.contador-cuenta--mini .contador-unidad {
-  min-width: auto;
-}
-.contador-cuenta--mini .contador-unidad__numero {
-  font-size: 1.25rem;
-}
-.contador-cuenta--mini .contador-unidad__etiqueta {
-  font-size: 9px;
-}
+  .contador-cuenta--mini {
+    gap: var(--spacing-xs);
+  }
+  .contador-cuenta--mini .contador-unidad {
+    min-width: auto;
+  }
+  .contador-cuenta--mini .contador-unidad__numero {
+    font-size: 1.25rem;
+  }
+  .contador-cuenta--mini .contador-unidad__etiqueta {
+    font-size: 9px;
+  }
 
-/* Espacio reservado para que la barra flotante no tape el pie de página —
+  /* Espacio reservado para que la barra flotante no tape el pie de página —
    ahora una sola medida en los tres cortes porque la barra ya no se
    esconde en escritorio. */
-body {
-  padding-bottom: 112px;
-}
+  body {
+    padding-bottom: 112px;
+  }
 
-/* ── Producción visual — el nivel de detalle de una página de venta real,
+  /* ── Producción visual — el nivel de detalle de una página de venta real,
  * no de un wireframe. Estudiado sobre la página de referencia (WordPress/
  * Elementor): sombra sólida desplazada tipo "sticker" detrás de imágenes,
  * insignias circulares en vez de números sueltos, fundido en los bordes
  * de las franjas horizontales. ──────────────────────────────────────── */
 
-/* Sombra sólida desplazada — le da peso gráfico a un bloque de imagen
+  /* Sombra sólida desplazada — le da peso gráfico a un bloque de imagen
    incluso antes de tener la foto real. */
-.marco-offset {
-  box-shadow: 10px 10px 0 0 var(--accion);
-}
+  .marco-offset {
+    box-shadow: 10px 10px 0 0 var(--accion);
+  }
 
-/* Insignia circular numerada — currícula, pasos. */
-.insignia-numero {
-  display: flex;
-  height: 40px;
-  width: 40px;
-  flex-shrink: 0;
-  align-items: center;
-  justify-content: center;
-  border-radius: 9999px;
-  background: var(--accion);
-  font-family: var(--font-display);
-  font-size: 1.1rem;
-  color: var(--texto-sobre-accion);
-}
+  /* Insignia circular numerada — currícula, pasos. */
+  .insignia-numero {
+    display: flex;
+    height: 40px;
+    width: 40px;
+    flex-shrink: 0;
+    align-items: center;
+    justify-content: center;
+    border-radius: 9999px;
+    background: var(--accion);
+    font-family: var(--font-display);
+    font-size: 1.1rem;
+    color: var(--texto-sobre-accion);
+  }
 
-/* Check como insignia, no como carácter Unicode suelto. */
-.check-insignia {
-  display: inline-flex;
-  height: 22px;
-  width: 22px;
-  flex-shrink: 0;
-  align-items: center;
-  justify-content: center;
-  border-radius: 9999px;
-  background: color-mix(in srgb, var(--accion) 18%, transparent);
-  color: var(--accion);
-  font-size: 13px;
-  font-weight: 700;
-}
+  /* Check como insignia, no como carácter Unicode suelto. */
+  .check-insignia {
+    display: inline-flex;
+    height: 22px;
+    width: 22px;
+    flex-shrink: 0;
+    align-items: center;
+    justify-content: center;
+    border-radius: 9999px;
+    background: color-mix(in srgb, var(--accion) 18%, transparent);
+    color: var(--accion);
+    font-size: 13px;
+    font-weight: 700;
+  }
 
-/* Avatar circular con iniciales — testimonios sin foto real todavía. */
-.avatar-iniciales {
-  display: flex;
-  height: 48px;
-  width: 48px;
-  flex-shrink: 0;
-  align-items: center;
-  justify-content: center;
-  border-radius: 9999px;
-  background: var(--elevado-fondo);
-  border: var(--borde-ancho) solid var(--linea);
-  font-family: var(--font-display);
-  font-size: 1rem;
-  color: var(--accion);
-}
+  /* Avatar circular con iniciales — testimonios sin foto real todavía. */
+  .avatar-iniciales {
+    display: flex;
+    height: 48px;
+    width: 48px;
+    flex-shrink: 0;
+    align-items: center;
+    justify-content: center;
+    border-radius: 9999px;
+    background: var(--elevado-fondo);
+    border: var(--borde-ancho) solid var(--linea);
+    font-family: var(--font-display);
+    font-size: 1rem;
+    color: var(--accion);
+  }
 
-/* Precio de ancla tachado junto al precio real. */
-.precio-tachado {
-  font-weight: 400;
-  text-decoration: line-through;
-  color: var(--texto-secundario);
-}
+  /* Precio de ancla tachado junto al precio real. */
+  .precio-tachado {
+    font-weight: 400;
+    text-decoration: line-through;
+    color: var(--texto-secundario);
+  }
 
-/* Línea decorativa corta bajo el eyebrow de cada sección — un detalle
+  /* Línea decorativa corta bajo el eyebrow de cada sección — un detalle
    editorial que separa el ritmo entre secciones consecutivas. */
-.linea-acento {
-  display: block;
-  height: 3px;
-  width: 48px;
-  margin-inline: auto;
-  margin-top: var(--spacing-2xs);
-  background: var(--accion);
-  border-radius: 9999px;
-}
+  .linea-acento {
+    display: block;
+    height: 3px;
+    width: 48px;
+    margin-inline: auto;
+    margin-top: var(--spacing-2xs);
+    background: var(--accion);
+    border-radius: 9999px;
+  }
 
-/* ── Hero a pantalla completa ──────────────────────────────────────────
+  /* ── Hero a pantalla completa ──────────────────────────────────────────
  * Mismo patrón que la referencia: el video ocupa todo el fondo de la
  * sección, el contenido va encima. Hasta que el cliente entregue el
  * video real, .hero-fondo es un resplandor radial en el color de marca
  * sobre el fondo oscuro — no una caja con borde suelta como antes.
  */
-.hero-video-seccion {
-  position: relative;
-  overflow: hidden;
-}
-.hero-fondo {
-  position: absolute;
-  inset: 0;
-  z-index: 0;
-  background: var(--pagina-fondo);
-}
-.hero-fondo video {
-  position: absolute;
-  inset: 0;
-  height: 100%;
-  width: 100%;
-  object-fit: cover;
-  opacity: 0.5;
-}
-/* El resplandor y el oscurecido van en un pseudo-elemento ENCIMA del
+  .hero-video-seccion {
+    position: relative;
+    overflow: hidden;
+  }
+  .hero-fondo {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    background: var(--pagina-fondo);
+  }
+  .hero-fondo video {
+    position: absolute;
+    inset: 0;
+    height: 100%;
+    width: 100%;
+    object-fit: cover;
+    opacity: 0.5;
+  }
+  /* El resplandor y el oscurecido van en un pseudo-elemento ENCIMA del
    video (se pinta después, en el mismo contexto de apilamiento): así el
    texto del hero mantiene contraste sin importar qué tan clara salga la
    toma del video real. */
-.hero-fondo::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background:
-    radial-gradient(
-      circle at 50% 15%,
-      color-mix(in srgb, var(--accion) 22%, transparent),
-      transparent 55%
-    ),
-    linear-gradient(
-      180deg,
-      color-mix(in srgb, var(--pagina-fondo) 55%, transparent) 0%,
-      color-mix(in srgb, var(--pagina-fondo) 88%, transparent) 100%
-    );
-}
-.hero-video-seccion > .contenedor {
-  position: relative;
-  z-index: 1;
-}
+  .hero-fondo::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(
+        circle at 50% 15%,
+        color-mix(in srgb, var(--accion) 22%, transparent),
+        transparent 55%
+      ),
+      linear-gradient(
+        180deg,
+        color-mix(in srgb, var(--pagina-fondo) 55%, transparent) 0%,
+        color-mix(in srgb, var(--pagina-fondo) 88%, transparent) 100%
+      );
+  }
+  .hero-video-seccion > .contenedor {
+    position: relative;
+    z-index: 1;
+  }
 
-/* Insignia de software con glow al pasar el ratón — mismo tratamiento
+  /* Insignia de software con glow al pasar el ratón — mismo tratamiento
    que la fila "Compatible con" de la referencia, sin usar sus logotipos
    reales (no son nuestros para redistribuir). */
-.insignia-software {
-  display: flex;
-  height: 64px;
-  width: 64px;
-  align-items: center;
-  justify-content: center;
-  border-radius: var(--radius-lg);
-  border: var(--borde-ancho) solid var(--linea);
-  background: var(--elevado-fondo);
-  font-family: var(--font-display);
-  font-size: 0.7rem;
-  text-align: center;
-  color: var(--texto-secundario);
-  transition:
-    box-shadow var(--mov-normal) var(--mov-curva),
-    border-color var(--mov-normal) var(--mov-curva);
-}
-.insignia-software:hover {
-  border-color: var(--accion);
-  box-shadow: 0 0 20px color-mix(in srgb, var(--accion) 40%, transparent);
-}
-/* Glow ambiental sin esperar al hover — cada insignia enciende y apaga en
+  .insignia-software {
+    display: flex;
+    height: 64px;
+    width: 64px;
+    align-items: center;
+    justify-content: center;
+    border-radius: var(--radius-lg);
+    border: var(--borde-ancho) solid var(--linea);
+    background: var(--elevado-fondo);
+    font-family: var(--font-display);
+    font-size: 0.7rem;
+    text-align: center;
+    color: var(--texto-secundario);
+    transition:
+      box-shadow var(--mov-normal) var(--mov-curva),
+      border-color var(--mov-normal) var(--mov-curva);
+  }
+  .insignia-software:hover {
+    border-color: var(--accion);
+    box-shadow: 0 0 20px color-mix(in srgb, var(--accion) 40%, transparent);
+  }
+  /* Glow ambiental sin esperar al hover — cada insignia enciende y apaga en
    su propio turno (retraso escalonado por nth-child) para que la fila se
    sienta viva en vez de una fila de iconos estáticos. */
-.insignia-software {
-  animation: glow-ambiental 3.6s ease-in-out infinite;
-}
-.insignia-software:nth-child(2) {
-  animation-delay: 0.5s;
-}
-.insignia-software:nth-child(3) {
-  animation-delay: 1s;
-}
-.insignia-software:nth-child(4) {
-  animation-delay: 1.5s;
-}
-.insignia-software:nth-child(5) {
-  animation-delay: 2s;
-}
-.insignia-software:nth-child(6) {
-  animation-delay: 2.5s;
-}
-.insignia-software:nth-child(7) {
-  animation-delay: 3s;
-}
-.insignia-software:nth-child(8) {
-  animation-delay: 0.25s;
-}
-@keyframes glow-ambiental {
-  0%,
-  100% {
-    border-color: var(--linea);
-    box-shadow: 0 0 0 color-mix(in srgb, var(--accion) 0%, transparent);
+  .insignia-software {
+    animation: glow-ambiental 3.6s ease-in-out infinite;
   }
-  50% {
-    border-color: color-mix(in srgb, var(--accion) 60%, var(--linea));
-    box-shadow: 0 0 16px color-mix(in srgb, var(--accion) 30%, transparent);
+  .insignia-software:nth-child(2) {
+    animation-delay: 0.5s;
   }
-}
+  .insignia-software:nth-child(3) {
+    animation-delay: 1s;
+  }
+  .insignia-software:nth-child(4) {
+    animation-delay: 1.5s;
+  }
+  .insignia-software:nth-child(5) {
+    animation-delay: 2s;
+  }
+  .insignia-software:nth-child(6) {
+    animation-delay: 2.5s;
+  }
+  .insignia-software:nth-child(7) {
+    animation-delay: 3s;
+  }
+  .insignia-software:nth-child(8) {
+    animation-delay: 0.25s;
+  }
+  @keyframes glow-ambiental {
+    0%,
+    100% {
+      border-color: var(--linea);
+      box-shadow: 0 0 0 color-mix(in srgb, var(--accion) 0%, transparent);
+    }
+    50% {
+      border-color: color-mix(in srgb, var(--accion) 60%, var(--linea));
+      box-shadow: 0 0 16px color-mix(in srgb, var(--accion) 30%, transparent);
+    }
+  }
 
-/* ── Avatares de la comunidad — marquee circular ─────────────────────
+  /* ── Avatares de la comunidad — marquee circular ─────────────────────
  * Iniciales por ahora (sin fotos reales todavía); dos filas girando en
  * direcciones opuestas, como los creadores que se ven en la referencia.
  */
-.avatar-marquee {
-  display: flex;
-  height: 56px;
-  width: 56px;
-  flex-shrink: 0;
-  align-items: center;
-  justify-content: center;
-  border-radius: 9999px;
-  background: var(--elevado-fondo);
-  border: var(--borde-ancho) solid var(--linea);
-  font-family: var(--font-display);
-  font-size: 0.85rem;
-  color: var(--accion);
-  transition: box-shadow var(--mov-normal) var(--mov-curva);
-}
-.avatar-marquee:hover {
-  box-shadow: 0 0 18px color-mix(in srgb, var(--accion) 45%, transparent);
-}
+  .avatar-marquee {
+    display: flex;
+    height: 56px;
+    width: 56px;
+    flex-shrink: 0;
+    align-items: center;
+    justify-content: center;
+    border-radius: 9999px;
+    background: var(--elevado-fondo);
+    border: var(--borde-ancho) solid var(--linea);
+    font-family: var(--font-display);
+    font-size: 0.85rem;
+    color: var(--accion);
+    transition: box-shadow var(--mov-normal) var(--mov-curva);
+  }
+  .avatar-marquee:hover {
+    box-shadow: 0 0 18px color-mix(in srgb, var(--accion) 45%, transparent);
+  }
 
-/* ── Resplandores de sección ──────────────────────────────────────────
+  /* ── Resplandores de sección ──────────────────────────────────────────
  * El mismo recurso del hero (radial-gradient de marca sobre el fondo),
  * reutilizable en cualquier sección vía --resplandor. Antes solo vivía en
  * el hero; el cliente pidió que la iluminación de marca apareciera en más
  * sitios, no solo al principio.
  */
-.fondo-resplandor {
-  position: relative;
-  overflow: hidden;
-}
-.fondo-resplandor::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  z-index: 0;
-  background: radial-gradient(
-    circle at var(--resplandor-x, 50%) var(--resplandor-y, 0%),
-    color-mix(in srgb, var(--resplandor-color, var(--accion)) 18%, transparent),
-    transparent 60%
-  );
-}
-.fondo-resplandor > .contenedor {
-  position: relative;
-  z-index: 1;
-}
+  .fondo-resplandor {
+    position: relative;
+    overflow: hidden;
+  }
+  .fondo-resplandor::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    background: radial-gradient(
+      circle at var(--resplandor-x, 50%) var(--resplandor-y, 0%),
+      color-mix(in srgb, var(--resplandor-color, var(--accion)) 18%, transparent),
+      transparent 60%
+    );
+  }
+  .fondo-resplandor > .contenedor {
+    position: relative;
+    z-index: 1;
+  }
 
-/* ── Icono flotante ────────────────────────────────────────────────────
+  /* ── Icono flotante ────────────────────────────────────────────────────
  * SVG propio, nunca emoji (regla anti-slop). Flota suave en bucle: un
  * detalle de vida cerca de titulares clave, no una animación por cada
  * icono de la página.
  */
-.icono-flotante {
-  display: inline-flex;
-  color: var(--accion);
-  animation: flotar 3.2s ease-in-out infinite;
-}
-@keyframes flotar {
-  0%,
-  100% {
-    transform: translateY(0) rotate(-4deg);
+  .icono-flotante {
+    display: inline-flex;
+    color: var(--accion);
+    animation: flotar 3.2s ease-in-out infinite;
   }
-  50% {
-    transform: translateY(-8px) rotate(4deg);
+  @keyframes flotar {
+    0%,
+    100% {
+      transform: translateY(0) rotate(-4deg);
+    }
+    50% {
+      transform: translateY(-8px) rotate(4deg);
+    }
   }
-}
 
-/* ── Contenedores ────────────────────────────────────────────────────*/
-.contenedor {
-  width: 100%;
-  max-width: var(--contenedor-max);
-  margin-inline: auto;
-  padding-inline: var(--spacing-md);
-}
-@media (min-width: 768px) {
+  /* ── Contenedores ────────────────────────────────────────────────────*/
   .contenedor {
-    padding-inline: var(--spacing-lg);
+    width: 100%;
+    max-width: var(--contenedor-max);
+    margin-inline: auto;
+    padding-inline: var(--spacing-md);
   }
-}
+  @media (min-width: 768px) {
+    .contenedor {
+      padding-inline: var(--spacing-lg);
+    }
+  }
 
-.seccion {
-  padding-block: var(--seccion-y);
-}
+  .seccion {
+    padding-block: var(--seccion-y);
+  }
 
-/* Longitud de línea legible para texto largo. Por encima de ~70 caracteres
+  /* Longitud de línea legible para texto largo. Por encima de ~70 caracteres
    el ojo pierde el renglón al volver. */
-.prosa {
-  max-width: var(--contenedor-texto-max);
-}
+  .prosa {
+    max-width: var(--contenedor-texto-max);
+  }
 
-/* ── Botones ─────────────────────────────────────────────────────────
+  /* ── Botones ─────────────────────────────────────────────────────────
  *
  * Un solo primario visible por vista. Si hay dos, uno está mal
  * clasificado. Altura mínima 44px en cualquier pantalla: es el objetivo
  * táctil por debajo del cual la gente falla el toque.
  */
-.boton {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: var(--spacing-2xs);
-  min-height: var(--boton-alto);
-  padding-inline: var(--boton-padding-x);
-  border-radius: var(--radius-md);
-  font-weight: 600;
-  line-height: 1;
-  text-align: center;
-  cursor: pointer;
-  transition:
-    background-color var(--mov-rapido) var(--mov-curva),
-    border-color var(--mov-rapido) var(--mov-curva),
-    transform var(--mov-rapido) var(--mov-curva);
-}
-.boton:active {
-  transform: translateY(1px);
-}
-.boton:disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
-  transform: none;
-}
+  .boton {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--spacing-2xs);
+    min-height: var(--boton-alto);
+    padding-inline: var(--boton-padding-x);
+    border-radius: var(--radius-md);
+    font-weight: 600;
+    line-height: 1;
+    text-align: center;
+    cursor: pointer;
+    transition:
+      background-color var(--mov-rapido) var(--mov-curva),
+      border-color var(--mov-rapido) var(--mov-curva),
+      transform var(--mov-rapido) var(--mov-curva);
+  }
+  .boton:active {
+    transform: translateY(1px);
+  }
+  .boton:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none;
+  }
 
-/* Píldora naranja sólida + glow neón — el cliente pidió quitar los
+  /* Píldora naranja sólida + glow neón — el cliente pidió quitar los
    degradados de la página: nada de relleno en dos tonos, el color es
    plano y lo que hace el trabajo visual es el resplandor exterior, como
    un cartel de neón encendido. */
-.boton-primario {
-  background: var(--accion);
-  color: var(--texto-sobre-accion);
-  border: var(--borde-ancho) solid color-mix(in srgb, var(--accion-hover) 70%, white);
-  border-radius: 9999px;
-  box-shadow:
-    0 0 16px color-mix(in srgb, var(--accion) 55%, transparent),
-    0 0 2px color-mix(in srgb, var(--accion) 80%, transparent);
-  transition:
-    box-shadow var(--mov-normal) var(--mov-curva),
-    transform var(--mov-rapido) var(--mov-curva);
-}
-.boton-primario:hover:not(:disabled) {
-  background: var(--accion-hover);
-  box-shadow:
-    0 0 32px color-mix(in srgb, var(--accion) 75%, transparent),
-    0 0 4px color-mix(in srgb, var(--accion) 90%, transparent);
-}
-.boton-primario:active:not(:disabled) {
-  transform: scale(0.96);
-}
+  .boton-primario {
+    background: var(--accion);
+    color: var(--texto-sobre-accion);
+    border: var(--borde-ancho) solid color-mix(in srgb, var(--accion-hover) 70%, white);
+    border-radius: 9999px;
+    box-shadow:
+      0 0 16px color-mix(in srgb, var(--accion) 55%, transparent),
+      0 0 2px color-mix(in srgb, var(--accion) 80%, transparent);
+    transition:
+      box-shadow var(--mov-normal) var(--mov-curva),
+      transform var(--mov-rapido) var(--mov-curva);
+  }
+  .boton-primario:hover:not(:disabled) {
+    background: var(--accion-hover);
+    box-shadow:
+      0 0 32px color-mix(in srgb, var(--accion) 75%, transparent),
+      0 0 4px color-mix(in srgb, var(--accion) 90%, transparent);
+  }
+  .boton-primario:active:not(:disabled) {
+    transform: scale(0.96);
+  }
 
-.boton-secundario {
-  background: transparent;
-  color: var(--texto-principal);
-  border: var(--borde-ancho) solid var(--linea);
-  border-radius: 9999px;
-}
-.boton-secundario:hover:not(:disabled) {
-  background: var(--tarjeta-fondo);
-}
+  .boton-secundario {
+    background: transparent;
+    color: var(--texto-principal);
+    border: var(--borde-ancho) solid var(--linea);
+    border-radius: 9999px;
+  }
+  .boton-secundario:hover:not(:disabled) {
+    background: var(--tarjeta-fondo);
+  }
 
-/* ── Tarjetas ────────────────────────────────────────────────────────
+  /* ── Tarjetas ────────────────────────────────────────────────────────
  * Prohibida la tarjeta dentro de tarjeta: un solo nivel de elevación
  * por región, o el ojo deja de saber qué es lo importante.
  */
-.tarjeta {
-  background: var(--tarjeta-fondo);
-  border: var(--borde-ancho) solid var(--linea);
-  border-radius: var(--radius-lg);
-  padding: var(--tarjeta-padding);
-}
-@media (min-width: 768px) {
   .tarjeta {
-    padding: var(--tarjeta-padding-lg);
+    background: var(--tarjeta-fondo);
+    border: var(--borde-ancho) solid var(--linea);
+    border-radius: var(--radius-lg);
+    padding: var(--tarjeta-padding);
   }
-}
+  @media (min-width: 768px) {
+    .tarjeta {
+      padding: var(--tarjeta-padding-lg);
+    }
+  }
 
-/* Solo las tarjetas que son clicables se elevan al pasar el ratón: si una
+  /* Solo las tarjetas que son clicables se elevan al pasar el ratón: si una
    tarjeta se mueve y no lleva a ningún sitio, es una promesa falsa. */
-.tarjeta-enlace {
-  transition:
-    border-color var(--mov-normal) var(--mov-curva),
-    transform var(--mov-normal) var(--mov-curva);
-}
-.tarjeta-enlace:hover {
-  border-color: var(--accion);
-  transform: translateY(-2px);
-}
+  .tarjeta-enlace {
+    transition:
+      border-color var(--mov-normal) var(--mov-curva),
+      transform var(--mov-normal) var(--mov-curva);
+  }
+  .tarjeta-enlace:hover {
+    border-color: var(--accion);
+    transform: translateY(-2px);
+  }
 
-/* ── Formulario ──────────────────────────────────────────────────────*/
-.campo {
-  width: 100%;
-  min-height: var(--campo-alto);
-  padding: var(--spacing-2xs) var(--spacing-xs);
-  background: var(--elevado-fondo);
-  border: var(--borde-ancho) solid var(--linea);
-  border-radius: var(--radius-sm);
-  color: var(--texto-principal);
-  font: inherit;
-  transition: border-color var(--mov-rapido) var(--mov-curva);
-}
-.campo:hover {
-  border-color: color-mix(in srgb, var(--linea) 60%, var(--texto-secundario));
-}
-.campo[aria-invalid='true'] {
-  border-color: var(--estado-error);
-}
+  /* ── Formulario ──────────────────────────────────────────────────────*/
+  .campo {
+    width: 100%;
+    min-height: var(--campo-alto);
+    padding: var(--spacing-2xs) var(--spacing-xs);
+    background: var(--elevado-fondo);
+    border: var(--borde-ancho) solid var(--linea);
+    border-radius: var(--radius-sm);
+    color: var(--texto-principal);
+    font: inherit;
+    transition: border-color var(--mov-rapido) var(--mov-curva);
+  }
+  .campo:hover {
+    border-color: color-mix(in srgb, var(--linea) 60%, var(--texto-secundario));
+  }
+  .campo[aria-invalid='true'] {
+    border-color: var(--estado-error);
+  }
 
-.etiqueta-campo {
-  display: block;
-  margin-bottom: var(--spacing-3xs);
-  font-size: 14px;
-  font-weight: 600;
-}
+  .etiqueta-campo {
+    display: block;
+    margin-bottom: var(--spacing-3xs);
+    font-size: 14px;
+    font-weight: 600;
+  }
 
-/* El error va DEBAJO del campo y dice cómo arreglarlo, no solo que está mal. */
-.error-campo {
-  margin-top: var(--spacing-3xs);
-  font-size: 14px;
-  color: var(--estado-error);
-}
+  /* El error va DEBAJO del campo y dice cómo arreglarlo, no solo que está mal. */
+  .error-campo {
+    margin-top: var(--spacing-3xs);
+    font-size: 14px;
+    color: var(--estado-error);
+  }
 
-/* Casilla de consentimiento de marketing — opcional a propósito: forzarla
+  /* Casilla de consentimiento de marketing — opcional a propósito: forzarla
    marcada por defecto o como requerida no es un consentimiento libre
    válido bajo la Ley 1581 de 2012 (Colombia). */
-.casilla-campo {
-  display: flex;
-  align-items: flex-start;
-  gap: var(--spacing-2xs);
-  font-size: 14px;
-  color: var(--texto-secundario);
-}
-.casilla-campo input[type='checkbox'] {
-  margin-top: 3px;
-  height: 18px;
-  width: 18px;
-  flex-shrink: 0;
-  accent-color: var(--accion);
-}
-
-/* ── Los cuatro estados ──────────────────────────────────────────────*/
-[data-estado] {
-  margin-top: var(--spacing-sm);
-  padding: var(--spacing-xs) var(--spacing-sm);
-  border-radius: var(--radius-md);
-  font-size: 15px;
-}
-[data-estado='cargando'] {
-  background: var(--tarjeta-fondo);
-  color: var(--texto-secundario);
-}
-[data-estado='exito'] {
-  background: color-mix(in srgb, var(--estado-exito) 12%, transparent);
-  color: var(--estado-exito);
-  font-weight: 600;
-}
-[data-estado='error'] {
-  background: color-mix(in srgb, var(--estado-error) 10%, transparent);
-  color: var(--estado-error);
-}
-
-/* Spinner del botón mientras envía */
-[aria-busy='true'] .indicador-carga {
-  display: inline-block;
-  width: 14px;
-  height: 14px;
-  border: 2px solid currentColor;
-  border-top-color: transparent;
-  border-radius: 50%;
-  animation: girar 700ms linear infinite;
-}
-.indicador-carga {
-  display: none;
-}
-@keyframes girar {
-  to {
-    transform: rotate(360deg);
+  .casilla-campo {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--spacing-2xs);
+    font-size: 14px;
+    color: var(--texto-secundario);
   }
-}
+  .casilla-campo input[type='checkbox'] {
+    margin-top: 3px;
+    height: 18px;
+    width: 18px;
+    flex-shrink: 0;
+    accent-color: var(--accion);
+  }
 
-/* ── Hero ────────────────────────────────────────────────────────────
+  /* ── Los cuatro estados ──────────────────────────────────────────────*/
+  [data-estado] {
+    margin-top: var(--spacing-sm);
+    padding: var(--spacing-xs) var(--spacing-sm);
+    border-radius: var(--radius-md);
+    font-size: 15px;
+  }
+  [data-estado='cargando'] {
+    background: var(--tarjeta-fondo);
+    color: var(--texto-secundario);
+  }
+  [data-estado='exito'] {
+    background: color-mix(in srgb, var(--estado-exito) 12%, transparent);
+    color: var(--estado-exito);
+    font-weight: 600;
+  }
+  [data-estado='error'] {
+    background: color-mix(in srgb, var(--estado-error) 10%, transparent);
+    color: var(--estado-error);
+  }
+
+  /* Spinner del botón mientras envía */
+  [aria-busy='true'] .indicador-carga {
+    display: inline-block;
+    width: 14px;
+    height: 14px;
+    border: 2px solid currentColor;
+    border-top-color: transparent;
+    border-radius: 50%;
+    animation: girar 700ms linear infinite;
+  }
+  .indicador-carga {
+    display: none;
+  }
+  @keyframes girar {
+    to {
+      transform: rotate(360deg);
+    }
+  }
+
+  /* ── Hero ────────────────────────────────────────────────────────────
  * En móvil NO se sirve el vídeo: se sirve el póster. Es de donde sale la
  * mayor parte de la puntuación de rendimiento en móvil, que es donde
  * está el tráfico.
  */
-.hero-media {
-  display: none;
-}
-@media (min-width: 768px) {
   .hero-media {
-    display: block;
+    display: none;
   }
-}
+  @media (min-width: 768px) {
+    .hero-media {
+      display: block;
+    }
+  }
 
-/* ── Sólo para lectores de pantalla ──────────────────────────────────*/
-.solo-lectores {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  padding: 0;
-  margin: -1px;
-  overflow: hidden;
-  clip-path: inset(50%);
-  white-space: nowrap;
-  border: 0;
-}
+  /* ── Sólo para lectores de pantalla ──────────────────────────────────*/
+  .solo-lectores {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+    border: 0;
+  }
 
-/* Saltar al contenido: primer tabulador de la página. Obligatorio para
+  /* Saltar al contenido: primer tabulador de la página. Obligatorio para
    quien navega por teclado y no quiere recorrer el menú cada vez. */
-.saltar-contenido {
-  position: absolute;
-  left: var(--spacing-sm);
-  top: -100px;
-  z-index: 100;
-  padding: var(--spacing-2xs) var(--spacing-sm);
-  background: var(--accion);
-  color: var(--texto-sobre-accion);
-  border-radius: var(--radius-sm);
-  transition: top var(--mov-rapido) var(--mov-curva);
-}
-.saltar-contenido:focus {
-  top: var(--spacing-sm);
-}
+  .saltar-contenido {
+    position: absolute;
+    left: var(--spacing-sm);
+    top: -100px;
+    z-index: 100;
+    padding: var(--spacing-2xs) var(--spacing-sm);
+    background: var(--accion);
+    color: var(--texto-sobre-accion);
+    border-radius: var(--radius-sm);
+    transition: top var(--mov-rapido) var(--mov-curva);
+  }
+  .saltar-contenido:focus {
+    top: var(--spacing-sm);
+  }
 
-/* ── Publicidad ──────────────────────────────────────────────────────
+  /* ── Publicidad ──────────────────────────────────────────────────────
  * El contenedor reserva la altura ANTES de que cargue el anuncio. Sin
  * esto el anuncio empuja el contenido al aparecer y el CLS se dispara.
  */
-.anuncio {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 100%;
-  margin-block: var(--spacing-lg);
-  overflow: hidden;
-}
-.anuncio::before {
-  content: 'Publicidad';
-  position: absolute;
-  font-size: 11px;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: var(--texto-secundario);
-  opacity: 0.5;
-}
-.anuncio > * {
-  position: relative;
-  z-index: 1;
+  .anuncio {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    margin-block: var(--spacing-lg);
+    overflow: hidden;
+  }
+  .anuncio::before {
+    content: 'Publicidad';
+    position: absolute;
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--texto-secundario);
+    opacity: 0.5;
+  }
+  .anuncio > * {
+    position: relative;
+    z-index: 1;
+  }
 }
