@@ -15,7 +15,7 @@ import './estilos/tokens.css';
 import './estilos/sitio.css';
 
 import { iniciarConsentimiento } from './lib/consentimiento';
-import { iniciarRevelado, iniciarContadores } from './lib/revelar';
+import { iniciarMotion } from './lib/motion';
 import { iniciarFormulario } from './lib/formulario';
 import { iniciarTracking, registrarConversiones } from './lib/tracking';
 
@@ -104,8 +104,7 @@ function iniciar(): void {
   iniciarConsentimiento();
 
   iniciarNavegacion();
-  iniciarRevelado();
-  iniciarContadores();
+  iniciarMotion();
   iniciarFaq();
   iniciarFormulario();
   actualizarAno();
