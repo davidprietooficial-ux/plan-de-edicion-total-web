@@ -138,28 +138,16 @@ body::after {
   overflow: hidden;
   border-radius: var(--radius-lg);
   border: var(--borde-ancho) solid color-mix(in srgb, var(--accion) 35%, var(--linea));
-  background: linear-gradient(
-    120deg,
-    var(--tarjeta-fondo) 30%,
-    var(--elevado-fondo) 50%,
-    var(--tarjeta-fondo) 70%
-  );
-  background-size: 260% 100%;
-  animation: reel-shimmer 4.5s ease-in-out infinite;
+  background: var(--tarjeta-fondo);
   box-shadow: 0 0 18px color-mix(in srgb, var(--accion) 20%, transparent);
 }
-.tarjeta-efecto__play {
-  position: absolute;
-  inset: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-.tarjeta-efecto__play svg {
-  height: 22px;
-  width: 22px;
-  color: var(--accion);
-  filter: drop-shadow(0 0 8px color-mix(in srgb, var(--accion) 60%, transparent));
+/* El póster llena la tarjeta desde el HTML (fail-open: si el video no
+   llega a reproducirse, la imagen ya cuenta el efecto). object-fit:cover
+   recorta el 9:16 original al 4:5 de la tarjeta sin deformarlo. */
+.tarjeta-efecto__video {
+  height: 100%;
+  width: 100%;
+  object-fit: cover;
 }
 .tarjeta-efecto__etiqueta {
   position: absolute;
@@ -235,23 +223,39 @@ body::after {
 }
 
 /* ── CTA flotante — móvil ───────────────────────────────────────────── */
-/* Barra flotante permanente — el cliente la quiere visible siempre, no
-   solo en móvil (antes se ocultaba desde 1024px). Cuenta regresiva a la
-   izquierda, mensaje + botón a la derecha, sublínea de refuerzo debajo. */
+/* Barra flotante permanente — el cliente pasó una referencia (bloque
+   redondeado, con margen respecto al borde de pantalla, cristal
+   esmerilado con un halo de luz alrededor) y pidió replicar ese
+   tratamiento. Es la ÚNICA excepción de glassmorphism en todo el sitio —
+   anti_slop lo prohíbe como relleno decorativo en superficies de color,
+   pero aquí es un pedido explícito y puntual sobre un solo componente
+   flotante, no un patrón repetido por la página. Cuenta regresiva a la
+   izquierda, mensaje + botón a la derecha, sublínea debajo. */
 .cta-flotante {
   position: fixed;
-  inset-inline: 0;
-  bottom: 0;
+  left: var(--spacing-sm);
+  right: var(--spacing-sm);
+  bottom: max(var(--spacing-sm), env(safe-area-inset-bottom));
   z-index: 30;
+  max-width: 640px;
+  margin-inline: auto;
   display: flex;
   flex-direction: column;
   gap: var(--spacing-3xs);
-  padding: var(--spacing-sm) var(--spacing-md);
-  padding-bottom: max(var(--spacing-sm), env(safe-area-inset-bottom));
-  background: color-mix(in srgb, var(--pagina-fondo) 94%, transparent);
-  border-top: var(--borde-ancho) solid color-mix(in srgb, var(--accion) 35%, var(--linea));
-  backdrop-filter: blur(10px);
-  box-shadow: 0 -8px 24px color-mix(in srgb, var(--accion) 12%, transparent);
+  padding: var(--spacing-xs) var(--spacing-sm);
+  border-radius: 28px;
+  background: color-mix(in srgb, var(--pagina-fondo) 55%, transparent);
+  border: var(--borde-ancho) solid color-mix(in srgb, var(--accion) 40%, var(--linea));
+  backdrop-filter: blur(18px) saturate(150%);
+  -webkit-backdrop-filter: blur(18px) saturate(150%);
+  box-shadow:
+    0 0 28px color-mix(in srgb, var(--accion) 22%, transparent),
+    0 8px 24px rgb(0 0 0 / 0.45);
+}
+.cta-flotante .boton-primario {
+  min-height: 36px;
+  padding-inline: var(--spacing-sm);
+  font-size: 14px;
 }
 .cta-flotante__fila {
   display: flex;
@@ -490,76 +494,6 @@ body {
   box-shadow: 0 0 18px color-mix(in srgb, var(--accion) 45%, transparent);
 }
 
-/* ── Galería de reels — tarjetas verticales con "reproducción" simulada
- * Hasta que el cliente entregue el video real, el shimmer en diagonal
- * ocupa el lugar del frame en movimiento: comunica "esto es video", no
- * "esto está roto". El badge de play y el borde con glow son el mismo
- * tratamiento que .play-pulso, a escala de tarjeta.
- */
-.tarjeta-reel {
-  position: relative;
-  flex-shrink: 0;
-  width: 168px;
-  aspect-ratio: 9 / 16;
-  overflow: hidden;
-  border-radius: var(--radius-lg);
-  border: var(--borde-ancho) solid var(--linea);
-  background: linear-gradient(
-    120deg,
-    var(--tarjeta-fondo) 30%,
-    var(--elevado-fondo) 50%,
-    var(--tarjeta-fondo) 70%
-  );
-  background-size: 260% 100%;
-  animation: reel-shimmer 4.5s ease-in-out infinite;
-  transition:
-    box-shadow var(--mov-normal) var(--mov-curva),
-    transform var(--mov-normal) var(--mov-curva);
-}
-.tarjeta-reel:hover {
-  box-shadow: 0 0 24px color-mix(in srgb, var(--accion) 35%, transparent);
-  transform: translateY(-4px);
-}
-@keyframes reel-shimmer {
-  0% {
-    background-position: 0% 0%;
-  }
-  50% {
-    background-position: 100% 0%;
-  }
-  100% {
-    background-position: 0% 0%;
-  }
-}
-.tarjeta-reel__play {
-  position: absolute;
-  inset: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-.tarjeta-reel__play svg {
-  height: 20px;
-  width: 20px;
-  color: var(--accion);
-  filter: drop-shadow(0 0 8px color-mix(in srgb, var(--accion) 60%, transparent));
-}
-.tarjeta-reel__etiqueta {
-  position: absolute;
-  inset-inline: 0;
-  bottom: 0;
-  padding: var(--spacing-2xs);
-  font-size: 11px;
-  font-weight: 600;
-  text-align: center;
-  color: var(--texto-secundario);
-  background: linear-gradient(
-    to top,
-    color-mix(in srgb, var(--tarjeta-fondo) 90%, transparent),
-    transparent
-  );
-}
-
 /* ── Resplandores de sección ──────────────────────────────────────────
  * El mismo recurso del hero (radial-gradient de marca sobre el fondo),
  * reutilizable en cualquier sección vía --resplandor. Antes solo vivía en
@@ -627,23 +561,6 @@ body {
    el ojo pierde el renglón al volver. */
 .prosa {
   max-width: var(--contenedor-texto-max);
-}
-
-/* ── Navegación ──────────────────────────────────────────────────────*/
-.navbar {
-  position: sticky;
-  top: 0;
-  z-index: 40;
-  background: transparent;
-  transition:
-    background-color var(--mov-normal) var(--mov-curva),
-    border-color var(--mov-normal) var(--mov-curva);
-  border-bottom: 1px solid transparent;
-}
-.navbar.compacta {
-  background: color-mix(in srgb, var(--pagina-fondo) 88%, transparent);
-  border-bottom-color: var(--linea);
-  backdrop-filter: blur(8px);
 }
 
 /* ── Botones ─────────────────────────────────────────────────────────
@@ -831,40 +748,6 @@ body {
   to {
     transform: rotate(360deg);
   }
-}
-
-/* ── Preguntas frecuentes ────────────────────────────────────────────*/
-[data-faq] details {
-  border-bottom: var(--borde-ancho) solid var(--linea);
-}
-[data-faq] summary {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: var(--spacing-sm);
-  padding-block: var(--spacing-sm);
-  min-height: var(--boton-alto);
-  font-weight: 600;
-  cursor: pointer;
-  list-style: none;
-}
-[data-faq] summary::-webkit-details-marker {
-  display: none;
-}
-[data-faq] summary::after {
-  content: '+';
-  flex-shrink: 0;
-  font-size: 22px;
-  font-weight: 400;
-  color: var(--texto-secundario);
-  transition: transform var(--mov-normal) var(--mov-curva);
-}
-[data-faq] details[open] summary::after {
-  transform: rotate(45deg);
-}
-[data-faq] details > div {
-  padding-bottom: var(--spacing-sm);
-  color: var(--texto-secundario);
 }
 
 /* ── Hero ────────────────────────────────────────────────────────────

@@ -2,12 +2,12 @@
 <!--
   BORRADOR T2 — landing CORTA de registro para la clase gratuita en vivo de
   "Plan de Edición Total" (Juan Camilo Pérez Moreno), viernes, cupo
-  limitado. Segunda vuelta de corrección con feedback directo del cliente
-  (2026-08-05): tema oscuro neón (antes claro), estructura reducida a lo
-  esencial — hero, video bajo demanda, herramientas, carrusel de efectos,
-  formulario, pie — quitando currícula/precio/testimonios/FAQ/bonos de la
-  vuelta anterior porque el objetivo ahora es una landing corta de una sola
-  meta: inscribirse a la clase.
+  limitado. Tercera vuelta de corrección con feedback directo del cliente
+  (2026-08-05): sin header/navbar, barra flotante tipo vidrio esmerilado
+  (única excepción de glassmorphism del sitio, pedida con referencia
+  propia), favicon sin verde, formulario más angosto, y el carrusel de
+  efectos ya usa los 5 videos reales de VIDEOS EFECTOS PAG PET
+  (comprimidos en public/efectos/) en vez de placeholders.
 
   Pendiente real del cliente (no inventar, no adivinar):
     - Enlace del grupo de WhatsApp VIP (el flujo actual usa un enlace de
@@ -15,9 +15,10 @@
       clic). Placeholder: https://[ENLACE_GRUPO_WHATSAPP_PENDIENTE]
     - Hora exacta de la clase del viernes (se puso 19:00 COP como
       provisional en data-cuenta-hasta — solo confirmó "el día viernes").
-    - Video de fondo del hero (en bucle, b-roll de edición) y los GIFs +
-      nombres reales de los efectos del carrusel — el cliente dijo que los
-      manda luego.
+    - Video de fondo del hero (en bucle, b-roll de edición) — el cliente
+      dijo que lo manda luego. Pidió explícitamente que no aparezca
+      ninguna mujer en ese clip.
+    - Más videos de efectos por venir, para sumar al carrusel.
     - Textos legales de las 4 páginas del pie: son borrador, no revisión
       legal.
 
@@ -79,13 +80,6 @@
 
   <body>
     <a class="saltar-contenido" href="#contenido">Saltar al contenido</a>
-
-    <!-- ══ Navegación mínima ═════════════════════════════════════════ -->
-    <header class="navbar" data-navbar>
-      <div class="contenedor flex h-[var(--navbar-alto)] items-center justify-center">
-        <p class="font-display text-lg tracking-tight uppercase">Plan de Edición Total</p>
-      </div>
-    </header>
 
     <!-- ══ Barra flotante permanente ═══════════════════════════════════
          Visible en los tres cortes (antes se ocultaba en escritorio). A
@@ -251,11 +245,12 @@
       </section>
 
       <!-- ══ 4. Carrusel de efectos ═══════════════════════════════════
-           Reemplaza "¿Qué encontrarás?" — el cliente pidió gifs en bucle
-           con el nombre del efecto, en carrusel. Nombres y gifs reales
-           pendientes de entrega; por ahora shimmer + nombre placeholder
-           con el mismo tratamiento visual que ya se usaba en la galería
-           de reels.
+           Reemplaza "¿Qué encontrarás?" — videos reales del cliente
+           (carpeta VIDEOS EFECTOS PAG PET), comprimidos a ~480px de ancho
+           y sin audio (eran clips de 7-107MB a bitrate de cámara; aquí
+           pesan entre 140KB y 480KB). data-video-efecto los reproduce
+           solo cuando están en pantalla — ver iniciarVideosEfecto en
+           main.ts. Faltan más efectos por venir, se agregan igual.
       -->
       <section class="fondo-resplandor seccion bg-[var(--tarjeta-fondo)]" style="--resplandor-y: 0%">
         <div data-motion="reveal">
@@ -265,58 +260,137 @@
           <div class="marquee-pista mt-[var(--spacing-lg)]">
             <div class="marquee-fila">
               <div class="tarjeta-efecto">
-                <span class="tarjeta-efecto__play" aria-hidden="true"
-                  ><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z" /></svg
-                ></span>
-                <span class="tarjeta-efecto__etiqueta">Efecto: Zoom Punch</span>
+                <video
+                  class="tarjeta-efecto__video"
+                  data-video-efecto
+                  src="/efectos/aparicion.mp4"
+                  poster="/efectos/aparicion.jpg"
+                  muted
+                  loop
+                  playsinline
+                  preload="none"
+                ></video>
+                <span class="tarjeta-efecto__etiqueta">Efecto: Aparición</span>
               </div>
               <div class="tarjeta-efecto">
-                <span class="tarjeta-efecto__play" aria-hidden="true"
-                  ><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z" /></svg
-                ></span>
-                <span class="tarjeta-efecto__etiqueta">Efecto: Speed Ramp</span>
+                <video
+                  class="tarjeta-efecto__video"
+                  data-video-efecto
+                  src="/efectos/animar-objetos.mp4"
+                  poster="/efectos/animar-objetos.jpg"
+                  muted
+                  loop
+                  playsinline
+                  preload="none"
+                ></video>
+                <span class="tarjeta-efecto__etiqueta">Efecto: Animar objetos</span>
               </div>
               <div class="tarjeta-efecto">
-                <span class="tarjeta-efecto__play" aria-hidden="true"
-                  ><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z" /></svg
-                ></span>
-                <span class="tarjeta-efecto__etiqueta">Efecto: Glitch Transition</span>
+                <video
+                  class="tarjeta-efecto__video"
+                  data-video-efecto
+                  src="/efectos/barras-negras.mp4"
+                  poster="/efectos/barras-negras.jpg"
+                  muted
+                  loop
+                  playsinline
+                  preload="none"
+                ></video>
+                <span class="tarjeta-efecto__etiqueta">Efecto: Barras negras</span>
               </div>
               <div class="tarjeta-efecto">
-                <span class="tarjeta-efecto__play" aria-hidden="true"
-                  ><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z" /></svg
-                ></span>
-                <span class="tarjeta-efecto__etiqueta">Efecto: Color Pop</span>
+                <video
+                  class="tarjeta-efecto__video"
+                  data-video-efecto
+                  src="/efectos/desaparicion.mp4"
+                  poster="/efectos/desaparicion.jpg"
+                  muted
+                  loop
+                  playsinline
+                  preload="none"
+                ></video>
+                <span class="tarjeta-efecto__etiqueta">Efecto: Desaparición</span>
+              </div>
+              <div class="tarjeta-efecto">
+                <video
+                  class="tarjeta-efecto__video"
+                  data-video-efecto
+                  src="/efectos/congelar-el-tiempo.mp4"
+                  poster="/efectos/congelar-el-tiempo.jpg"
+                  muted
+                  loop
+                  playsinline
+                  preload="none"
+                ></video>
+                <span class="tarjeta-efecto__etiqueta">Efecto: Congelar el tiempo</span>
               </div>
               <div class="tarjeta-efecto" aria-hidden="true">
-                <span class="tarjeta-efecto__play"
-                  ><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z" /></svg
-                ></span>
-                <span class="tarjeta-efecto__etiqueta">Efecto: Zoom Punch</span>
+                <video
+                  class="tarjeta-efecto__video"
+                  data-video-efecto
+                  src="/efectos/aparicion.mp4"
+                  poster="/efectos/aparicion.jpg"
+                  muted
+                  loop
+                  playsinline
+                  preload="none"
+                ></video>
+                <span class="tarjeta-efecto__etiqueta">Efecto: Aparición</span>
               </div>
               <div class="tarjeta-efecto" aria-hidden="true">
-                <span class="tarjeta-efecto__play"
-                  ><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z" /></svg
-                ></span>
-                <span class="tarjeta-efecto__etiqueta">Efecto: Speed Ramp</span>
+                <video
+                  class="tarjeta-efecto__video"
+                  data-video-efecto
+                  src="/efectos/animar-objetos.mp4"
+                  poster="/efectos/animar-objetos.jpg"
+                  muted
+                  loop
+                  playsinline
+                  preload="none"
+                ></video>
+                <span class="tarjeta-efecto__etiqueta">Efecto: Animar objetos</span>
               </div>
               <div class="tarjeta-efecto" aria-hidden="true">
-                <span class="tarjeta-efecto__play"
-                  ><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z" /></svg
-                ></span>
-                <span class="tarjeta-efecto__etiqueta">Efecto: Glitch Transition</span>
+                <video
+                  class="tarjeta-efecto__video"
+                  data-video-efecto
+                  src="/efectos/barras-negras.mp4"
+                  poster="/efectos/barras-negras.jpg"
+                  muted
+                  loop
+                  playsinline
+                  preload="none"
+                ></video>
+                <span class="tarjeta-efecto__etiqueta">Efecto: Barras negras</span>
               </div>
               <div class="tarjeta-efecto" aria-hidden="true">
-                <span class="tarjeta-efecto__play"
-                  ><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z" /></svg
-                ></span>
-                <span class="tarjeta-efecto__etiqueta">Efecto: Color Pop</span>
+                <video
+                  class="tarjeta-efecto__video"
+                  data-video-efecto
+                  src="/efectos/desaparicion.mp4"
+                  poster="/efectos/desaparicion.jpg"
+                  muted
+                  loop
+                  playsinline
+                  preload="none"
+                ></video>
+                <span class="tarjeta-efecto__etiqueta">Efecto: Desaparición</span>
+              </div>
+              <div class="tarjeta-efecto" aria-hidden="true">
+                <video
+                  class="tarjeta-efecto__video"
+                  data-video-efecto
+                  src="/efectos/congelar-el-tiempo.mp4"
+                  poster="/efectos/congelar-el-tiempo.jpg"
+                  muted
+                  loop
+                  playsinline
+                  preload="none"
+                ></video>
+                <span class="tarjeta-efecto__etiqueta">Efecto: Congelar el tiempo</span>
               </div>
             </div>
           </div>
-          <p class="contenedor mt-[var(--spacing-sm)] text-center text-xs text-[var(--texto-secundario)]">
-            Gifs y nombres de ejemplo — se reemplazan por los efectos reales cuando el cliente los entregue.
-          </p>
 
           <p class="contenedor font-display mt-[var(--spacing-lg)] text-center text-xl text-[var(--accion)] uppercase">
             "La clase es 100% gratis — no se te cobra nada por entrar"
@@ -333,7 +407,7 @@
            un solo clic al grupo de WhatsApp.
       -->
       <section id="registro" class="seccion bg-[var(--tarjeta-fondo)]">
-        <div class="contenedor max-w-[32rem]" data-motion="reveal">
+        <div class="contenedor max-w-[24rem]" data-motion="reveal">
           <h2 class="font-display text-center text-[1.75rem] uppercase md:text-[2.25rem]">Reserva tu cupo gratis</h2>
           <p class="prosa mt-[var(--spacing-2xs)] text-center text-[var(--texto-secundario)]">
             Cupos limitados a <span data-cupos>100</span> personas por clase.

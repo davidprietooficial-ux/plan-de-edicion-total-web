@@ -4,7 +4,7 @@
  * El orden importa y no es arbitrario:
  *   1. Estilos, para que no haya destello sin estilar.
  *   2. Consentimiento, porque todo lo demás depende de él.
- *   3. Interfaz (navegación, revelado, formulario): funciona sin permisos.
+ *   3. Interfaz (revelado, formulario, video): funciona sin permisos.
  *   4. Tracking, que queda en cola hasta que haya consentimiento.
  *
  * Todo el JS de este archivo es de mejora progresiva: si falla, la página
@@ -19,71 +19,34 @@ import { iniciarMotion } from './lib/motion';
 import { iniciarFormulario } from './lib/formulario';
 import { iniciarTracking, registrarConversiones } from './lib/tracking';
 
-// ── Navegación ────────────────────────────────────────────────────────
+// ── Videos del carrusel de efectos ──────────────────────────────────────
+// Reproduce/pausa cada <video> del carrusel solo cuando está en pantalla:
+// son 10 elementos de video (5 efectos × 2, por el loop infinito del
+// marquee) y dejarlos todos reproduciendo a la vez de fondo es peso y
+// batería regalados. Con prefers-reduced-motion no se reproduce nada — se
+// queda en el poster, que ya cuenta la idea.
+function iniciarVideosEfecto(): void {
+  const videos = document.querySelectorAll<HTMLVideoElement>('[data-video-efecto]');
+  if (videos.length === 0) return;
 
-function iniciarNavegacion(): void {
-  const barra = document.querySelector<HTMLElement>('[data-navbar]');
-  const boton = document.querySelector<HTMLButtonElement>('[data-menu-boton]');
-  const menu = document.querySelector<HTMLElement>('[data-menu]');
+  const sinMovimiento = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (sinMovimiento || !('IntersectionObserver' in window)) return;
 
-  // Fondo sólido al bajar. Se usa un IntersectionObserver sobre un centinela
-  // en vez de escuchar scroll: no dispara en cada píxel.
-  if (barra) {
-    const centinela = document.createElement('div');
-    centinela.setAttribute('aria-hidden', 'true');
-    centinela.style.cssText = 'position:absolute;top:0;height:1px;width:1px';
-    document.body.prepend(centinela);
-    new IntersectionObserver(
-      ([entrada]) => barra.classList.toggle('compacta', !entrada?.isIntersecting),
-      { threshold: 0 },
-    ).observe(centinela);
-  }
-
-  if (!boton || !menu) return;
-
-  const alternar = (abierto: boolean): void => {
-    boton.setAttribute('aria-expanded', String(abierto));
-    menu.hidden = !abierto;
-    // Bloquea el scroll del fondo solo en móvil, donde el menú es pantalla
-    // completa. En escritorio el menú siempre está visible.
-    document.body.style.overflow = abierto ? 'hidden' : '';
-  };
-
-  boton.addEventListener('click', () =>
-    alternar(boton.getAttribute('aria-expanded') !== 'true'),
+  const observador = new IntersectionObserver(
+    (entradas) => {
+      for (const entrada of entradas) {
+        const video = entrada.target as HTMLVideoElement;
+        if (entrada.isIntersecting) {
+          video.play().catch(() => {}); // el navegador puede negar el autoplay; no es un error a mostrar
+        } else {
+          video.pause();
+        }
+      }
+    },
+    { threshold: 0.35 },
   );
 
-  menu.addEventListener('click', (e) => {
-    if ((e.target as HTMLElement).closest('a')) alternar(false);
-  });
-
-  document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape' && boton.getAttribute('aria-expanded') === 'true') {
-      alternar(false);
-      boton.focus();
-    }
-  });
-
-  // Si se pasa a escritorio con el menú abierto, se restaura el scroll.
-  window.matchMedia('(min-width: 768px)').addEventListener('change', (e) => {
-    if (e.matches) alternar(false);
-  });
-}
-
-// ── Preguntas frecuentes ──────────────────────────────────────────────
-
-function iniciarFaq(): void {
-  // Se usa <details>, que ya es accesible y funciona sin JS. Esto solo
-  // añade el cierre de las demás al abrir una.
-  const grupo = document.querySelectorAll<HTMLDetailsElement>('[data-faq] details');
-  grupo.forEach((d) => {
-    d.addEventListener('toggle', () => {
-      if (!d.open) return;
-      grupo.forEach((otra) => {
-        if (otra !== d) otra.open = false;
-      });
-    });
-  });
+  videos.forEach((v) => observador.observe(v));
 }
 
 // ── Toggle "Instrucciones / más información" ────────────────────────────
@@ -160,11 +123,10 @@ function iniciar(): void {
 
   iniciarConsentimiento();
 
-  iniciarNavegacion();
   iniciarMotion();
-  iniciarFaq();
   iniciarToggleVideo();
   iniciarCuposSimulados();
+  iniciarVideosEfecto();
   iniciarFormulario();
   actualizarAno();
 
