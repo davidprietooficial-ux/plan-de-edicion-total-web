@@ -192,6 +192,59 @@ body {
   border-radius: 9999px;
 }
 
+/* ── Hero a pantalla completa ──────────────────────────────────────────
+ * Mismo patrón que la referencia: el video ocupa todo el fondo de la
+ * sección, el contenido va encima. Hasta que el cliente entregue el
+ * video real, .hero-fondo es un resplandor radial en el color de marca
+ * sobre el fondo oscuro — no una caja con borde suelta como antes.
+ */
+.hero-video-seccion {
+  position: relative;
+  overflow: hidden;
+}
+.hero-fondo {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background:
+    radial-gradient(circle at 50% 15%, color-mix(in srgb, var(--accion) 26%, transparent), transparent 55%),
+    var(--pagina-fondo);
+}
+.hero-fondo video {
+  position: absolute;
+  inset: 0;
+  height: 100%;
+  width: 100%;
+  object-fit: cover;
+}
+.hero-video-seccion > .contenedor {
+  position: relative;
+  z-index: 1;
+}
+
+/* Insignia de software con glow al pasar el ratón — mismo tratamiento
+   que la fila "Compatible con" de la referencia, sin usar sus logotipos
+   reales (no son nuestros para redistribuir). */
+.insignia-software {
+  display: flex;
+  height: 64px;
+  width: 64px;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-lg);
+  border: var(--borde-ancho) solid var(--linea);
+  background: var(--elevado-fondo);
+  font-family: var(--font-display);
+  font-size: 0.7rem;
+  text-align: center;
+  color: var(--texto-secundario);
+  transition: box-shadow var(--mov-normal) var(--mov-curva), border-color var(--mov-normal) var(--mov-curva);
+}
+.insignia-software:hover {
+  border-color: var(--accion);
+  box-shadow: 0 0 20px color-mix(in srgb, var(--accion) 40%, transparent);
+}
+
 /* ── Contenedores ────────────────────────────────────────────────────*/
 .contenedor {
   width: 100%;
@@ -264,19 +317,33 @@ body {
   transform: none;
 }
 
+/* Píldora + degradado naranja + glow: es el mismo tratamiento de botón
+   que la referencia (radio 28-34px, borde blanco translúcido, sombra que
+   se enciende al pasar el ratón, "shrink" al pulsar) — con el degradado
+   en naranja de marca en vez del azul-morado del original, que cae en el
+   rango de matiz que prohíbe anti_slop.rango_hue_prohibido. */
 .boton-primario {
-  background: var(--accion);
+  background: linear-gradient(180deg, var(--accion-hover) 0%, var(--accion) 100%);
   color: var(--texto-sobre-accion);
-  border: var(--borde-ancho) solid transparent;
+  border: var(--borde-ancho) solid color-mix(in srgb, white 45%, transparent);
+  border-radius: 9999px;
+  box-shadow: 0 0 0 color-mix(in srgb, var(--accion) 0%, transparent);
+  transition:
+    box-shadow var(--mov-normal) var(--mov-curva),
+    transform var(--mov-rapido) var(--mov-curva);
 }
 .boton-primario:hover:not(:disabled) {
-  background: var(--accion-hover);
+  box-shadow: 0 0 28px color-mix(in srgb, var(--accion) 55%, transparent);
+}
+.boton-primario:active:not(:disabled) {
+  transform: scale(0.96);
 }
 
 .boton-secundario {
   background: transparent;
   color: var(--texto-principal);
   border: var(--borde-ancho) solid var(--linea);
+  border-radius: 9999px;
 }
 .boton-secundario:hover:not(:disabled) {
   background: var(--tarjeta-fondo);
