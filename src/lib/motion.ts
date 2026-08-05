@@ -1,9 +1,14 @@
 /**
- * Motion de nivel T2: reveal, contador y marquee — Web Animations API +
+ * Motion de nivel T2: reveal y contador — Web Animations API +
  * IntersectionObserver, sin librería. `split`, `parallax` y `pin` no se
  * implementan aquí: necesitan GSAP/ScrollTrigger (T3) para verse bien;
  * forzarlos a pelo se ve peor que no animarlos, así que en T2 degradan a
  * reveal.
+ *
+ * El marquee NO vive aquí: es CSS puro (.marquee-pista/.marquee-fila en
+ * sitio.css) — un loop infinito de verdad, en vez del rebote que daba
+ * calcular el ancho en JS y animar con .animate(). `prefers-reduced-motion`
+ * ya lo apaga la regla global de tokens.css.
  *
  * Se anima con `.animate()`, no con una clase CSS: el elemento nunca
  * depende de una regla externa que lo esconda de entrada. Si el JS falla o
@@ -36,7 +41,11 @@ function iniciarReveal(): void {
   );
   if (objetivo.length === 0) return;
 
-  if (sinMovimiento() || !('IntersectionObserver' in window) || !('animate' in Element.prototype)) {
+  if (
+    sinMovimiento() ||
+    !('IntersectionObserver' in window) ||
+    !('animate' in Element.prototype)
+  ) {
     return; // sin animar: el contenido ya está visible en el HTML de base
   }
 
@@ -55,7 +64,9 @@ function iniciarReveal(): void {
 }
 
 function iniciarCounter(): void {
-  const contadores = document.querySelectorAll<HTMLElement>('[data-motion="counter"] [data-to]');
+  const contadores = document.querySelectorAll<HTMLElement>(
+    '[data-motion="counter"] [data-to]',
+  );
   if (contadores.length === 0) return;
 
   const pintar = (el: HTMLElement, v: number): void => {
@@ -93,22 +104,7 @@ function iniciarCounter(): void {
   contadores.forEach((el) => observador.observe(el));
 }
 
-function iniciarMarquee(): void {
-  const franjas = document.querySelectorAll<HTMLElement>('[data-motion="marquee"] .marquee-fila');
-  if (franjas.length === 0 || sinMovimiento() || !('animate' in Element.prototype)) return;
-
-  franjas.forEach((fila) => {
-    const ancho = fila.scrollWidth - fila.clientWidth;
-    if (ancho <= 0) return; // ya cabe entero, no hay nada que desplazar
-    fila.animate(
-      [{ transform: 'translateX(0)' }, { transform: `translateX(-${ancho}px)` }],
-      { duration: Math.max(4000, ancho * 20), iterations: Infinity, direction: 'alternate', easing: 'linear' },
-    );
-  });
-}
-
 export function iniciarMotion(): void {
   iniciarReveal();
   iniciarCounter();
-  iniciarMarquee();
 }

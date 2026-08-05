@@ -63,6 +63,50 @@
   animation: pulso 1.6s ease-out infinite;
 }
 
+/* ── Marquee — CSS puro, sin JS ─────────────────────────────────────────
+ * Antes usaba la Web Animations API con un cálculo de ancho en JS que
+ * REBOTABA (direction:'alternate'): iba y volvía, no daba la sensación de
+ * cinta continua. El patrón real (rieles de logos, avatares girando) es
+ * un loop infinito en una sola dirección, y eso se hace mejor con CSS
+ * puro: el contenido se duplica una vez en el HTML y la animación
+ * desplaza la pista exactamente -50% — como el segundo tramo es idéntico
+ * al primero, el punto de reinicio es invisible. Cero JS, cero cálculo de
+ * layout, y `prefers-reduced-motion` ya lo apaga por la regla global de
+ * tokens.css sin necesitar guard aquí.
+ */
+.marquee-pista {
+  overflow: hidden;
+  mask-image: linear-gradient(to right, transparent, black 8%, black 92%, transparent);
+  -webkit-mask-image: linear-gradient(to right, transparent, black 8%, black 92%, transparent);
+}
+.marquee-fila {
+  display: flex;
+  width: max-content;
+  flex-shrink: 0;
+  align-items: center;
+  gap: var(--spacing-sm);
+  animation: desplazar-izq 32s linear infinite;
+}
+.marquee-pista--rapida .marquee-fila {
+  animation-duration: 22s;
+}
+.marquee-pista--derecha .marquee-fila {
+  animation-name: desplazar-der;
+}
+@keyframes desplazar-izq {
+  to {
+    transform: translateX(-50%);
+  }
+}
+@keyframes desplazar-der {
+  from {
+    transform: translateX(-50%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
 /* ── Marquee de herramientas ────────────────────────────────────────── */
 .etiqueta-herramienta {
   flex-shrink: 0;
@@ -166,13 +210,6 @@ body {
   color: var(--accion);
 }
 
-/* Fundido en los bordes de cualquier franja horizontal continua (marquee):
-   sin este detalle el corte de la fila se ve cortado a tijera. */
-[data-motion='marquee'] {
-  mask-image: linear-gradient(to right, transparent, black 8%, black 92%, transparent);
-  -webkit-mask-image: linear-gradient(to right, transparent, black 8%, black 92%, transparent);
-}
-
 /* Precio de ancla tachado junto al precio real. */
 .precio-tachado {
   font-weight: 400;
@@ -207,7 +244,11 @@ body {
   inset: 0;
   z-index: 0;
   background:
-    radial-gradient(circle at 50% 15%, color-mix(in srgb, var(--accion) 26%, transparent), transparent 55%),
+    radial-gradient(
+      circle at 50% 15%,
+      color-mix(in srgb, var(--accion) 26%, transparent),
+      transparent 55%
+    ),
     var(--pagina-fondo);
 }
 .hero-fondo video {
@@ -238,11 +279,190 @@ body {
   font-size: 0.7rem;
   text-align: center;
   color: var(--texto-secundario);
-  transition: box-shadow var(--mov-normal) var(--mov-curva), border-color var(--mov-normal) var(--mov-curva);
+  transition:
+    box-shadow var(--mov-normal) var(--mov-curva),
+    border-color var(--mov-normal) var(--mov-curva);
 }
 .insignia-software:hover {
   border-color: var(--accion);
   box-shadow: 0 0 20px color-mix(in srgb, var(--accion) 40%, transparent);
+}
+/* Glow ambiental sin esperar al hover — cada insignia enciende y apaga en
+   su propio turno (retraso escalonado por nth-child) para que la fila se
+   sienta viva en vez de una fila de iconos estáticos. */
+.insignia-software {
+  animation: glow-ambiental 3.6s ease-in-out infinite;
+}
+.insignia-software:nth-child(2) {
+  animation-delay: 0.5s;
+}
+.insignia-software:nth-child(3) {
+  animation-delay: 1s;
+}
+.insignia-software:nth-child(4) {
+  animation-delay: 1.5s;
+}
+.insignia-software:nth-child(5) {
+  animation-delay: 2s;
+}
+.insignia-software:nth-child(6) {
+  animation-delay: 2.5s;
+}
+.insignia-software:nth-child(7) {
+  animation-delay: 3s;
+}
+.insignia-software:nth-child(8) {
+  animation-delay: 0.25s;
+}
+@keyframes glow-ambiental {
+  0%,
+  100% {
+    border-color: var(--linea);
+    box-shadow: 0 0 0 color-mix(in srgb, var(--accion) 0%, transparent);
+  }
+  50% {
+    border-color: color-mix(in srgb, var(--accion) 60%, var(--linea));
+    box-shadow: 0 0 16px color-mix(in srgb, var(--accion) 30%, transparent);
+  }
+}
+
+/* ── Avatares de la comunidad — marquee circular ─────────────────────
+ * Iniciales por ahora (sin fotos reales todavía); dos filas girando en
+ * direcciones opuestas, como los creadores que se ven en la referencia.
+ */
+.avatar-marquee {
+  display: flex;
+  height: 56px;
+  width: 56px;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  border-radius: 9999px;
+  background: var(--elevado-fondo);
+  border: var(--borde-ancho) solid var(--linea);
+  font-family: var(--font-display);
+  font-size: 0.85rem;
+  color: var(--accion);
+  transition: box-shadow var(--mov-normal) var(--mov-curva);
+}
+.avatar-marquee:hover {
+  box-shadow: 0 0 18px color-mix(in srgb, var(--accion) 45%, transparent);
+}
+
+/* ── Galería de reels — tarjetas verticales con "reproducción" simulada
+ * Hasta que el cliente entregue el video real, el shimmer en diagonal
+ * ocupa el lugar del frame en movimiento: comunica "esto es video", no
+ * "esto está roto". El badge de play y el borde con glow son el mismo
+ * tratamiento que .play-pulso, a escala de tarjeta.
+ */
+.tarjeta-reel {
+  position: relative;
+  flex-shrink: 0;
+  width: 168px;
+  aspect-ratio: 9 / 16;
+  overflow: hidden;
+  border-radius: var(--radius-lg);
+  border: var(--borde-ancho) solid var(--linea);
+  background: linear-gradient(
+    120deg,
+    var(--tarjeta-fondo) 30%,
+    var(--elevado-fondo) 50%,
+    var(--tarjeta-fondo) 70%
+  );
+  background-size: 260% 100%;
+  animation: reel-shimmer 4.5s ease-in-out infinite;
+  transition:
+    box-shadow var(--mov-normal) var(--mov-curva),
+    transform var(--mov-normal) var(--mov-curva);
+}
+.tarjeta-reel:hover {
+  box-shadow: 0 0 24px color-mix(in srgb, var(--accion) 35%, transparent);
+  transform: translateY(-4px);
+}
+@keyframes reel-shimmer {
+  0% {
+    background-position: 0% 0%;
+  }
+  50% {
+    background-position: 100% 0%;
+  }
+  100% {
+    background-position: 0% 0%;
+  }
+}
+.tarjeta-reel__play {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.tarjeta-reel__play svg {
+  height: 20px;
+  width: 20px;
+  color: var(--accion);
+  filter: drop-shadow(0 0 8px color-mix(in srgb, var(--accion) 60%, transparent));
+}
+.tarjeta-reel__etiqueta {
+  position: absolute;
+  inset-inline: 0;
+  bottom: 0;
+  padding: var(--spacing-2xs);
+  font-size: 11px;
+  font-weight: 600;
+  text-align: center;
+  color: var(--texto-secundario);
+  background: linear-gradient(
+    to top,
+    color-mix(in srgb, var(--tarjeta-fondo) 90%, transparent),
+    transparent
+  );
+}
+
+/* ── Resplandores de sección ──────────────────────────────────────────
+ * El mismo recurso del hero (radial-gradient de marca sobre el fondo),
+ * reutilizable en cualquier sección vía --resplandor. Antes solo vivía en
+ * el hero; el cliente pidió que la iluminación de marca apareciera en más
+ * sitios, no solo al principio.
+ */
+.fondo-resplandor {
+  position: relative;
+  overflow: hidden;
+}
+.fondo-resplandor::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background: radial-gradient(
+    circle at var(--resplandor-x, 50%) var(--resplandor-y, 0%),
+    color-mix(in srgb, var(--resplandor-color, var(--accion)) 18%, transparent),
+    transparent 60%
+  );
+}
+.fondo-resplandor > .contenedor {
+  position: relative;
+  z-index: 1;
+}
+
+/* ── Icono flotante ────────────────────────────────────────────────────
+ * SVG propio, nunca emoji (regla anti-slop). Flota suave en bucle: un
+ * detalle de vida cerca de titulares clave, no una animación por cada
+ * icono de la página.
+ */
+.icono-flotante {
+  display: inline-flex;
+  color: var(--accion);
+  animation: flotar 3.2s ease-in-out infinite;
+}
+@keyframes flotar {
+  0%,
+  100% {
+    transform: translateY(0) rotate(-4deg);
+  }
+  50% {
+    transform: translateY(-8px) rotate(4deg);
+  }
 }
 
 /* ── Contenedores ────────────────────────────────────────────────────*/
