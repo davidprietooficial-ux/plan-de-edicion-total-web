@@ -115,7 +115,7 @@
       </div>
       <div class="cta-flotante__columna cta-flotante__columna--cta">
         <a href="#registro" class="boton boton-primario">Acceder ahora</a>
-        <p class="cta-flotante__etiqueta">Accede a nuestro grupo de WhatsApp VIP</p>
+        <p class="cta-flotante__etiqueta">Accede a nuestro WhatsApp VIP</p>
       </div>
     </div>
 
@@ -215,6 +215,27 @@
            entre ellos. "Más información" ya no es un botón que oculta o
            muestra nada: es un ancla normal que baja con scroll suave
            nativo del navegador, cero JS de por medio.
+
+           PENDIENTE — reproductor a medida, especificado por el cliente
+           el 2026-08-05, a construir en cuanto entregue el archivo real
+           (necesito el video para probar contra su duración real, no
+           tiene sentido programar la lógica de tiempos a ciegas):
+             1. Barra de progreso propia (no los controles nativos del
+                navegador) con play/pausa.
+             2. Sin scrub: la persona NO puede arrastrar la barra para
+                saltar de posición, solo ver cuánto lleva.
+             3. Retomar donde iba: guardar el avance en localStorage: al
+                recargar, preguntar "¿Reproducir de nuevo o continuar
+                donde ibas?" en vez de reiniciar solo.
+             4. Progreso psicológico: la barra corre ~20% más rápido que
+                el video real desde el inicio, así que a mitad de
+                reproducción ya se ve más avanzada de lo que realmente
+                va. Entre el 90% y el 100% desacelera para "pagar" esa
+                ventaja y llegar al final exactamente cuando el video
+                real termina — sensación de que dura menos de lo que
+                dura. (Mismo espíritu que el contador de cupos simulado:
+                documentado en el código como truco de percepción, no
+                un dato real.)
       -->
       <section id="video-instrucciones" class="seccion">
         <div class="contenedor" data-motion="reveal">
@@ -526,12 +547,12 @@
       -->
       <section id="registro" class="seccion bg-[var(--tarjeta-fondo)]">
         <div class="contenedor text-center" data-motion="reveal">
-          <h2 class="font-display text-[1.75rem] uppercase md:text-[2.25rem]">Reserva tu cupo gratis</h2>
+          <h2 class="font-display text-[1.575rem] uppercase md:text-[2.025rem]">Reserva tu cupo gratis</h2>
           <!-- Misma insignia de cupos del hero, no un párrafo aparte —
                pedido explícito del cliente: replicar ese componente
                justo debajo del título, en vez de la frase que había. -->
           <p
-            class="mx-auto mt-[var(--spacing-sm)] inline-flex items-center gap-2 rounded-full border border-[var(--linea)] bg-[var(--pagina-fondo)] px-4 py-1.5 text-sm font-semibold text-[var(--accion)]"
+            class="mx-auto mt-[var(--spacing-sm)] inline-flex items-center gap-2 rounded-full border border-[var(--linea)] bg-[var(--pagina-fondo)] px-4 py-1.5 text-[0.7875rem] font-semibold text-[var(--accion)]"
           >
             <span class="punto-urgencia" aria-hidden="true"></span>
             Quedan <span data-cupos>100</span> cupos disponibles
@@ -539,9 +560,9 @@
         </div>
 
         <!-- Solo el formulario va restringido — el título y la insignia de
-             arriba usan el ancho normal de sección. 34.32rem = 26.4rem
-             (ancho de la vuelta anterior) + 30% más, como pidió ahora. -->
-        <div class="contenedor max-w-[34.32rem]">
+             arriba usan el ancho normal de sección. 37.752rem = 34.32rem
+             (ancho de la vuelta anterior) + 10% más, como pidió ahora. -->
+        <div class="contenedor max-w-[37.752rem]">
           <form
             class="tarjeta mt-[var(--spacing-lg)]"
             data-formulario
@@ -580,14 +601,14 @@
                 Autorizo el envío de información de marketing y avisos sobre esta y futuras formaciones.
               </label>
 
-              <button type="submit" class="boton boton-primario w-full" data-enviar>
+              <button type="submit" class="boton boton-primario w-full text-[15.3px]" data-enviar>
                 <span class="indicador-carga" aria-hidden="true"></span>
                 Acceder al WhatsApp VIP
               </button>
 
               <p data-estado data-mensaje-exito="¡Listo! Te llevamos a WhatsApp." hidden></p>
 
-              <p class="text-center text-sm text-[var(--texto-secundario)]">
+              <p class="text-center text-[0.7875rem] text-[var(--texto-secundario)]">
                 Tus datos se usan solo para darte acceso a la clase.
                 <br />
                 <a href="/politica-de-privacidad/" class="underline underline-offset-2">Cómo los trato</a>.
