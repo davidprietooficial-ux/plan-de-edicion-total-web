@@ -108,6 +108,90 @@ body {
   }
 }
 
+/* ── Producción visual — el nivel de detalle de una página de venta real,
+ * no de un wireframe. Estudiado sobre la página de referencia (WordPress/
+ * Elementor): sombra sólida desplazada tipo "sticker" detrás de imágenes,
+ * insignias circulares en vez de números sueltos, fundido en los bordes
+ * de las franjas horizontales. ──────────────────────────────────────── */
+
+/* Sombra sólida desplazada — le da peso gráfico a un bloque de imagen
+   incluso antes de tener la foto real. */
+.marco-offset {
+  box-shadow: 10px 10px 0 0 var(--accion);
+}
+
+/* Insignia circular numerada — currícula, pasos. */
+.insignia-numero {
+  display: flex;
+  height: 40px;
+  width: 40px;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  border-radius: 9999px;
+  background: var(--accion);
+  font-family: var(--font-display);
+  font-size: 1.1rem;
+  color: var(--texto-sobre-accion);
+}
+
+/* Check como insignia, no como carácter Unicode suelto. */
+.check-insignia {
+  display: inline-flex;
+  height: 22px;
+  width: 22px;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  border-radius: 9999px;
+  background: color-mix(in srgb, var(--accion) 18%, transparent);
+  color: var(--accion);
+  font-size: 13px;
+  font-weight: 700;
+}
+
+/* Avatar circular con iniciales — testimonios sin foto real todavía. */
+.avatar-iniciales {
+  display: flex;
+  height: 48px;
+  width: 48px;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  border-radius: 9999px;
+  background: var(--elevado-fondo);
+  border: var(--borde-ancho) solid var(--linea);
+  font-family: var(--font-display);
+  font-size: 1rem;
+  color: var(--accion);
+}
+
+/* Fundido en los bordes de cualquier franja horizontal continua (marquee):
+   sin este detalle el corte de la fila se ve cortado a tijera. */
+[data-motion='marquee'] {
+  mask-image: linear-gradient(to right, transparent, black 8%, black 92%, transparent);
+  -webkit-mask-image: linear-gradient(to right, transparent, black 8%, black 92%, transparent);
+}
+
+/* Precio de ancla tachado junto al precio real. */
+.precio-tachado {
+  font-weight: 400;
+  text-decoration: line-through;
+  color: var(--texto-secundario);
+}
+
+/* Línea decorativa corta bajo el eyebrow de cada sección — un detalle
+   editorial que separa el ritmo entre secciones consecutivas. */
+.linea-acento {
+  display: block;
+  height: 3px;
+  width: 48px;
+  margin-inline: auto;
+  margin-top: var(--spacing-2xs);
+  background: var(--accion);
+  border-radius: 9999px;
+}
+
 /* ── Contenedores ────────────────────────────────────────────────────*/
 .contenedor {
   width: 100%;
