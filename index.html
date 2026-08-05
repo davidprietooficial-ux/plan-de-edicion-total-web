@@ -127,13 +127,13 @@
            en la toma. autoplay+muted+loop+playsinline: sin eso ningún
            navegador móvil lo reproduce solo.
       -->
-      <section class="hero-video-seccion seccion pt-[var(--spacing-xl)]">
+      <section class="hero-video-seccion seccion pt-[var(--spacing-2xl)] md:pt-[var(--spacing-3xl)]">
         <div class="hero-fondo" aria-hidden="true">
           <video autoplay muted loop playsinline poster="/video-hero.jpg">
             <source src="/video-hero.mp4" type="video/mp4" />
           </video>
         </div>
-        <div class="contenedor max-w-[46rem] text-center" data-motion="reveal">
+        <div class="contenedor max-w-[55rem] text-center" data-motion="reveal">
           <span class="icono-flotante mb-[var(--spacing-2xs)]" aria-hidden="true">
             <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
               <path d="M4 8.5 19 5l1 4-15 3.5z" />
@@ -145,7 +145,7 @@
             Masterclass de edición en vivo
           </p>
 
-          <h1 class="font-display text-[2.1rem] leading-[1.05] uppercase md:text-[3rem] lg:text-[3.5rem]">
+          <h1 class="font-display text-[1.7rem] leading-[1.05] uppercase md:text-[2.4rem] lg:text-[2.8rem]">
             Aprende a editar <span class="text-[var(--accion)]">gratis</span> videos profesionales
           </h1>
 
@@ -527,16 +527,21 @@
       <section id="registro" class="seccion bg-[var(--tarjeta-fondo)]">
         <div class="contenedor text-center" data-motion="reveal">
           <h2 class="font-display text-[1.75rem] uppercase md:text-[2.25rem]">Reserva tu cupo gratis</h2>
-          <p class="prosa mx-auto mt-[var(--spacing-2xs)] text-[var(--texto-secundario)]">
-            Cupos limitados a <span data-cupos>100</span> personas por clase.
+          <!-- Misma insignia de cupos del hero, no un párrafo aparte —
+               pedido explícito del cliente: replicar ese componente
+               justo debajo del título, en vez de la frase que había. -->
+          <p
+            class="mx-auto mt-[var(--spacing-sm)] inline-flex items-center gap-2 rounded-full border border-[var(--linea)] bg-[var(--pagina-fondo)] px-4 py-1.5 text-sm font-semibold text-[var(--accion)]"
+          >
+            <span class="punto-urgencia" aria-hidden="true"></span>
+            Quedan <span data-cupos>100</span> cupos disponibles
           </p>
         </div>
 
-        <!-- Solo el formulario va restringido — el título y el párrafo de
-             arriba usan el ancho normal de sección. 26.4rem = 22rem (lo
-             que pidió el cliente en la vuelta anterior) + 20% más, como
-             pidió ahora. -->
-        <div class="contenedor max-w-[26.4rem]">
+        <!-- Solo el formulario va restringido — el título y la insignia de
+             arriba usan el ancho normal de sección. 34.32rem = 26.4rem
+             (ancho de la vuelta anterior) + 30% más, como pidió ahora. -->
+        <div class="contenedor max-w-[34.32rem]">
           <form
             class="tarjeta mt-[var(--spacing-lg)]"
             data-formulario
@@ -582,8 +587,9 @@
 
               <p data-estado data-mensaje-exito="¡Listo! Te llevamos a WhatsApp." hidden></p>
 
-              <p class="text-sm text-[var(--texto-secundario)]">
+              <p class="text-center text-sm text-[var(--texto-secundario)]">
                 Tus datos se usan solo para darte acceso a la clase.
+                <br />
                 <a href="/politica-de-privacidad/" class="underline underline-offset-2">Cómo los trato</a>.
               </p>
             </div>
