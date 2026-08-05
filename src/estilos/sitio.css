@@ -241,8 +241,9 @@ body::after {
   margin-inline: auto;
   display: flex;
   flex-direction: column;
-  gap: var(--spacing-3xs);
-  padding: var(--spacing-xs) var(--spacing-sm);
+  align-items: center;
+  gap: var(--spacing-xs);
+  padding: var(--spacing-sm) var(--spacing-md);
   border-radius: 28px;
   background: color-mix(in srgb, var(--pagina-fondo) 55%, transparent);
   border: var(--borde-ancho) solid color-mix(in srgb, var(--accion) 40%, var(--linea));
@@ -252,42 +253,53 @@ body::after {
     0 0 28px color-mix(in srgb, var(--accion) 22%, transparent),
     0 8px 24px rgb(0 0 0 / 0.45);
 }
-.cta-flotante .boton-primario {
-  min-height: 36px;
-  padding-inline: var(--spacing-sm);
-  font-size: 14px;
+@media (min-width: 480px) {
+  .cta-flotante {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+  }
 }
-.cta-flotante__fila {
+/* Dos columnas — igual a la referencia: columna 1 lo que ahí es precio,
+   aquí la cuenta regresiva completa; columna 2 el botón grande y a dónde
+   lleva, cada una con su etiqueta debajo. */
+.cta-flotante__columna {
   display: flex;
+  flex-direction: column;
   align-items: center;
-  justify-content: space-between;
-  gap: var(--spacing-sm);
-  flex-wrap: wrap;
-}
-.cta-flotante__cuenta {
-  display: flex;
-  align-items: baseline;
   gap: var(--spacing-3xs);
-  font-size: 13px;
-  color: var(--texto-secundario);
 }
-.cta-flotante__cuenta strong {
-  font-family: var(--font-display);
-  font-size: 1.15rem;
-  color: var(--accion);
-  text-shadow: 0 0 10px color-mix(in srgb, var(--accion) 55%, transparent);
-  font-variant-numeric: tabular-nums;
+@media (min-width: 480px) {
+  .cta-flotante__columna--cta {
+    align-items: flex-end;
+  }
 }
-.cta-flotante__mensaje {
-  font-size: 13px;
+.cta-flotante__etiqueta {
+  font-size: 11px;
   font-weight: 600;
   color: var(--texto-secundario);
-  text-align: right;
-}
-.cta-flotante__sub {
-  font-size: 11px;
-  color: var(--texto-secundario);
   text-align: center;
+  white-space: nowrap;
+}
+@media (min-width: 480px) {
+  .cta-flotante__columna--cta .cta-flotante__etiqueta {
+    text-align: right;
+  }
+}
+
+/* Cuenta regresiva a escala de barra — mismo componente que la del hero
+   (.contador-cuenta), solo más chico. */
+.contador-cuenta--mini {
+  gap: var(--spacing-xs);
+}
+.contador-cuenta--mini .contador-unidad {
+  min-width: auto;
+}
+.contador-cuenta--mini .contador-unidad__numero {
+  font-size: 1.25rem;
+}
+.contador-cuenta--mini .contador-unidad__etiqueta {
+  font-size: 9px;
 }
 
 /* Espacio reservado para que la barra flotante no tape el pie de página —
@@ -388,13 +400,7 @@ body {
   position: absolute;
   inset: 0;
   z-index: 0;
-  background:
-    radial-gradient(
-      circle at 50% 15%,
-      color-mix(in srgb, var(--accion) 26%, transparent),
-      transparent 55%
-    ),
-    var(--pagina-fondo);
+  background: var(--pagina-fondo);
 }
 .hero-fondo video {
   position: absolute;
@@ -402,6 +408,27 @@ body {
   height: 100%;
   width: 100%;
   object-fit: cover;
+  opacity: 0.5;
+}
+/* El resplandor y el oscurecido van en un pseudo-elemento ENCIMA del
+   video (se pinta después, en el mismo contexto de apilamiento): así el
+   texto del hero mantiene contraste sin importar qué tan clara salga la
+   toma del video real. */
+.hero-fondo::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(
+      circle at 50% 15%,
+      color-mix(in srgb, var(--accion) 22%, transparent),
+      transparent 55%
+    ),
+    linear-gradient(
+      180deg,
+      color-mix(in srgb, var(--pagina-fondo) 55%, transparent) 0%,
+      color-mix(in srgb, var(--pagina-fondo) 88%, transparent) 100%
+    );
 }
 .hero-video-seccion > .contenedor {
   position: relative;

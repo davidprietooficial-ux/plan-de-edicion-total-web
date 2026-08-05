@@ -82,32 +82,52 @@
     <a class="saltar-contenido" href="#contenido">Saltar al contenido</a>
 
     <!-- ══ Barra flotante permanente ═══════════════════════════════════
-         Visible en los tres cortes (antes se ocultaba en escritorio). A
-         la izquierda la cuenta regresiva compacta, a la derecha el CTA al
-         WhatsApp VIP, debajo una línea de refuerzo — igual a la
-         referencia que pasó el cliente.
+         Dos columnas, tal como la referencia que pasó el cliente:
+         columna 1 = lo que antes era el precio, aquí la cuenta regresiva
+         completa + qué es; columna 2 = el botón grande + a dónde lleva.
     -->
     <div class="cta-flotante" role="region" aria-label="Acciones rápidas">
-      <div class="cta-flotante__fila">
-        <span class="cta-flotante__cuenta">
-          <strong data-cuenta-hasta="2026-08-07T19:00:00-05:00" data-cuenta-formato="compacto">--:--</strong>
-          para la clase en vivo
-        </span>
-        <span class="cta-flotante__mensaje">Únete a nuestro WhatsApp VIP para acceder a la formación</span>
-        <a href="#registro" class="boton boton-primario">Acceder ahora</a>
+      <div class="cta-flotante__columna" data-cuenta-hasta="2026-08-07T19:00:00-05:00">
+        <div class="contador-cuenta contador-cuenta--mini">
+          <div class="contador-unidad">
+            <span class="contador-unidad__numero" data-cuenta-campo="dias">00</span>
+            <span class="contador-unidad__etiqueta">Días</span>
+          </div>
+          <div class="contador-unidad">
+            <span class="contador-unidad__numero" data-cuenta-campo="horas">00</span>
+            <span class="contador-unidad__etiqueta">Hrs</span>
+          </div>
+          <div class="contador-unidad">
+            <span class="contador-unidad__numero" data-cuenta-campo="minutos">00</span>
+            <span class="contador-unidad__etiqueta">Min</span>
+          </div>
+          <div class="contador-unidad">
+            <span class="contador-unidad__numero" data-cuenta-campo="segundos">00</span>
+            <span class="contador-unidad__etiqueta">Seg</span>
+          </div>
+        </div>
+        <p class="cta-flotante__etiqueta">Masterclass de edición en vivo</p>
       </div>
-      <p class="cta-flotante__sub">Accede al grupo VIP para estar pendiente de la fecha.</p>
+      <div class="cta-flotante__columna cta-flotante__columna--cta">
+        <a href="#registro" class="boton boton-primario">Acceder ahora</a>
+        <p class="cta-flotante__etiqueta">Accede a nuestro grupo de WhatsApp VIP</p>
+      </div>
     </div>
 
     <main id="contenido" tabindex="-1">
       <!-- ══ 1. Hero ═══════════════════════════════════════════════
-           .hero-fondo es un resplandor radial neón sobre fondo oscuro —
-           se reemplaza por el <video loop muted autoplay> real de fondo
-           cuando el cliente lo entregue (pidió b-roll de edición en
-           bucle detrás de todo el hero).
+           .hero-fondo::after pone el resplandor neón y el oscurecido
+           ENCIMA del video real de fondo (b-roll de Premiere Pro, en
+           bucle) para que el texto mantenga contraste pase lo que pase
+           en la toma. autoplay+muted+loop+playsinline: sin eso ningún
+           navegador móvil lo reproduce solo.
       -->
       <section class="hero-video-seccion seccion pt-[var(--spacing-xl)]">
-        <div class="hero-fondo" aria-hidden="true"></div>
+        <div class="hero-fondo" aria-hidden="true">
+          <video autoplay muted loop playsinline poster="/video-hero.jpg">
+            <source src="/video-hero.mp4" type="video/mp4" />
+          </video>
+        </div>
         <div class="contenedor max-w-[46rem] text-center" data-motion="reveal">
           <span class="icono-flotante mb-[var(--spacing-2xs)]" aria-hidden="true">
             <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
@@ -229,16 +249,20 @@
             <div class="marquee-fila">
               <span class="etiqueta-herramienta">Premiere Pro</span>
               <span class="etiqueta-herramienta">CapCut</span>
-              <span class="etiqueta-herramienta">After Effects</span>
-              <span class="etiqueta-herramienta">Motion Graphics</span>
-              <span class="etiqueta-herramienta">Edición con IA</span>
-              <span class="etiqueta-herramienta">+200 recursos</span>
+              <span class="etiqueta-herramienta">Montaje</span>
+              <span class="etiqueta-herramienta">Edición de sonido</span>
+              <span class="etiqueta-herramienta">Textos y motion graphics</span>
+              <span class="etiqueta-herramienta">Efectos visuales</span>
+              <span class="etiqueta-herramienta">Efectos sonoros</span>
+              <span class="etiqueta-herramienta">Exportación</span>
               <span class="etiqueta-herramienta" aria-hidden="true">Premiere Pro</span>
               <span class="etiqueta-herramienta" aria-hidden="true">CapCut</span>
-              <span class="etiqueta-herramienta" aria-hidden="true">After Effects</span>
-              <span class="etiqueta-herramienta" aria-hidden="true">Motion Graphics</span>
-              <span class="etiqueta-herramienta" aria-hidden="true">Edición con IA</span>
-              <span class="etiqueta-herramienta" aria-hidden="true">+200 recursos</span>
+              <span class="etiqueta-herramienta" aria-hidden="true">Montaje</span>
+              <span class="etiqueta-herramienta" aria-hidden="true">Edición de sonido</span>
+              <span class="etiqueta-herramienta" aria-hidden="true">Textos y motion graphics</span>
+              <span class="etiqueta-herramienta" aria-hidden="true">Efectos visuales</span>
+              <span class="etiqueta-herramienta" aria-hidden="true">Efectos sonoros</span>
+              <span class="etiqueta-herramienta" aria-hidden="true">Exportación</span>
             </div>
           </div>
         </div>
@@ -324,6 +348,58 @@
                 ></video>
                 <span class="tarjeta-efecto__etiqueta">Efecto: Congelar el tiempo</span>
               </div>
+              <div class="tarjeta-efecto">
+                <video
+                  class="tarjeta-efecto__video"
+                  data-video-efecto
+                  src="/efectos/salir-de-la-pantalla.mp4"
+                  poster="/efectos/salir-de-la-pantalla.jpg"
+                  muted
+                  loop
+                  playsinline
+                  preload="none"
+                ></video>
+                <span class="tarjeta-efecto__etiqueta">Efecto: Salir de la pantalla</span>
+              </div>
+              <div class="tarjeta-efecto">
+                <video
+                  class="tarjeta-efecto__video"
+                  data-video-efecto
+                  src="/efectos/puerta.mp4"
+                  poster="/efectos/puerta.jpg"
+                  muted
+                  loop
+                  playsinline
+                  preload="none"
+                ></video>
+                <span class="tarjeta-efecto__etiqueta">Efecto: Puerta</span>
+              </div>
+              <div class="tarjeta-efecto">
+                <video
+                  class="tarjeta-efecto__video"
+                  data-video-efecto
+                  src="/efectos/transformar.mp4"
+                  poster="/efectos/transformar.jpg"
+                  muted
+                  loop
+                  playsinline
+                  preload="none"
+                ></video>
+                <span class="tarjeta-efecto__etiqueta">Efecto: Transformar</span>
+              </div>
+              <div class="tarjeta-efecto">
+                <video
+                  class="tarjeta-efecto__video"
+                  data-video-efecto
+                  src="/efectos/portal.mp4"
+                  poster="/efectos/portal.jpg"
+                  muted
+                  loop
+                  playsinline
+                  preload="none"
+                ></video>
+                <span class="tarjeta-efecto__etiqueta">Efecto: Portal</span>
+              </div>
               <div class="tarjeta-efecto" aria-hidden="true">
                 <video
                   class="tarjeta-efecto__video"
@@ -388,6 +464,58 @@
                   preload="none"
                 ></video>
                 <span class="tarjeta-efecto__etiqueta">Efecto: Congelar el tiempo</span>
+              </div>
+              <div class="tarjeta-efecto" aria-hidden="true">
+                <video
+                  class="tarjeta-efecto__video"
+                  data-video-efecto
+                  src="/efectos/salir-de-la-pantalla.mp4"
+                  poster="/efectos/salir-de-la-pantalla.jpg"
+                  muted
+                  loop
+                  playsinline
+                  preload="none"
+                ></video>
+                <span class="tarjeta-efecto__etiqueta">Efecto: Salir de la pantalla</span>
+              </div>
+              <div class="tarjeta-efecto" aria-hidden="true">
+                <video
+                  class="tarjeta-efecto__video"
+                  data-video-efecto
+                  src="/efectos/puerta.mp4"
+                  poster="/efectos/puerta.jpg"
+                  muted
+                  loop
+                  playsinline
+                  preload="none"
+                ></video>
+                <span class="tarjeta-efecto__etiqueta">Efecto: Puerta</span>
+              </div>
+              <div class="tarjeta-efecto" aria-hidden="true">
+                <video
+                  class="tarjeta-efecto__video"
+                  data-video-efecto
+                  src="/efectos/transformar.mp4"
+                  poster="/efectos/transformar.jpg"
+                  muted
+                  loop
+                  playsinline
+                  preload="none"
+                ></video>
+                <span class="tarjeta-efecto__etiqueta">Efecto: Transformar</span>
+              </div>
+              <div class="tarjeta-efecto" aria-hidden="true">
+                <video
+                  class="tarjeta-efecto__video"
+                  data-video-efecto
+                  src="/efectos/portal.mp4"
+                  poster="/efectos/portal.jpg"
+                  muted
+                  loop
+                  playsinline
+                  preload="none"
+                ></video>
+                <span class="tarjeta-efecto__etiqueta">Efecto: Portal</span>
               </div>
             </div>
           </div>
