@@ -86,6 +86,63 @@ function iniciarFaq(): void {
   });
 }
 
+// ── Toggle "Instrucciones / más información" ────────────────────────────
+// Revela el bloque de video, oculto por defecto. El botón sigue siendo
+// enfocable y accesible con aria-expanded aunque el JS falle en cargar —
+// en ese caso el panel simplemente queda visible (sin el atributo
+// `hidden` no hay nada que abrir, así que no es una trampa sin salida).
+function iniciarToggleVideo(): void {
+  const boton = document.querySelector<HTMLButtonElement>('[data-toggle-video]');
+  const panel = document.querySelector<HTMLElement>('[data-panel-video]');
+  if (!boton || !panel) return;
+
+  panel.hidden = true;
+  boton.setAttribute('aria-expanded', 'false');
+
+  boton.addEventListener('click', () => {
+    const abierto = boton.getAttribute('aria-expanded') === 'true';
+    boton.setAttribute('aria-expanded', String(!abierto));
+    panel.hidden = abierto;
+    if (!abierto) {
+      const sinMovimiento = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      panel.scrollIntoView({ behavior: sinMovimiento ? 'auto' : 'smooth', block: 'start' });
+    }
+  });
+}
+
+// ── Cupos disponibles — simulados ────────────────────────────────────────
+// El cliente pidió un contador de cupos que arranca ~100 y baja de forma
+// progresiva y aleatoria. Es urgencia simulada, no un inventario real —
+// por eso el techo y el piso viven en data-* en vez de un número mágico
+// en el JS, y por eso nunca baja de un piso: llegar a 0 se leería como
+// que la clase ya no acepta gente, y sigue abierta hasta el formulario.
+function iniciarCuposSimulados(): void {
+  const config = document.querySelector<HTMLElement>('[data-cupos-config]');
+  const objetivos = document.querySelectorAll<HTMLElement>('[data-cupos]');
+  if (!config || objetivos.length === 0) return;
+
+  const piso = Number(config.dataset.cuposPiso ?? 6);
+  let actual = Number(config.dataset.cuposInicial ?? 100);
+
+  const pintar = (): void => {
+    objetivos.forEach((el) => {
+      el.textContent = String(actual);
+    });
+  };
+  pintar();
+
+  const programarSiguiente = (): void => {
+    if (actual <= piso) return;
+    const espera = 6000 + Math.random() * 14000;
+    window.setTimeout(() => {
+      actual = Math.max(piso, actual - 1);
+      pintar();
+      programarSiguiente();
+    }, espera);
+  };
+  programarSiguiente();
+}
+
 // ── Año del pie ───────────────────────────────────────────────────────
 
 function actualizarAno(): void {
@@ -106,6 +163,8 @@ function iniciar(): void {
   iniciarNavegacion();
   iniciarMotion();
   iniciarFaq();
+  iniciarToggleVideo();
+  iniciarCuposSimulados();
   iniciarFormulario();
   actualizarAno();
 

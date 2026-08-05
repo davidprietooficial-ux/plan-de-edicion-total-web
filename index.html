@@ -1,22 +1,25 @@
 <!doctype html>
 <!--
-  BORRADOR T2 — landing de registro para la clase gratuita de "Plan de
-  Edición Total" (Juan Camilo Pérez Moreno). Estructura y nivel de
-  producción visual calcados de creatorclub.store (fuente real: WordPress
-  + Elementor, leída por completo el 2026-08-04 vía curl con user-agent de
-  navegador — WebFetch la bloqueaba con 403). Esa página es de "Creator
-  Club" / Diego Arroyo, OTRO negocio — se tomó de ahí la estructura, el
-  nivel de detalle visual (insignias circulares, sombra sólida desplazada,
-  fundido en los bordes del marquee) y el TIPO de secciones, nunca sus
-  cifras, nombres de alumnos ni afirmaciones — esas son de ellos, no
-  nuestras. Colores, tipografía, WhatsApp, testimonios y currícula reales
-  vienen del checkout propio del cliente en Hotmart.
+  BORRADOR T2 — landing CORTA de registro para la clase gratuita en vivo de
+  "Plan de Edición Total" (Juan Camilo Pérez Moreno), viernes, cupo
+  limitado. Segunda vuelta de corrección con feedback directo del cliente
+  (2026-08-05): tema oscuro neón (antes claro), estructura reducida a lo
+  esencial — hero, video bajo demanda, herramientas, carrusel de efectos,
+  formulario, pie — quitando currícula/precio/testimonios/FAQ/bonos de la
+  vuelta anterior porque el objetivo ahora es una landing corta de una sola
+  meta: inscribirse a la clase.
 
-  Lo que sigue en [CORCHETES] falta por confirmar exacto con el cliente
-  (fecha/hora de la clase, cupos reales, precio y moneda definitivos — la
-  referencia mostraba $47 y €25/semestre en dos sitios distintos). Las
-  cifras marcadas "cifra de ejemplo" son solo para probar la interacción
-  del contador, no un dato real. No publicar así.
+  Pendiente real del cliente (no inventar, no adivinar):
+    - Enlace del grupo de WhatsApp VIP (el flujo actual usa un enlace de
+      chat individual — el cliente pidió un enlace de GRUPO de un solo
+      clic). Placeholder: https://[ENLACE_GRUPO_WHATSAPP_PENDIENTE]
+    - Hora exacta de la clase del viernes (se puso 19:00 COP como
+      provisional en data-cuenta-hasta — solo confirmó "el día viernes").
+    - Video de fondo del hero (en bucle, b-roll de edición) y los GIFs +
+      nombres reales de los efectos del carrusel — el cliente dijo que los
+      manda luego.
+    - Textos legales de las 4 páginas del pie: son borrador, no revisión
+      legal.
 
   La clase no-js del <html> la quita src/main.ts al arrancar. Si el JS
   falla o lo bloquean, se queda puesta y todo el contenido se ve igual.
@@ -26,18 +29,18 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Plan de Edición Total · Clase gratis de edición de video</title>
+    <title>Plan de Edición Total · Masterclass gratis en vivo</title>
     <meta
       name="description"
-      content="Aprende edición de video y empieza a cobrar por tus ediciones. Agenda tu cupo para la clase en vivo y gratuita. Cupos limitados."
+      content="Aprende a editar videos profesionales gratis. Clase en vivo el viernes, cupo limitado. Inscríbete y accede por WhatsApp."
     />
     <link rel="canonical" href="https://[DOMINIO]/" />
 
     <meta property="og:type" content="website" />
-    <meta property="og:title" content="Plan de Edición Total · Clase gratis" />
+    <meta property="og:title" content="Plan de Edición Total · Masterclass gratis en vivo" />
     <meta
       property="og:description"
-      content="Aprende edición de video y empieza a cobrar por tus ediciones. Agenda tu cupo para la clase en vivo y gratuita."
+      content="Aprende a editar videos profesionales gratis. Clase en vivo el viernes, cupo limitado."
     />
     <meta property="og:url" content="https://[DOMINIO]/" />
     <meta property="og:image" content="https://[DOMINIO]/og.jpg" />
@@ -46,19 +49,20 @@
 
     <link rel="preload" href="/fuentes/anton-var.woff2" as="font" type="font/woff2" crossorigin />
 
-    <meta name="theme-color" content="#FFFFFF" />
+    <meta name="theme-color" content="#0B0908" />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
 
     <script type="module" src="/src/main.ts"></script>
 
-    <!-- JSON-LD tipo Event: fecha y hora reales pendientes de confirmar. -->
+    <!-- JSON-LD tipo Event. startDate provisional (viernes, 19:00 COP) —
+         confirmar hora exacta con el cliente. -->
     <script type="application/ld+json">
       {
         "@context": "https://schema.org",
         "@type": "Event",
-        "name": "Plan de Edición Total — clase gratis",
-        "description": "Clase en vivo y gratuita de edición de video.",
-        "startDate": "[FECHA_HORA_ISO_PENDIENTE]",
+        "name": "Plan de Edición Total — masterclass gratis en vivo",
+        "description": "Clase en vivo y gratuita de edición de video. Cupo limitado.",
+        "startDate": "2026-08-07T19:00:00-05:00",
         "eventAttendanceMode": "https://schema.org/OnlineEventAttendanceMode",
         "eventStatus": "https://schema.org/EventScheduled",
         "location": { "@type": "VirtualLocation", "url": "https://[DOMINIO]/" },
@@ -76,39 +80,37 @@
   <body>
     <a class="saltar-contenido" href="#contenido">Saltar al contenido</a>
 
-    <!-- ══ Navegación mínima ═════════════════════════════════════════
-         Un solo CTA en todo el sitio (regla 1.3.1 de docs/sistema-bloques.md):
-         sin menú, cualquier enlace que no sea el registro es una fuga.
-    -->
+    <!-- ══ Navegación mínima ═════════════════════════════════════════ -->
     <header class="navbar" data-navbar>
       <div class="contenedor flex h-[var(--navbar-alto)] items-center justify-center">
         <p class="font-display text-lg tracking-tight uppercase">Plan de Edición Total</p>
       </div>
     </header>
 
-    <!-- ══ CTA flotante — móvil ═════════════════════════════════════
-         Regla 1.3.5 (móvil primero): sticky CTA en todos los tiers. Se
-         esconde en escritorio, donde el CTA del hero ya está a la vista.
+    <!-- ══ Barra flotante permanente ═══════════════════════════════════
+         Visible en los tres cortes (antes se ocultaba en escritorio). A
+         la izquierda la cuenta regresiva compacta, a la derecha el CTA al
+         WhatsApp VIP, debajo una línea de refuerzo — igual a la
+         referencia que pasó el cliente.
     -->
     <div class="cta-flotante" role="region" aria-label="Acciones rápidas">
-      <a href="#registro" class="boton boton-primario">Reservar cupo</a>
-      <a
-        href="https://wa.me/573237158237?text=Hola%2C%20tengo%20una%20duda%20sobre%20la%20clase%20gratis%20de%20edici%C3%B3n%20de%20video."
-        target="_blank"
-        rel="noopener noreferrer"
-        class="boton boton-secundario"
-      >
-        WhatsApp
-      </a>
+      <div class="cta-flotante__fila">
+        <span class="cta-flotante__cuenta">
+          <strong data-cuenta-hasta="2026-08-07T19:00:00-05:00" data-cuenta-formato="compacto">--:--</strong>
+          para la clase en vivo
+        </span>
+        <span class="cta-flotante__mensaje">Únete a nuestro WhatsApp VIP para acceder a la formación</span>
+        <a href="#registro" class="boton boton-primario">Acceder ahora</a>
+      </div>
+      <p class="cta-flotante__sub">Accede al grupo VIP para estar pendiente de la fecha.</p>
     </div>
 
     <main id="contenido" tabindex="-1">
       <!-- ══ 1. Hero ═══════════════════════════════════════════════
-           A pantalla completa, con el resplandor de fondo (.hero-fondo)
-           en vez de un bloque de texto suelto sobre fondo plano — mismo
-           patrón que la referencia, aunque el video real del fondo
-           todavía no llegó (se reemplaza .hero-fondo por un <video> real
-           cuando el cliente lo entregue).
+           .hero-fondo es un resplandor radial neón sobre fondo oscuro —
+           se reemplaza por el <video loop muted autoplay> real de fondo
+           cuando el cliente lo entregue (pidió b-roll de edición en
+           bucle detrás de todo el hero).
       -->
       <section class="hero-video-seccion seccion pt-[var(--spacing-xl)]">
         <div class="hero-fondo" aria-hidden="true"></div>
@@ -121,43 +123,88 @@
             </svg>
           </span>
           <p class="mb-[var(--spacing-sm)] text-sm font-semibold tracking-[0.14em] text-[var(--accion)] uppercase">
-            Masterclass en edición viral
+            Masterclass de edición en vivo
           </p>
 
           <h1 class="font-display text-[2.1rem] leading-[1.05] uppercase md:text-[3rem] lg:text-[3.5rem]">
-            Aprende edición viral y empieza a
-            <span class="text-[var(--accion)]">cobrar más</span> por tus videos —
-            <span class="text-[var(--accion)]">100% gratis</span>
+            Aprende a editar <span class="text-[var(--accion)]">gratis</span> videos profesionales
           </h1>
 
           <p class="prosa mx-auto mt-[var(--spacing-md)] max-w-[34rem] text-lg text-[var(--texto-secundario)]">
-            Clase en vivo con Juan Camilo Pérez Moreno: cómo editar tus videos como un profesional y empezar a cobrar
-            por tus ediciones, aunque nunca hayas tocado un editor.
+            Llena el formulario y accede a nuestro WhatsApp exclusivo para tu acceso a la clase en vivo —
+            <strong class="text-[var(--texto-principal)]">es el único medio de acceso</strong>. El material no se
+            guarda: es una clase única, en vivo, que no queda grabada en ningún lugar.
+          </p>
+
+          <!-- Cuenta regresiva gigante — dd:hh:mm:ss actualizada por
+               lib/motion.ts cada segundo desde data-cuenta-hasta. -->
+          <div class="mt-[var(--spacing-lg)]" data-cuenta-hasta="2026-08-07T19:00:00-05:00">
+            <div class="contador-cuenta">
+              <div class="contador-unidad">
+                <span class="contador-unidad__numero" data-cuenta-campo="dias">00</span>
+                <span class="contador-unidad__etiqueta">Días</span>
+              </div>
+              <div class="contador-unidad">
+                <span class="contador-unidad__numero" data-cuenta-campo="horas">00</span>
+                <span class="contador-unidad__etiqueta">Horas</span>
+              </div>
+              <div class="contador-unidad">
+                <span class="contador-unidad__numero" data-cuenta-campo="minutos">00</span>
+                <span class="contador-unidad__etiqueta">Min</span>
+              </div>
+              <div class="contador-unidad">
+                <span class="contador-unidad__numero" data-cuenta-campo="segundos">00</span>
+                <span class="contador-unidad__etiqueta">Seg</span>
+              </div>
+            </div>
+            <p
+              data-cuenta-en-vivo
+              hidden
+              class="mt-[var(--spacing-2xs)] text-center text-sm font-semibold text-[var(--accion)]"
+            >
+              ¡Estamos en vivo ahora — entra ya!
+            </p>
+          </div>
+          <p class="mt-[var(--spacing-2xs)] text-sm text-[var(--texto-secundario)]">
+            Viernes · En vivo · [HORA_PENDIENTE_DE_CONFIRMAR]
           </p>
 
           <p
             class="mx-auto mt-[var(--spacing-lg)] inline-flex items-center gap-2 rounded-full border border-[var(--linea)] bg-[var(--tarjeta-fondo)] px-4 py-1.5 text-sm font-semibold text-[var(--accion)]"
+            data-cupos-config
+            data-cupos-inicial="100"
+            data-cupos-piso="6"
           >
             <span class="punto-urgencia" aria-hidden="true"></span>
-            Quedan <span data-cupos>[CUPOS]</span> cupos disponibles
-          </p>
-          <p class="mt-[var(--spacing-2xs)] text-sm text-[var(--texto-secundario)]">
-            [FECHA Y HORA DE LA CLASE] · En vivo · Cupo limitado
+            Quedan <span data-cupos>100</span> cupos disponibles
           </p>
 
-          <div class="mt-[var(--spacing-lg)]">
+          <div class="mt-[var(--spacing-lg)] flex flex-col items-center gap-[var(--spacing-sm)]">
             <a href="#registro" class="boton boton-primario">Reservar mi cupo</a>
+            <button
+              type="button"
+              class="boton boton-secundario toggle-instrucciones"
+              data-toggle-video
+              aria-expanded="false"
+              aria-controls="video-instrucciones"
+            >
+              Instrucciones / Más información
+              <span class="toggle-instrucciones__icono" aria-hidden="true">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M6 9l6 6 6-6" />
+                </svg>
+              </span>
+            </button>
           </div>
         </div>
       </section>
 
       <!-- ══ 2. Video de presentación ═════════════════════════════════
-           Sección propia (así vive en la referencia: el video del hero
-           es de fondo/ambiente, el video de venta es aparte, en 16:9).
-           padding-top:56.25% es la técnica clásica de embed responsive
-           — el video real reemplaza este marco cuando llegue.
+           Oculto por defecto (lo abre el botón de instrucciones del
+           hero) — si el JS no llega a correr, se queda visible: nunca
+           queda un contenido atrapado detrás de un botón roto.
       -->
-      <section class="seccion">
+      <section id="video-instrucciones" class="seccion" data-panel-video>
         <div class="contenedor max-w-[48rem]" data-motion="reveal">
           <div
             class="marco-offset relative w-full overflow-hidden rounded-[var(--radius-lg)] border border-[var(--linea)] bg-[var(--tarjeta-fondo)] pt-[56.25%]"
@@ -177,498 +224,119 @@
         </div>
       </section>
 
-      <!-- ══ 3. Herramientas que vas a dominar ════════════════════════
-           Cinta continua en CSS puro (ver .marquee-pista en sitio.css) —
-           el contenido se repite una vez para que el loop no se note.
-           Nombres reales de la currícula, nada inventado.
+      <!-- ══ 3. Programas que vas a dominar ═══════════════════════════
+           Mismo margen que el video (contenedor max-w-[48rem]) — antes
+           quedaba pegado a la izquierda del ancho completo de página,
+           desalineado con el bloque de video de arriba.
       -->
-      <section class="marquee-pista py-[var(--spacing-md)]">
-        <div class="marquee-fila">
-          <span class="etiqueta-herramienta">Premiere Pro</span>
-          <span class="etiqueta-herramienta">CapCut</span>
-          <span class="etiqueta-herramienta">After Effects</span>
-          <span class="etiqueta-herramienta">Motion Graphics</span>
-          <span class="etiqueta-herramienta">Edición con IA</span>
-          <span class="etiqueta-herramienta">+200 recursos</span>
-          <span class="etiqueta-herramienta" aria-hidden="true">Premiere Pro</span>
-          <span class="etiqueta-herramienta" aria-hidden="true">CapCut</span>
-          <span class="etiqueta-herramienta" aria-hidden="true">After Effects</span>
-          <span class="etiqueta-herramienta" aria-hidden="true">Motion Graphics</span>
-          <span class="etiqueta-herramienta" aria-hidden="true">Edición con IA</span>
-          <span class="etiqueta-herramienta" aria-hidden="true">+200 recursos</span>
-        </div>
-      </section>
-
-      <!-- ══ 4. Qué encontrarás ═══════════════════════════════════════ -->
-      <section class="seccion bg-[var(--tarjeta-fondo)]">
-        <div class="contenedor max-w-[42rem] text-center" data-motion="reveal">
-          <h2 class="font-display text-[1.75rem] uppercase md:text-[2.25rem]">¿Qué encontrarás?</h2>
-          <span class="linea-acento" aria-hidden="true"></span>
-          <ul
-            class="prosa mx-auto mt-[var(--spacing-md)] flex flex-col gap-[var(--spacing-2xs)] text-left text-lg text-[var(--texto-secundario)]"
-          >
-            <li>— Cómo editar tus primeros videos virales de principio a fin, en vivo.</li>
-            <li>— El método que usa Juan Camilo con sus alumnos y clientes reales.</li>
-            <li>— Qué herramientas usar según si trabajas desde el celular o el computador.</li>
-            <li>— Cómo empezar a cobrar por tus ediciones aunque estés empezando de cero.</li>
-          </ul>
-          <div class="mt-[var(--spacing-lg)]">
-            <a href="#registro" class="boton boton-primario">Reservar cupo</a>
-          </div>
-        </div>
-      </section>
-
-      <!-- ══ 4. Sistema de aprendizaje + metodología ═══════════════ -->
       <section class="seccion">
-        <div class="contenedor" data-motion="reveal">
-          <h2 class="font-display text-center text-[1.75rem] uppercase md:text-[2.25rem]">Sistema de aprendizaje</h2>
-          <p class="prosa mx-auto mt-[var(--spacing-2xs)] text-center text-lg text-[var(--texto-secundario)]">
-            Metodología probada con nuestros alumnos y clientes: se aprende editando desde el primer día, no viendo
-            teoría.
-          </p>
-
-          <!-- "Compatible con" — insignias con glow, sin logos reales de
-               terceros (no son nuestros para redistribuir): iniciales
-               como marcador hasta tener el asset oficial de cada uno. -->
-          <p
-            class="mt-[var(--spacing-lg)] text-center text-sm font-semibold tracking-[0.1em] text-[var(--texto-secundario)] uppercase"
-          >
-            Compatible con
-          </p>
-          <div class="marquee-pista marquee-pista--rapida mt-[var(--spacing-sm)]">
+        <div class="contenedor max-w-[48rem]">
+          <div class="marquee-pista py-[var(--spacing-md)]">
             <div class="marquee-fila">
-              <span class="insignia-software" title="CapCut">Cc</span>
-              <span class="insignia-software" title="Premiere Pro">Pr</span>
-              <span class="insignia-software" title="After Effects">Ae</span>
-              <span class="insignia-software" title="DaVinci Resolve">Dr</span>
-              <span class="insignia-software" title="CapCut" aria-hidden="true">Cc</span>
-              <span class="insignia-software" title="Premiere Pro" aria-hidden="true">Pr</span>
-              <span class="insignia-software" title="After Effects" aria-hidden="true">Ae</span>
-              <span class="insignia-software" title="DaVinci Resolve" aria-hidden="true">Dr</span>
-            </div>
-          </div>
-
-          <div class="mt-[var(--spacing-lg)] grid gap-[var(--spacing-md)] md:grid-cols-3">
-            <div class="marco-offset tarjeta aspect-[3/4]" data-motion="reveal" data-motion-retraso="0">
-              <p class="text-sm text-[var(--texto-secundario)]">Resultado de alumno — pendiente</p>
-            </div>
-            <div class="marco-offset tarjeta aspect-[3/4]" data-motion="reveal" data-motion-retraso="1">
-              <p class="text-sm text-[var(--texto-secundario)]">Resultado de alumno — pendiente</p>
-            </div>
-            <div class="marco-offset tarjeta aspect-[3/4]" data-motion="reveal" data-motion-retraso="2">
-              <p class="text-sm text-[var(--texto-secundario)]">Resultado de alumno — pendiente</p>
+              <span class="etiqueta-herramienta">Premiere Pro</span>
+              <span class="etiqueta-herramienta">CapCut</span>
+              <span class="etiqueta-herramienta">After Effects</span>
+              <span class="etiqueta-herramienta">Motion Graphics</span>
+              <span class="etiqueta-herramienta">Edición con IA</span>
+              <span class="etiqueta-herramienta">+200 recursos</span>
+              <span class="etiqueta-herramienta" aria-hidden="true">Premiere Pro</span>
+              <span class="etiqueta-herramienta" aria-hidden="true">CapCut</span>
+              <span class="etiqueta-herramienta" aria-hidden="true">After Effects</span>
+              <span class="etiqueta-herramienta" aria-hidden="true">Motion Graphics</span>
+              <span class="etiqueta-herramienta" aria-hidden="true">Edición con IA</span>
+              <span class="etiqueta-herramienta" aria-hidden="true">+200 recursos</span>
             </div>
           </div>
         </div>
       </section>
 
-      <!-- ══ 5. Vas a editar a este nivel ═══════════════════════════
-           Galería de reels en cinta continua — 9:16, esquinas redondeadas,
-           shimmer diagonal simulando reproducción mientras no hay video
-           real (.tarjeta-reel en sitio.css). Mismo patrón de duplicado que
-           los demás marquees para el loop continuo.
+      <!-- ══ 4. Carrusel de efectos ═══════════════════════════════════
+           Reemplaza "¿Qué encontrarás?" — el cliente pidió gifs en bucle
+           con el nombre del efecto, en carrusel. Nombres y gifs reales
+           pendientes de entrega; por ahora shimmer + nombre placeholder
+           con el mismo tratamiento visual que ya se usaba en la galería
+           de reels.
       -->
-      <section class="seccion bg-[var(--tarjeta-fondo)]">
+      <section class="fondo-resplandor seccion bg-[var(--tarjeta-fondo)]" style="--resplandor-y: 0%">
         <div data-motion="reveal">
           <h2 class="contenedor font-display text-center text-[1.75rem] uppercase md:text-[2.25rem]">
-            Vas a editar a este nivel
+            Esto vas a aprender a editar
           </h2>
           <div class="marquee-pista mt-[var(--spacing-lg)]">
-            <div class="marquee-fila gap-[var(--spacing-sm)]">
-              <div class="tarjeta-reel">
-                <span class="tarjeta-reel__play" aria-hidden="true"
-                  ><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z" /></svg
-                ></span>
-                <span class="tarjeta-reel__etiqueta">Antes / después</span>
-              </div>
-              <div class="tarjeta-reel">
-                <span class="tarjeta-reel__play" aria-hidden="true"
-                  ><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z" /></svg
-                ></span>
-                <span class="tarjeta-reel__etiqueta">Motion graphics</span>
-              </div>
-              <div class="tarjeta-reel">
-                <span class="tarjeta-reel__play" aria-hidden="true"
-                  ><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z" /></svg
-                ></span>
-                <span class="tarjeta-reel__etiqueta">Edición viral</span>
-              </div>
-              <div class="tarjeta-reel">
-                <span class="tarjeta-reel__play" aria-hidden="true"
-                  ><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z" /></svg
-                ></span>
-                <span class="tarjeta-reel__etiqueta">Color grading</span>
-              </div>
-              <div class="tarjeta-reel" aria-hidden="true">
-                <span class="tarjeta-reel__play"
-                  ><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z" /></svg
-                ></span>
-                <span class="tarjeta-reel__etiqueta">Antes / después</span>
-              </div>
-              <div class="tarjeta-reel" aria-hidden="true">
-                <span class="tarjeta-reel__play"
-                  ><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z" /></svg
-                ></span>
-                <span class="tarjeta-reel__etiqueta">Motion graphics</span>
-              </div>
-              <div class="tarjeta-reel" aria-hidden="true">
-                <span class="tarjeta-reel__play"
-                  ><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z" /></svg
-                ></span>
-                <span class="tarjeta-reel__etiqueta">Edición viral</span>
-              </div>
-              <div class="tarjeta-reel" aria-hidden="true">
-                <span class="tarjeta-reel__play"
-                  ><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z" /></svg
-                ></span>
-                <span class="tarjeta-reel__etiqueta">Color grading</span>
-              </div>
-            </div>
-          </div>
-          <p class="contenedor mt-[var(--spacing-sm)] text-center text-sm text-[var(--texto-secundario)]">
-            Placeholder de galería — reels reales pendientes de entrega del cliente.
-          </p>
-        </div>
-      </section>
-
-      <!-- ══ 6. Ahorra tiempo ════════════════════════════════════════ -->
-      <section class="seccion">
-        <div class="contenedor max-w-[42rem] text-center" data-motion="reveal">
-          <h2 class="font-display text-[1.75rem] uppercase md:text-[2.25rem]">
-            Lo que te tomaría horas aprender solo, ahórratelo aquí
-          </h2>
-          <ul
-            class="prosa mx-auto mt-[var(--spacing-md)] flex flex-col gap-[var(--spacing-sm)] text-left text-lg text-[var(--texto-secundario)]"
-          >
-            <li class="flex items-center gap-[var(--spacing-2xs)]">
-              <span class="check-insignia" aria-hidden="true">✓</span>
-              Deja de perder tiempo viendo tutoriales sueltos que no llevan a nada.
-            </li>
-            <li class="flex items-center gap-[var(--spacing-2xs)]">
-              <span class="check-insignia" aria-hidden="true">✓</span>
-              Aprende el método completo en una sola sesión en vivo.
-            </li>
-            <li class="flex items-center gap-[var(--spacing-2xs)]">
-              <span class="check-insignia" aria-hidden="true">✓</span>
-              Resuelve tus dudas en directo, no en un foro sin respuesta.
-            </li>
-          </ul>
-          <div class="mt-[var(--spacing-lg)]">
-            <a href="#registro" class="boton boton-primario">Reservar cupo</a>
-          </div>
-        </div>
-      </section>
-
-      <!-- ══ 7. Esto es para ti si... ══════════════════════════════
-           Sección de calificación de audiencia, patrón tomado de la
-           referencia — criterios genéricos razonables para un curso de
-           edición, no afirmaciones sobre alumnos reales.
-      -->
-      <section class="seccion bg-[var(--tarjeta-fondo)]">
-        <div class="contenedor max-w-[42rem]" data-motion="reveal">
-          <h2 class="font-display text-center text-[1.75rem] uppercase md:text-[2.25rem]">Esto es para ti si...</h2>
-          <ul
-            class="prosa mx-auto mt-[var(--spacing-lg)] flex flex-col gap-[var(--spacing-sm)] text-left text-lg text-[var(--texto-secundario)]"
-          >
-            <li class="flex items-center gap-[var(--spacing-2xs)]">
-              <span class="check-insignia" aria-hidden="true">✓</span>
-              Creas contenido pero sientes que tus videos no tienen el nivel de edición que ves en otros creadores.
-            </li>
-            <li class="flex items-center gap-[var(--spacing-2xs)]">
-              <span class="check-insignia" aria-hidden="true">✓</span>
-              Tienes ideas pero no sabes cómo editarlas para que enganchen desde el primer segundo.
-            </li>
-            <li class="flex items-center gap-[var(--spacing-2xs)]">
-              <span class="check-insignia" aria-hidden="true">✓</span>
-              Quieres editar para otros y cobrar por ello, aunque hoy nunca hayas tocado un editor.
-            </li>
-          </ul>
-        </div>
-      </section>
-
-      <!-- ══ 8. El único programa que necesitas ═════════════════════
-           Currícula real, leída de la barra lateral de módulos del
-           checkout de referencia. Insignia circular en vez de número
-           suelto; cada tarjeta escalona su entrada.
-      -->
-      <section class="fondo-resplandor seccion" style="--resplandor-y: 0%">
-        <div class="contenedor max-w-[46rem]" data-motion="reveal">
-          <h2 class="font-display text-center text-[1.75rem] uppercase md:text-[2.25rem]">
-            El único programa que necesitas para convertirte
-          </h2>
-          <ol class="prosa mx-auto mt-[var(--spacing-lg)] flex flex-col gap-[var(--spacing-sm)]">
-            <li class="tarjeta flex items-center gap-[var(--spacing-sm)]" data-motion="reveal" data-motion-retraso="0">
-              <span class="insignia-numero" aria-hidden="true">01</span>
-              <div>
-                <h3 class="font-semibold">Comienza ya</h3>
-                <p class="text-[var(--texto-secundario)]">
-                  Introducción y mentalidad — de qué se trata editar de forma profesional.
-                </p>
-              </div>
-            </li>
-            <li class="tarjeta flex items-center gap-[var(--spacing-sm)]" data-motion="reveal" data-motion-retraso="1">
-              <span class="insignia-numero" aria-hidden="true">02</span>
-              <div>
-                <h3 class="font-semibold">Crea contenido con tendencia</h3>
-                <p class="text-[var(--texto-secundario)]">
-                  Conoce las herramientas que usan los editores profesionales.
-                </p>
-              </div>
-            </li>
-            <li class="tarjeta flex items-center gap-[var(--spacing-sm)]" data-motion="reveal" data-motion-retraso="2">
-              <span class="insignia-numero" aria-hidden="true">03</span>
-              <div>
-                <h3 class="font-semibold">CapCut / Premiere Pro (móvil y PC)</h3>
-                <p class="text-[var(--texto-secundario)]">Fundamentos y optimización de cada herramienta de edición.</p>
-              </div>
-            </li>
-            <li class="tarjeta flex items-center gap-[var(--spacing-sm)]" data-motion="reveal" data-motion-retraso="3">
-              <span class="insignia-numero" aria-hidden="true">04</span>
-              <div>
-                <h3 class="font-semibold">Motion graphics y After Effects</h3>
-                <p class="text-[var(--texto-secundario)]">Gráficos animados para diferenciar tus ediciones.</p>
-              </div>
-            </li>
-            <li class="tarjeta flex items-center gap-[var(--spacing-sm)]" data-motion="reveal" data-motion-retraso="4">
-              <span class="insignia-numero" aria-hidden="true">05</span>
-              <div>
-                <h3 class="font-semibold">Destino IA PRO</h3>
-                <p class="text-[var(--texto-secundario)]">
-                  Herramientas de inteligencia artificial aplicadas a la edición.
-                </p>
-              </div>
-            </li>
-            <li class="tarjeta flex items-center gap-[var(--spacing-sm)]" data-motion="reveal" data-motion-retraso="5">
-              <span class="insignia-numero" aria-hidden="true">06</span>
-              <div>
-                <h3 class="font-semibold">Descarga de recursos con IA</h3>
-                <p class="text-[var(--texto-secundario)]">Genera y descarga recursos con IA para tus proyectos.</p>
-              </div>
-            </li>
-            <li class="tarjeta flex items-center gap-[var(--spacing-sm)]" data-motion="reveal" data-motion-retraso="6">
-              <span class="insignia-numero" aria-hidden="true">07</span>
-              <div>
-                <h3 class="font-semibold">Pack de +200 recursos</h3>
-                <p class="text-[var(--texto-secundario)]">Biblioteca de recursos listos para usar en tus ediciones.</p>
-              </div>
-            </li>
-          </ol>
-        </div>
-      </section>
-
-      <!-- ══ 9. La comunidad de mayor crecimiento ═══════════════════
-           Contador animado (data-motion="counter"). El valor es una
-           cifra de ejemplo para probar la interacción — no publicar sin
-           reemplazarla por un caso real y verificable.
-      -->
-      <section
-        class="fondo-resplandor seccion bg-[var(--tarjeta-fondo)]"
-        style="--resplandor-color: var(--acento); --resplandor-y: 100%"
-      >
-        <div class="contenedor max-w-[36rem] text-center" data-motion="reveal">
-          <p class="text-sm font-semibold tracking-[0.14em] text-[var(--accion)] uppercase">
-            La comunidad de mayor crecimiento
-          </p>
-          <h2 class="font-display mt-[var(--spacing-2xs)] text-[1.75rem] uppercase md:text-[2.25rem]">
-            Alumnos que ya están cobrando por sus ediciones
-          </h2>
-          <p
-            class="font-display mt-[var(--spacing-md)] text-[3rem] leading-none text-[var(--accion)]"
-            data-motion="counter"
-          >
-            +<span data-to="150" data-sufijo="">0</span>
-          </p>
-          <p class="mt-[var(--spacing-2xs)] text-sm text-[var(--texto-secundario)]">
-            Cifra de ejemplo — pedir al cliente un número real y verificable antes de publicar.
-          </p>
-        </div>
-
-        <!-- Avatares girando en direcciones opuestas — placeholder de
-             "creadores de la comunidad" mientras no hay fotos reales. -->
-        <div class="mt-[var(--spacing-lg)] flex flex-col gap-[var(--spacing-2xs)]">
-          <div class="marquee-pista marquee-pista--rapida">
             <div class="marquee-fila">
-              <span class="avatar-marquee">VR</span>
-              <span class="avatar-marquee">JG</span>
-              <span class="avatar-marquee">MC</span>
-              <span class="avatar-marquee">DL</span>
-              <span class="avatar-marquee">SP</span>
-              <span class="avatar-marquee">RT</span>
-              <span class="avatar-marquee" aria-hidden="true">VR</span>
-              <span class="avatar-marquee" aria-hidden="true">JG</span>
-              <span class="avatar-marquee" aria-hidden="true">MC</span>
-              <span class="avatar-marquee" aria-hidden="true">DL</span>
-              <span class="avatar-marquee" aria-hidden="true">SP</span>
-              <span class="avatar-marquee" aria-hidden="true">RT</span>
+              <div class="tarjeta-efecto">
+                <span class="tarjeta-efecto__play" aria-hidden="true"
+                  ><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z" /></svg
+                ></span>
+                <span class="tarjeta-efecto__etiqueta">Efecto: Zoom Punch</span>
+              </div>
+              <div class="tarjeta-efecto">
+                <span class="tarjeta-efecto__play" aria-hidden="true"
+                  ><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z" /></svg
+                ></span>
+                <span class="tarjeta-efecto__etiqueta">Efecto: Speed Ramp</span>
+              </div>
+              <div class="tarjeta-efecto">
+                <span class="tarjeta-efecto__play" aria-hidden="true"
+                  ><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z" /></svg
+                ></span>
+                <span class="tarjeta-efecto__etiqueta">Efecto: Glitch Transition</span>
+              </div>
+              <div class="tarjeta-efecto">
+                <span class="tarjeta-efecto__play" aria-hidden="true"
+                  ><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z" /></svg
+                ></span>
+                <span class="tarjeta-efecto__etiqueta">Efecto: Color Pop</span>
+              </div>
+              <div class="tarjeta-efecto" aria-hidden="true">
+                <span class="tarjeta-efecto__play"
+                  ><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z" /></svg
+                ></span>
+                <span class="tarjeta-efecto__etiqueta">Efecto: Zoom Punch</span>
+              </div>
+              <div class="tarjeta-efecto" aria-hidden="true">
+                <span class="tarjeta-efecto__play"
+                  ><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z" /></svg
+                ></span>
+                <span class="tarjeta-efecto__etiqueta">Efecto: Speed Ramp</span>
+              </div>
+              <div class="tarjeta-efecto" aria-hidden="true">
+                <span class="tarjeta-efecto__play"
+                  ><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z" /></svg
+                ></span>
+                <span class="tarjeta-efecto__etiqueta">Efecto: Glitch Transition</span>
+              </div>
+              <div class="tarjeta-efecto" aria-hidden="true">
+                <span class="tarjeta-efecto__play"
+                  ><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z" /></svg
+                ></span>
+                <span class="tarjeta-efecto__etiqueta">Efecto: Color Pop</span>
+              </div>
             </div>
           </div>
-          <div class="marquee-pista marquee-pista--rapida marquee-pista--derecha">
-            <div class="marquee-fila">
-              <span class="avatar-marquee">AL</span>
-              <span class="avatar-marquee">KP</span>
-              <span class="avatar-marquee">NF</span>
-              <span class="avatar-marquee">EG</span>
-              <span class="avatar-marquee">TB</span>
-              <span class="avatar-marquee">CO</span>
-              <span class="avatar-marquee" aria-hidden="true">AL</span>
-              <span class="avatar-marquee" aria-hidden="true">KP</span>
-              <span class="avatar-marquee" aria-hidden="true">NF</span>
-              <span class="avatar-marquee" aria-hidden="true">EG</span>
-              <span class="avatar-marquee" aria-hidden="true">TB</span>
-              <span class="avatar-marquee" aria-hidden="true">CO</span>
-            </div>
-          </div>
-        </div>
-        <p class="contenedor mt-[var(--spacing-sm)] text-center text-xs text-[var(--texto-secundario)]">
-          Iniciales de ejemplo — se reemplazan por fotos reales de alumnos cuando el cliente las entregue.
-        </p>
-      </section>
+          <p class="contenedor mt-[var(--spacing-sm)] text-center text-xs text-[var(--texto-secundario)]">
+            Gifs y nombres de ejemplo — se reemplazan por los efectos reales cuando el cliente los entregue.
+          </p>
 
-      <!-- ══ 10. Dos bonos ═══════════════════════════════════════════ -->
-      <section class="seccion">
-        <div class="contenedor grid gap-[var(--spacing-sm)] md:grid-cols-2">
-          <article class="tarjeta" data-motion="reveal" data-motion-retraso="0">
-            <p class="text-sm font-semibold text-[var(--accion)] uppercase">Bono 1</p>
-            <h3 class="font-display mt-[var(--spacing-3xs)] text-xl uppercase">Agenda de IA para ti</h3>
-            <p class="mt-[var(--spacing-2xs)] text-[var(--texto-secundario)]">
-              [Descripción pendiente — qué incluye exactamente este bono]
-            </p>
-          </article>
-          <article class="tarjeta" data-motion="reveal" data-motion-retraso="1">
-            <p class="text-sm font-semibold text-[var(--accion)] uppercase">Bono 2</p>
-            <h3 class="font-display mt-[var(--spacing-3xs)] text-xl uppercase">Masterclass de edición avanzada</h3>
-            <p class="mt-[var(--spacing-2xs)] text-[var(--texto-secundario)]">
-              [Descripción pendiente — qué incluye exactamente este bono]
-            </p>
-          </article>
-        </div>
-      </section>
-
-      <!-- ══ 11. Quién ═════════════════════════════════════════════ -->
-      <section class="seccion bg-[var(--tarjeta-fondo)]">
-        <div
-          class="contenedor grid gap-[var(--spacing-xl)] lg:grid-cols-[1fr_1.3fr] lg:items-center"
-          data-motion="reveal"
-        >
-          <div
-            class="marco-offset aspect-square rounded-[var(--radius-lg)] border border-[var(--linea)] bg-[var(--pagina-fondo)]"
-          ></div>
-          <div>
-            <p class="text-sm font-semibold tracking-[0.14em] text-[var(--accion)] uppercase">¿Quién?</p>
-            <h2 class="font-display mt-[var(--spacing-2xs)] text-[1.75rem] uppercase md:text-[2.25rem]">
-              Juan Camilo Pérez Moreno
-            </h2>
-            <p class="prosa mt-[var(--spacing-sm)] text-lg text-[var(--texto-secundario)]">
-              [Biografía pendiente — trayectoria del instructor, años editando, marcas o clientes con los que ha
-              trabajado. No inventar cifras: pedirlas al cliente.]
-            </p>
-          </div>
-        </div>
-      </section>
-
-      <!-- ══ 12. Testimonios reales ═══════════════════════════════════
-           Transcritos del checkout de referencia — verificar la
-           redacción exacta con el cliente antes de publicar. Avatar con
-           iniciales mientras no hay foto real.
-      -->
-      <section class="seccion">
-        <div class="contenedor" data-motion="reveal">
-          <h2 class="font-display text-center text-[1.75rem] uppercase md:text-[2.25rem]">Lo que dicen los alumnos</h2>
-          <div class="mt-[var(--spacing-lg)] grid gap-[var(--spacing-sm)] md:grid-cols-2">
-            <figure class="tarjeta" data-motion="reveal" data-motion-retraso="0">
-              <div class="flex items-center gap-[var(--spacing-2xs)]">
-                <span class="avatar-iniciales" aria-hidden="true">VR</span>
-                <div>
-                  <p class="font-semibold">Valentina Rojas</p>
-                  <div class="flex gap-[2px] text-[var(--accion)]" aria-label="5 de 5 estrellas">★★★★★</div>
-                </div>
-              </div>
-              <blockquote class="prosa mt-[var(--spacing-sm)] text-[var(--texto-secundario)]">
-                <p>
-                  "En lo personal me parece que es un curso muy completo, muestra las cosas claras, sin rodeos. Tiene
-                  demasiados tips y ejemplos que funcionan en el día a día. Aprendí más en 2 meses y medio que en 1 año
-                  haciendo el técnico — es súper claro, paciente y muy entusiasta."
-                </p>
-              </blockquote>
-            </figure>
-            <figure class="tarjeta" data-motion="reveal" data-motion-retraso="1">
-              <div class="flex items-center gap-[var(--spacing-2xs)]">
-                <span class="avatar-iniciales" aria-hidden="true">JG</span>
-                <div>
-                  <p class="font-semibold">Juan Guzmán</p>
-                  <div class="flex gap-[2px] text-[var(--accion)]" aria-label="5 de 5 estrellas">★★★★★</div>
-                </div>
-              </div>
-              <blockquote class="prosa mt-[var(--spacing-sm)] text-[var(--texto-secundario)]">
-                <p>
-                  "Cuando ingresé, lo único que pensé es que quería que me devolvieran todo el dinero que pagué en mi
-                  universidad. El programa me ayudó como profesional en edición, y eso que ya tenía mi título. Juan es
-                  un tipo muy carismático, paciente y definitivamente uno de los mejores editores que conozco."
-                </p>
-              </blockquote>
-            </figure>
-          </div>
-        </div>
-      </section>
-
-      <!-- ══ 13. Precio / oferta ═══════════════════════════════════════
-           $47 es el precio mostrado en la referencia estructural. El
-           checkout real de Hotmart mostraba €25/semestre — confirmar con
-           el cliente cuál es el vigente antes de publicar. El precio
-           tachado es de ejemplo, no un ancla real todavía.
-      -->
-      <section class="fondo-resplandor seccion bg-[var(--tarjeta-fondo)]" style="--resplandor-y: 50%">
-        <div class="contenedor max-w-[28rem]" data-motion="reveal">
-          <article class="marco-offset tarjeta text-center">
-            <p class="text-sm font-semibold tracking-[0.14em] text-[var(--accion)] uppercase">Plan de Edición Total</p>
-            <p class="mt-[var(--spacing-sm)]">
-              <span class="precio-tachado text-lg">[PRECIO_ANCLA_PENDIENTE]</span>
-            </p>
-            <p class="font-display mt-[var(--spacing-3xs)] text-[3rem] leading-none">[PRECIO_PENDIENTE]</p>
-            <p class="mt-[var(--spacing-3xs)] text-sm text-[var(--texto-secundario)]">
-              Precio de referencia: $47 (o €25/semestre según el checkout actual) — confirmar cuál usar.
-            </p>
-            <ul
-              class="prosa mt-[var(--spacing-md)] flex flex-col gap-[var(--spacing-2xs)] text-left text-[var(--texto-secundario)]"
-            >
-              <li class="flex items-center gap-[var(--spacing-2xs)]">
-                <span class="check-insignia" aria-hidden="true">✓</span>
-                Acceso a los 6 módulos del Plan de Edición Total
-              </li>
-              <li class="flex items-center gap-[var(--spacing-2xs)]">
-                <span class="check-insignia" aria-hidden="true">✓</span>
-                Biblioteca de sonidos para videos virales
-              </li>
-              <li class="flex items-center gap-[var(--spacing-2xs)]">
-                <span class="check-insignia" aria-hidden="true">✓</span>
-                Impulsa tus ediciones con IA
-              </li>
-              <li class="flex items-center gap-[var(--spacing-2xs)]">
-                <span class="check-insignia" aria-hidden="true">✓</span>
-                Pack de +200 recursos
-              </li>
-            </ul>
-            <p
-              class="mt-[var(--spacing-md)] inline-flex items-center gap-2 rounded-full border border-[var(--linea)] px-4 py-1.5 text-sm font-semibold text-[var(--estado-aviso)]"
-            >
-              Garantía de 7 días
-            </p>
-          </article>
-          <p class="mt-[var(--spacing-sm)] text-center text-sm text-[var(--texto-secundario)]">
-            Esta oferta se presenta al final de la clase gratuita — no es lo que se cobra por el registro de hoy.
+          <p class="contenedor font-display mt-[var(--spacing-lg)] text-center text-xl text-[var(--accion)] uppercase">
+            "La clase es 100% gratis — no se te cobra nada por entrar"
+          </p>
+          <p class="contenedor mt-[var(--spacing-2xs)] text-center text-sm text-[var(--texto-secundario)]">
+            Cupo único: es una clase en vivo que se dicta por única vez y no queda grabada en ningún lugar.
           </p>
         </div>
       </section>
 
-      <!-- ══ 14. Formulario de registro ══════════════════════════════
+      <!-- ══ 5. Formulario de registro ══════════════════════════════
            Los cuatro estados los gestiona src/lib/formulario.ts. Al
-           enviar con éxito redirige a /gracias/ (data-exito-redirige).
+           enviar con éxito redirige a /gracias/, donde está el botón de
+           un solo clic al grupo de WhatsApp.
       -->
-      <section id="registro" class="seccion">
+      <section id="registro" class="seccion bg-[var(--tarjeta-fondo)]">
         <div class="contenedor max-w-[32rem]" data-motion="reveal">
           <h2 class="font-display text-center text-[1.75rem] uppercase md:text-[2.25rem]">Reserva tu cupo gratis</h2>
           <p class="prosa mt-[var(--spacing-2xs)] text-center text-[var(--texto-secundario)]">
-            Cupos limitados a <span data-cupos>[CUPOS]</span> personas por clase.
+            Cupos limitados a <span data-cupos>100</span> personas por clase.
           </p>
 
           <form
@@ -687,9 +355,15 @@
 
             <div class="grid gap-[var(--spacing-sm)]">
               <div>
-                <label class="etiqueta-campo" for="nombre">Tu nombre</label>
+                <label class="etiqueta-campo" for="nombre">Nombre completo</label>
                 <input class="campo" type="text" id="nombre" name="nombre" autocomplete="name" required />
                 <p class="error-campo" data-error-de="nombre" hidden></p>
+              </div>
+
+              <div>
+                <label class="etiqueta-campo" for="email">Correo</label>
+                <input class="campo" type="email" id="email" name="email" autocomplete="email" required />
+                <p class="error-campo" data-error-de="email" hidden></p>
               </div>
 
               <div>
@@ -698,85 +372,48 @@
                 <p class="error-campo" data-error-de="telefono" hidden></p>
               </div>
 
+              <label class="casilla-campo">
+                <input type="checkbox" name="autoriza_marketing" value="si" />
+                Autorizo el envío de información de marketing y avisos sobre esta y futuras formaciones.
+              </label>
+
               <button type="submit" class="boton boton-primario w-full" data-enviar>
                 <span class="indicador-carga" aria-hidden="true"></span>
-                Reservar mi cupo gratis
+                Acceder al WhatsApp VIP
               </button>
 
               <p data-estado data-mensaje-exito="¡Listo! Te llevamos a WhatsApp." hidden></p>
 
               <p class="text-sm text-[var(--texto-secundario)]">
-                Tus datos se usan solo para enviarte el enlace de la clase.
-                <a href="/privacidad" class="underline underline-offset-2">Cómo los trato</a>.
+                Tus datos se usan solo para darte acceso a la clase.
+                <a href="/politica-de-privacidad/" class="underline underline-offset-2">Cómo los trato</a>.
               </p>
             </div>
           </form>
         </div>
       </section>
-
-      <!-- ══ 15. FAQ ═══════════════════════════════════════════════ -->
-      <section class="seccion bg-[var(--tarjeta-fondo)]">
-        <div class="contenedor max-w-[42rem]" data-motion="reveal">
-          <h2 class="font-display text-center text-[1.75rem] uppercase md:text-[2.25rem]">Preguntas frecuentes</h2>
-          <div class="prosa mt-[var(--spacing-lg)]" data-faq>
-            <details name="faq">
-              <summary>¿Es un curso de por vida?</summary>
-              <div>[RESPUESTA_PENDIENTE — confirmar condiciones de acceso con el cliente]</div>
-            </details>
-            <details name="faq">
-              <summary>¿Es un solo pago o una suscripción?</summary>
-              <div>
-                [RESPUESTA_PENDIENTE — el checkout de referencia mostraba €25/semestre (suscripción), pero la página
-                larga de referencia mostraba $47 como pago único. Confirmar cuál aplica.]
-              </div>
-            </details>
-            <details name="faq">
-              <summary>¿Necesito computador o me sirve solo con el celular?</summary>
-              <div>
-                [RESPUESTA_PENDIENTE — la currícula incluye CapCut para móvil y Premiere Pro para PC, sugiere que ambos
-                caminos son válidos — confirmar con el cliente.]
-              </div>
-            </details>
-            <details name="faq">
-              <summary>¿El curso trae actualizaciones?</summary>
-              <div>[RESPUESTA_PENDIENTE]</div>
-            </details>
-            <details name="faq">
-              <summary>¿Necesito conocimientos previos de edición?</summary>
-              <div>[RESPUESTA_PENDIENTE — el módulo 1 se llama "Comienza ya", sugiere que no, confirmar.]</div>
-            </details>
-          </div>
-        </div>
-      </section>
     </main>
 
-    <!-- ══ Pie ═══════════════════════════════════════════════════════ -->
-    <footer class="border-t border-[var(--linea)] py-[var(--spacing-xl)]">
+    <!-- ══ Pie ═══════════════════════════════════════════════════════
+         Legal poco notorio, tal como pidió el cliente — texto pequeño,
+         no es el foco de la página. Las 4 páginas son borrador, no
+         revisión legal.
+    -->
+    <footer class="border-t border-[var(--linea)] py-[var(--spacing-lg)]">
       <div class="contenedor text-center">
-        <p class="font-display uppercase">Plan de Edición Total</p>
-        <p class="mt-[var(--spacing-2xs)] text-[var(--texto-secundario)]">¿Aún con dudas?</p>
-        <a
-          href="https://wa.me/573237158237?text=Hola%2C%20tengo%20una%20duda%20sobre%20la%20clase%20gratis%20de%20edici%C3%B3n%20de%20video."
-          target="_blank"
-          rel="noopener noreferrer"
-          class="boton boton-primario mt-[var(--spacing-2xs)] inline-flex"
-        >
-          Escríbenos por WhatsApp
-        </a>
-
         <nav
-          class="mt-[var(--spacing-lg)] flex flex-wrap justify-center gap-[var(--spacing-md)] text-sm"
+          class="flex flex-wrap justify-center gap-[var(--spacing-sm)] text-xs text-[var(--texto-secundario)]"
           aria-label="Legal"
         >
-          <a href="/privacidad" class="text-[var(--texto-secundario)] hover:text-[var(--texto-principal)]"
-            >Privacidad</a
-          >
+          <a href="/terminos-y-condiciones/" class="hover:text-[var(--texto-principal)]">Términos y condiciones</a>
+          <a href="/politica-de-cookies/" class="hover:text-[var(--texto-principal)]">Política de cookies</a>
+          <a href="/aviso-legal/" class="hover:text-[var(--texto-principal)]">Aviso legal</a>
+          <a href="/politica-de-privacidad/" class="hover:text-[var(--texto-principal)]">Política de privacidad</a>
         </nav>
+        <p class="mt-[var(--spacing-sm)] text-xs text-[var(--texto-secundario)]">
+          © <span data-ano>2026</span> Plan de Edición Total. Todos los derechos reservados.
+        </p>
       </div>
-
-      <p class="contenedor mt-[var(--spacing-lg)] text-center text-sm text-[var(--texto-secundario)]">
-        © <span data-ano>2026</span> Plan de Edición Total
-      </p>
     </footer>
   </body>
 </html>

@@ -104,7 +104,61 @@ function iniciarCounter(): void {
   contadores.forEach((el) => observador.observe(el));
 }
 
+// Cuenta regresiva a la fecha de la clase. Lee `data-cuenta-hasta` (ISO
+// con offset) de cada contenedor que la use — hay más de uno (hero grande,
+// barra flotante compacta), así que actualiza todos desde un único
+// intervalo en vez de uno por instancia. `data-cuenta-formato="compacto"`
+// pinta un texto corto ("2d 14h 30m"); si no, escribe en los campos
+// `[data-cuenta-campo]` que ya existen en el HTML con ceros de partida —
+// si el JS no llega a correr, esos ceros son el peor caso, no un hueco.
+function formatearRestante(msRestante: number) {
+  const total = Math.max(0, Math.floor(msRestante / 1000));
+  return {
+    dias: Math.floor(total / 86400),
+    horas: Math.floor((total % 86400) / 3600),
+    minutos: Math.floor((total % 3600) / 60),
+    segundos: total % 60,
+  };
+}
+
+function iniciarCuentaRegresiva(): void {
+  const contenedores = document.querySelectorAll<HTMLElement>('[data-cuenta-hasta]');
+  if (contenedores.length === 0) return;
+
+  const actualizar = (): void => {
+    contenedores.forEach((el) => {
+      const destino = new Date(el.dataset.cuentaHasta ?? '').getTime();
+      if (Number.isNaN(destino)) return;
+      const restante = destino - Date.now();
+      const { dias, horas, minutos, segundos } = formatearRestante(restante);
+
+      if (el.dataset.cuentaFormato === 'compacto') {
+        el.textContent = restante <= 0 ? 'En vivo ahora' : `${dias}d ${horas}h ${minutos}m`;
+        return;
+      }
+
+      const escribir = (campo: string, valor: number): void => {
+        const destinoEl = el.querySelector<HTMLElement>(`[data-cuenta-campo="${campo}"]`);
+        if (destinoEl) destinoEl.textContent = String(valor).padStart(2, '0');
+      };
+      escribir('dias', dias);
+      escribir('horas', horas);
+      escribir('minutos', minutos);
+      escribir('segundos', segundos);
+
+      if (restante <= 0) {
+        const enVivo = el.querySelector<HTMLElement>('[data-cuenta-en-vivo]');
+        if (enVivo) enVivo.hidden = false;
+      }
+    });
+  };
+
+  actualizar();
+  window.setInterval(actualizar, 1000);
+}
+
 export function iniciarMotion(): void {
   iniciarReveal();
   iniciarCounter();
+  iniciarCuentaRegresiva();
 }

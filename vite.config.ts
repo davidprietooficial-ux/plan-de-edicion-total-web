@@ -22,14 +22,18 @@ export default defineConfig({
     // es lo que permite cachear un año con seguridad (ver public/.htaccess).
     assetsDir: 'assets',
 
-    // Dos páginas: el registro y la confirmación de gracias tras el envío
-    // del formulario (redirige ahí src/lib/formulario.ts). Sigue siendo T1
-    // en espíritu — la de gracias es un paso operativo del embudo, no
-    // contenido nuevo — pero necesita su propia entrada de Vite.
+    // El registro, la confirmación de gracias tras el envío del formulario
+    // (redirige ahí src/lib/formulario.ts), y las 4 páginas legales que
+    // pidió el cliente en el pie — cada carpeta necesita su propia entrada
+    // de Vite para que el build genere su index.html.
     rollupOptions: {
       input: {
         inicio: r('index.html'),
         gracias: r('gracias/index.html'),
+        terminos: r('terminos-y-condiciones/index.html'),
+        cookies: r('politica-de-cookies/index.html'),
+        avisoLegal: r('aviso-legal/index.html'),
+        privacidad: r('politica-de-privacidad/index.html'),
       },
       output: {
         entryFileNames: 'assets/[name]-[hash].js',

@@ -5,6 +5,24 @@
  * Este archivo sí: aquí van los patrones que usan esos tokens.
  * ─────────────────────────────────────────────────────────────────── */
 
+/* ── Textura de ruido ──────────────────────────────────────────────────
+ * El cliente pidió "componentes de ruido" para reforzar el look neón
+ * sobre fondo oscuro. SVG con feTurbulence en vez de una imagen: cero
+ * peso de red, se repite en mosaico. mix-blend-mode:overlay hace que sea
+ * casi imperceptible como imagen suelta y se lea como grano de cámara.
+ * pointer-events:none para que nunca capture un clic ni un foco.
+ */
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: 999;
+  pointer-events: none;
+  opacity: 0.05;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='180' height='180'><filter id='r'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%25' height='100%25' filter='url(%23r)'/></svg>");
+}
+
 /* ── Motion T2 ────────────────────────────────────────────────────────
  *
  * lib/motion.ts anima con la Web Animations API, no con clases CSS: los
@@ -63,6 +81,102 @@
   animation: pulso 1.6s ease-out infinite;
 }
 
+/* ── Cuenta regresiva gigante ────────────────────────────────────────────
+ * lib/motion.ts la actualiza cada segundo leyendo data-cuenta-hasta. Cada
+ * unidad es un bloque con número en Anton + resplandor de texto (glow de
+ * neón real, no una sombra decorativa) y su etiqueta debajo.
+ */
+.contador-cuenta {
+  display: flex;
+  justify-content: center;
+  gap: var(--spacing-sm);
+}
+.contador-unidad {
+  display: flex;
+  min-width: 64px;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+}
+.contador-unidad__numero {
+  font-family: var(--font-display);
+  font-size: clamp(2.25rem, 6vw, 3.5rem);
+  line-height: 1;
+  color: var(--accion);
+  text-shadow:
+    0 0 12px color-mix(in srgb, var(--accion) 70%, transparent),
+    0 0 32px color-mix(in srgb, var(--accion) 40%, transparent);
+  font-variant-numeric: tabular-nums;
+}
+.contador-unidad__etiqueta {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--texto-secundario);
+}
+
+/* ── Toggle "Instrucciones / Más información" ────────────────────────────
+ * Revela el bloque de video, que empieza oculto. Sin JS el <button> sigue
+ * siendo un enlace ancla normal por el href="#video" del <a> subyacente,
+ * así que nunca es una trampa sin salida.
+ */
+.toggle-instrucciones[aria-expanded='true'] .toggle-instrucciones__icono {
+  transform: rotate(180deg);
+}
+.toggle-instrucciones__icono {
+  display: inline-flex;
+  transition: transform var(--mov-normal) var(--mov-curva);
+}
+
+/* ── Carrusel de efectos ──────────────────────────────────────────────── */
+.tarjeta-efecto {
+  position: relative;
+  flex-shrink: 0;
+  width: 220px;
+  aspect-ratio: 4 / 5;
+  overflow: hidden;
+  border-radius: var(--radius-lg);
+  border: var(--borde-ancho) solid color-mix(in srgb, var(--accion) 35%, var(--linea));
+  background: linear-gradient(
+    120deg,
+    var(--tarjeta-fondo) 30%,
+    var(--elevado-fondo) 50%,
+    var(--tarjeta-fondo) 70%
+  );
+  background-size: 260% 100%;
+  animation: reel-shimmer 4.5s ease-in-out infinite;
+  box-shadow: 0 0 18px color-mix(in srgb, var(--accion) 20%, transparent);
+}
+.tarjeta-efecto__play {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.tarjeta-efecto__play svg {
+  height: 22px;
+  width: 22px;
+  color: var(--accion);
+  filter: drop-shadow(0 0 8px color-mix(in srgb, var(--accion) 60%, transparent));
+}
+.tarjeta-efecto__etiqueta {
+  position: absolute;
+  inset-inline: 0;
+  bottom: 0;
+  padding: var(--spacing-2xs);
+  font-size: 12px;
+  font-weight: 700;
+  text-align: center;
+  color: var(--texto-principal);
+  background: linear-gradient(
+    to top,
+    color-mix(in srgb, var(--tarjeta-fondo) 92%, transparent),
+    transparent
+  );
+}
+
 /* ── Marquee — CSS puro, sin JS ─────────────────────────────────────────
  * Antes usaba la Web Animations API con un cálculo de ancho en JS que
  * REBOTABA (direction:'alternate'): iba y volvía, no daba la sensación de
@@ -110,46 +224,73 @@
 /* ── Marquee de herramientas ────────────────────────────────────────── */
 .etiqueta-herramienta {
   flex-shrink: 0;
-  border: var(--borde-ancho) solid var(--linea);
+  border: var(--borde-ancho) solid color-mix(in srgb, var(--accion) 45%, var(--linea));
   border-radius: var(--radius-md);
   padding: var(--spacing-2xs) var(--spacing-sm);
   font-size: 14px;
   font-weight: 600;
-  color: var(--texto-secundario);
+  color: var(--accion);
   white-space: nowrap;
+  box-shadow: 0 0 10px color-mix(in srgb, var(--accion) 25%, transparent);
 }
 
 /* ── CTA flotante — móvil ───────────────────────────────────────────── */
+/* Barra flotante permanente — el cliente la quiere visible siempre, no
+   solo en móvil (antes se ocultaba desde 1024px). Cuenta regresiva a la
+   izquierda, mensaje + botón a la derecha, sublínea de refuerzo debajo. */
 .cta-flotante {
   position: fixed;
   inset-inline: 0;
   bottom: 0;
   z-index: 30;
   display: flex;
-  gap: var(--spacing-2xs);
-  padding: var(--spacing-2xs) var(--spacing-sm);
-  padding-bottom: max(var(--spacing-2xs), env(safe-area-inset-bottom));
-  background: color-mix(in srgb, var(--pagina-fondo) 92%, transparent);
-  border-top: var(--borde-ancho) solid var(--linea);
-  backdrop-filter: blur(8px);
+  flex-direction: column;
+  gap: var(--spacing-3xs);
+  padding: var(--spacing-sm) var(--spacing-md);
+  padding-bottom: max(var(--spacing-sm), env(safe-area-inset-bottom));
+  background: color-mix(in srgb, var(--pagina-fondo) 94%, transparent);
+  border-top: var(--borde-ancho) solid color-mix(in srgb, var(--accion) 35%, var(--linea));
+  backdrop-filter: blur(10px);
+  box-shadow: 0 -8px 24px color-mix(in srgb, var(--accion) 12%, transparent);
 }
-.cta-flotante .boton {
-  flex: 1;
+.cta-flotante__fila {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--spacing-sm);
+  flex-wrap: wrap;
 }
-@media (min-width: 1024px) {
-  .cta-flotante {
-    display: none;
-  }
+.cta-flotante__cuenta {
+  display: flex;
+  align-items: baseline;
+  gap: var(--spacing-3xs);
+  font-size: 13px;
+  color: var(--texto-secundario);
+}
+.cta-flotante__cuenta strong {
+  font-family: var(--font-display);
+  font-size: 1.15rem;
+  color: var(--accion);
+  text-shadow: 0 0 10px color-mix(in srgb, var(--accion) 55%, transparent);
+  font-variant-numeric: tabular-nums;
+}
+.cta-flotante__mensaje {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--texto-secundario);
+  text-align: right;
+}
+.cta-flotante__sub {
+  font-size: 11px;
+  color: var(--texto-secundario);
+  text-align: center;
 }
 
-/* Espacio reservado para que el CTA flotante no tape el pie de página. */
+/* Espacio reservado para que la barra flotante no tape el pie de página —
+   ahora una sola medida en los tres cortes porque la barra ya no se
+   esconde en escritorio. */
 body {
-  padding-bottom: 72px;
-}
-@media (min-width: 1024px) {
-  body {
-    padding-bottom: 0;
-  }
+  padding-bottom: 112px;
 }
 
 /* ── Producción visual — el nivel de detalle de una página de venta real,
@@ -537,23 +678,27 @@ body {
   transform: none;
 }
 
-/* Píldora + degradado naranja + glow: es el mismo tratamiento de botón
-   que la referencia (radio 28-34px, borde blanco translúcido, sombra que
-   se enciende al pasar el ratón, "shrink" al pulsar) — con el degradado
-   en naranja de marca en vez del azul-morado del original, que cae en el
-   rango de matiz que prohíbe anti_slop.rango_hue_prohibido. */
+/* Píldora naranja sólida + glow neón — el cliente pidió quitar los
+   degradados de la página: nada de relleno en dos tonos, el color es
+   plano y lo que hace el trabajo visual es el resplandor exterior, como
+   un cartel de neón encendido. */
 .boton-primario {
-  background: linear-gradient(180deg, var(--accion-hover) 0%, var(--accion) 100%);
+  background: var(--accion);
   color: var(--texto-sobre-accion);
-  border: var(--borde-ancho) solid color-mix(in srgb, white 45%, transparent);
+  border: var(--borde-ancho) solid color-mix(in srgb, var(--accion-hover) 70%, white);
   border-radius: 9999px;
-  box-shadow: 0 0 0 color-mix(in srgb, var(--accion) 0%, transparent);
+  box-shadow:
+    0 0 16px color-mix(in srgb, var(--accion) 55%, transparent),
+    0 0 2px color-mix(in srgb, var(--accion) 80%, transparent);
   transition:
     box-shadow var(--mov-normal) var(--mov-curva),
     transform var(--mov-rapido) var(--mov-curva);
 }
 .boton-primario:hover:not(:disabled) {
-  box-shadow: 0 0 28px color-mix(in srgb, var(--accion) 55%, transparent);
+  background: var(--accion-hover);
+  box-shadow:
+    0 0 32px color-mix(in srgb, var(--accion) 75%, transparent),
+    0 0 4px color-mix(in srgb, var(--accion) 90%, transparent);
 }
 .boton-primario:active:not(:disabled) {
   transform: scale(0.96);
@@ -628,6 +773,24 @@ body {
   margin-top: var(--spacing-3xs);
   font-size: 14px;
   color: var(--estado-error);
+}
+
+/* Casilla de consentimiento de marketing — opcional a propósito: forzarla
+   marcada por defecto o como requerida no es un consentimiento libre
+   válido bajo la Ley 1581 de 2012 (Colombia). */
+.casilla-campo {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--spacing-2xs);
+  font-size: 14px;
+  color: var(--texto-secundario);
+}
+.casilla-campo input[type='checkbox'] {
+  margin-top: 3px;
+  height: 18px;
+  width: 18px;
+  flex-shrink: 0;
+  accent-color: var(--accion);
 }
 
 /* ── Los cuatro estados ──────────────────────────────────────────────*/
