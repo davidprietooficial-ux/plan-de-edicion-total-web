@@ -31,11 +31,28 @@
     - Barra flotante: se oculta mientras el hero está en pantalla (el
       formulario ya vive ahí, mostrarla encima duplicaba el CTA) y en
       pantallas chicas (<480px) solo deja el contador y el botón.
+    - Reproductor: botón oculto mientras reproduce (clic en el video
+      pausa igual), banner naranja al terminar con contador + botón al
+      formulario.
+    - Backend del formulario cambiado de PHP a Google Apps Script (Sheets
+      + correo de aviso + correo de bienvenida con el enlace al grupo):
+      GitHub Pages no ejecuta PHP, así que el formulario del sitio en
+      pruebas no estaba guardando nada — ver detalle completo abajo.
 
   Pendiente real del cliente (no inventar, no adivinar):
     - Enlace del grupo de WhatsApp VIP (el flujo actual usa un enlace de
       chat individual — el cliente pidió un enlace de GRUPO de un solo
       clic). Placeholder: https://[ENLACE_GRUPO_WHATSAPP_PENDIENTE]
+      (usado tanto en gracias/index.html como en el correo de bienvenida
+      de automatizaciones/formulario-google-sheets.gs — hay que ponerlo
+      en los dos lugares).
+    - Correo real del cliente para las notificaciones de registro
+      (automatizaciones/formulario-google-sheets.gs, CORREO_ADMIN — sigue
+      con el placeholder hola@ejemplo.com).
+    - Implementar automatizaciones/formulario-google-sheets.gs como
+      Apps Script y pegar la URL real en el `action` del formulario de
+      abajo (sigue con el placeholder [ACTION_APPS_SCRIPT_PENDIENTE]).
+      Sin esto el formulario no guarda nada todavía.
     - Efecto de avance/desaceleración del video (20% más rápido y
       frenando cerca del final) — confirmarlo antes de construirlo, ver
       detalle arriba.
@@ -214,13 +231,24 @@
                contador de cupos y el botón, no al final de la página.
                Los cuatro estados los gestiona src/lib/formulario.ts. Al
                enviar con éxito redirige a /gracias/, donde está el botón
-               de un solo clic al grupo de WhatsApp. -->
+               de un solo clic al grupo de WhatsApp.
+
+               El backend es un Google Apps Script, no PHP — GitHub Pages
+               no ejecuta PHP y este formulario tenía que funcionar en el
+               sitio en pruebas, no solo en el hosting final. Guarda cada
+               registro en un Google Sheet, avisa por correo y le manda a
+               quien se registra un correo de bienvenida con el botón al
+               grupo de WhatsApp. El código para pegar en Apps Script está
+               en automatizaciones/formulario-google-sheets.gs — no se
+               sube a este repo, no es parte del sitio que ve el cliente.
+               El `action` de abajo es un placeholder hasta que se
+               implemente el script y llegue la URL real. -->
           <div id="registro" class="mx-auto mt-[var(--spacing-lg)] max-w-[26rem] text-left">
             <form
               class="tarjeta"
               data-formulario
               data-exito-redirige="/gracias/"
-              action="/formulario.php"
+              action="https://script.google.com/macros/s/[ACTION_APPS_SCRIPT_PENDIENTE]/exec"
               method="post"
               novalidate
             >

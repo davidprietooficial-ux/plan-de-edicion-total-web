@@ -14,12 +14,22 @@
  *   > 10 s  barra de progreso
  *
  * La validación de aquí es cortesía para el usuario. La de verdad está en
- * public/formulario.php, en el servidor, y se repite entera.
+ * el backend (automatizaciones/formulario-google-sheets.gs, un Google Apps
+ * Script), y se repite entera.
+ *
+ * Apps Script no puede devolver un status HTTP distinto de 200 — así que
+ * el éxito NO se decide solo por respuesta.ok, hace falta leer el cuerpo
+ * JSON (`{ ok, mensaje }`) que el propio backend manda.
  */
 
 import { permitido } from './consentimiento';
 
 type Estado = 'vacio' | 'cargando' | 'exito' | 'error';
+
+// Marca los mensajes que ya vienen aprobados para mostrarse tal cual (los
+// que arma el propio backend, nunca una excepción cruda) — así el catch
+// de abajo puede distinguirlos de un fallo de red genérico sin adivinar.
+class RespuestaBackend extends Error {}
 
 const RETRASO_SPINNER_MS = 900; // por debajo de esto no se muestra nada
 const TIEMPO_MAXIMO_MS = 15_000;
@@ -158,7 +168,23 @@ export function iniciarFormulario(): void {
       window.clearTimeout(temporizadorSpinner);
       window.clearTimeout(corte);
 
-      if (!respuesta.ok) throw new Error(String(respuesta.status));
+      // Apps Script devuelve siempre HTTP 200 — el resultado real viene
+      // en el cuerpo. Si el cuerpo no llega a ser JSON válido, se trata
+      // como fallo: mejor un error genérico que dar por bueno un envío
+      // que no sabemos qué hizo.
+      let cuerpo: { ok?: boolean; mensaje?: string } | null = null;
+      try {
+        cuerpo = await respuesta.json();
+      } catch {
+        cuerpo = null;
+      }
+
+      if (!respuesta.ok || !cuerpo || cuerpo.ok === false) {
+        throw new RespuestaBackend(
+          cuerpo?.mensaje ||
+            'No he podido enviarlo. Prueba otra vez, o escríbeme por WhatsApp.',
+        );
+      }
 
       ponerEstado('exito', zonaEstado.dataset.mensajeExito ?? '¡Recibido!');
       form.reset();
@@ -184,15 +210,19 @@ export function iniciarFormulario(): void {
       window.clearTimeout(temporizadorSpinner);
       window.clearTimeout(corte);
 
-      // El usuario ve un mensaje genérico y una salida alternativa. El
-      // detalle no se enseña: cada línea de un error crudo es información
-      // gratis para quien esté mirando.
+      // El usuario ve un mensaje genérico (o el que el propio backend ya
+      // preparó como seguro para mostrar) y una salida alternativa.
+      // Cualquier otro tipo de excepción (red caída, CORS, etc.) no se
+      // enseña cruda: cada línea de un error real es información gratis
+      // para quien esté mirando.
       const abortado = e instanceof DOMException && e.name === 'AbortError';
       ponerEstado(
         'error',
         abortado
           ? 'Está tardando demasiado. Prueba otra vez, o escríbeme por WhatsApp.'
-          : 'No he podido enviarlo. Prueba otra vez, o escríbeme por WhatsApp.',
+          : e instanceof RespuestaBackend
+            ? e.message
+            : 'No he podido enviarlo. Prueba otra vez, o escríbeme por WhatsApp.',
       );
       boton.disabled = false;
     }
