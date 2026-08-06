@@ -20,10 +20,13 @@
       quedara siempre visible) — abre/cierra el video + la fila de
       herramientas juntos.
     - Video de presentación real integrado (INSTRUCCIONES PAG.mp4,
-      comprimido de 58MB a 3.5MB) con controles nativos por ahora — la
-      barra de progreso a medida (sin scrub, con retomar desde
-      localStorage y el efecto de avance/desaceleración) sigue
-      pendiente: necesita más trabajo de UI que no tiene sentido apurar.
+      comprimido de 58MB a 3.5MB). Séptima vuelta (mismo día): reproductor
+      a medida estilo Vturb — botón grande de play/pausa, barra de
+      progreso solo visual (sin arrastrar) y retomar desde localStorage
+      con diálogo de "continuar donde iba / ver desde el inicio". El
+      efecto de avance/desaceleración que se pidió en una vuelta anterior
+      sigue sin construir (no se repitió en este pedido, ver comentario en
+      la sección del video).
     - Carrusel de efectos a 9:16 real (antes 4:5 recortaba de más).
     - Barra flotante: se oculta mientras el hero está en pantalla (el
       formulario ya vive ahí, mostrarla encima duplicaba el CTA) y en
@@ -33,7 +36,9 @@
     - Enlace del grupo de WhatsApp VIP (el flujo actual usa un enlace de
       chat individual — el cliente pidió un enlace de GRUPO de un solo
       clic). Placeholder: https://[ENLACE_GRUPO_WHATSAPP_PENDIENTE]
-    - Reproductor a medida del video de presentación (ver detalle arriba).
+    - Efecto de avance/desaceleración del video (20% más rápido y
+      frenando cerca del final) — confirmarlo antes de construirlo, ver
+      detalle arriba.
     - Más videos de efectos por venir, para sumar al carrusel.
     - Textos legales de las 4 páginas del pie: son borrador, no revisión
       legal.
@@ -298,22 +303,85 @@
            forma de abrirlo).
 
            Video real: INSTRUCCIONES PAG.mp4, comprimido de 58MB (1080p,
-           20Mbps) a 3.5MB (720p, audio AAC 128kbps). Controles nativos
-           por ahora — la barra de progreso a medida (sin scrub, con
-           retomar desde localStorage y el efecto de avance/desaceleración
-           que pidió el cliente) sigue pendiente de construir, ver detalle
-           completo del pedido en git log de esta vuelta.
+           20Mbps) a 3.5MB (720p, audio AAC 128kbps).
+
+           Reproductor a medida (estilo Vturb): botón grande de play/pausa,
+           barra de progreso solo visual (sin arrastrar, no se puede
+           adelantar) y retomar desde localStorage con un diálogo de
+           "continuar donde iba / ver desde el inicio". Toda la lógica
+           vive en lib/reproductor.ts. El atributo `controls` se deja
+           puesto en el HTML a propósito — es el fallback fail-open: si el
+           JS no llega a correr, el navegador muestra sus controles nativos
+           en vez de dejar el video sin forma de reproducirse. Recién
+           cuando el botón y la barra ya están enganchados,
+           iniciarReproductor() lo quita.
+
+           Pendiente, no construido esta vuelta: el efecto de
+           avance/desaceleración (20% más rápido y frenando cerca del
+           final) que pidió el cliente en una vuelta anterior — no se
+           mencionó en este pedido puntual y es la pieza más delicada
+           (afecta el tiempo real de reproducción), así que se deja para
+           cuando lo confirme explícitamente.
       -->
       <section id="video-instrucciones" class="seccion" data-panel-video>
         <div class="contenedor" data-motion="reveal">
-          <video
-            class="marco-offset h-auto w-full rounded-[var(--radius-lg)] border border-[var(--linea)]"
-            controls
-            preload="none"
-            poster="/video-instrucciones.jpg"
+          <div
+            class="reproductor marco-offset overflow-hidden rounded-[var(--radius-lg)] border border-[var(--linea)]"
+            data-reproductor="instrucciones"
           >
-            <source src="/video-instrucciones.mp4" type="video/mp4" />
-          </video>
+            <video
+              class="reproductor__video"
+              data-reproductor-video
+              controls
+              controlslist="nodownload noplaybackrate"
+              playsinline
+              preload="none"
+              poster="/video-instrucciones.jpg"
+            >
+              <source src="/video-instrucciones.mp4" type="video/mp4" />
+            </video>
+
+            <button type="button" class="reproductor__boton" data-reproductor-boton aria-label="Reproducir video">
+              <svg data-icono-play width="26" height="26" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                <path d="M8 5v14l11-7z" />
+              </svg>
+              <svg
+                data-icono-pausa
+                hidden
+                width="26"
+                height="26"
+                viewBox="0 0 24 24"
+                fill="currentColor"
+                aria-hidden="true"
+              >
+                <path d="M7 5h4v14H7zM13 5h4v14h-4z" />
+              </svg>
+            </button>
+
+            <div
+              class="reproductor__barra"
+              data-reproductor-barra
+              role="progressbar"
+              aria-valuemin="0"
+              aria-valuemax="100"
+              aria-valuenow="0"
+              aria-label="Progreso del video"
+            >
+              <div class="reproductor__barra-relleno" data-reproductor-relleno></div>
+            </div>
+
+            <div class="reproductor__resumen" data-reproductor-resumen hidden>
+              <p>Ya habías empezado a ver este video.</p>
+              <div class="reproductor__resumen-acciones">
+                <button type="button" class="boton boton-primario" data-reproductor-continuar>
+                  Continuar donde iba
+                </button>
+                <button type="button" class="boton boton-secundario" data-reproductor-reiniciar>
+                  Ver desde el inicio
+                </button>
+              </div>
+            </div>
+          </div>
         </div>
         <div class="contenedor mt-[var(--spacing-lg)]">
           <div class="marquee-pista py-[var(--spacing-md)]">

@@ -17,6 +17,7 @@ import './estilos/sitio.css';
 import { iniciarConsentimiento } from './lib/consentimiento';
 import { iniciarMotion } from './lib/motion';
 import { iniciarFormulario } from './lib/formulario';
+import { iniciarReproductor } from './lib/reproductor';
 import { iniciarTracking, registrarConversiones } from './lib/tracking';
 
 // ── Videos del carrusel de efectos ──────────────────────────────────────
@@ -149,6 +150,7 @@ function iniciar(): void {
   iniciarBarraFlotante();
   iniciarCuposSimulados();
   iniciarVideosEfecto();
+  iniciarReproductor();
   iniciarFormulario();
   actualizarAno();
 
