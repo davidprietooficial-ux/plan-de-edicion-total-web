@@ -381,6 +381,35 @@
                 </button>
               </div>
             </div>
+
+            <!-- Banner de cierre — aparece solo cuando el video termina
+                 (video.addEventListener('ended', ...) en reproductor.ts).
+                 Mismo contador que el resto del sitio, reutilizado tal
+                 cual: motion.ts ya lo engancha porque escanea TODOS los
+                 [data-cuenta-hasta] al cargar la página, sin importar si
+                 están ocultos en ese momento. -->
+            <div class="reproductor__final" data-reproductor-final hidden>
+              <p class="reproductor__final-texto">No esperes más y accede hoy a la clase</p>
+              <div class="contador-cuenta contador-cuenta--mini" data-cuenta-hasta="2026-08-10T18:00:00-05:00">
+                <div class="contador-unidad">
+                  <span class="contador-unidad__numero" data-cuenta-campo="dias">00</span>
+                  <span class="contador-unidad__etiqueta">Días</span>
+                </div>
+                <div class="contador-unidad">
+                  <span class="contador-unidad__numero" data-cuenta-campo="horas">00</span>
+                  <span class="contador-unidad__etiqueta">Hrs</span>
+                </div>
+                <div class="contador-unidad">
+                  <span class="contador-unidad__numero" data-cuenta-campo="minutos">00</span>
+                  <span class="contador-unidad__etiqueta">Min</span>
+                </div>
+                <div class="contador-unidad">
+                  <span class="contador-unidad__numero" data-cuenta-campo="segundos">00</span>
+                  <span class="contador-unidad__etiqueta">Seg</span>
+                </div>
+              </div>
+              <a href="#registro" class="boton">Llenar el formulario</a>
+            </div>
           </div>
         </div>
         <div class="contenedor mt-[var(--spacing-lg)]">

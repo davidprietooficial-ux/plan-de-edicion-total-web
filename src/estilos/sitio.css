@@ -104,6 +104,17 @@
     background: var(--accion);
     color: var(--texto-sobre-accion);
     cursor: pointer;
+    transition:
+      opacity var(--mov-normal) var(--mov-curva),
+      visibility var(--mov-normal) var(--mov-curva);
+  }
+  /* Mientras reproduce, el botón se quita del medio — cualquier clic en
+     el video pausa igual, sin que el botón le tape la cara a la persona
+     del video todo el tiempo. Vuelve a aparecer en cuanto se pausa.
+     reproductor.ts pone/quita esta clase en el contenedor. */
+  .reproductor--reproduciendo .reproductor__boton {
+    opacity: 0;
+    visibility: hidden;
   }
   .reproductor__boton::after {
     content: '';
@@ -163,6 +174,50 @@
     flex-wrap: wrap;
     justify-content: center;
     gap: var(--spacing-xs);
+  }
+
+  /* Banner de cierre, al terminar el video. El naranja de --color-primario
+     puro no da contraste AA con letra blanca (≈2.9:1) — se oscurece con
+     color-mix para que el blanco sea legible de verdad y siga leyéndose
+     como el mismo naranja de marca, no uno inventado. */
+  .reproductor__final {
+    position: absolute;
+    inset: 0;
+    z-index: 4;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: var(--spacing-sm);
+    padding: var(--spacing-md);
+    text-align: center;
+    background: color-mix(in srgb, var(--color-primario) 60%, black);
+  }
+  .reproductor__final[hidden] {
+    display: none;
+  }
+  .reproductor__final-texto {
+    max-width: 26rem;
+    font-family: var(--font-display);
+    font-size: clamp(1.1rem, 4vw, 1.5rem);
+    line-height: 1.2;
+    color: white;
+    text-wrap: balance;
+  }
+  .reproductor__final .contador-unidad__numero {
+    color: white;
+    text-shadow: none;
+  }
+  .reproductor__final .contador-unidad__etiqueta {
+    color: color-mix(in srgb, white 75%, transparent);
+  }
+  .reproductor__final .boton {
+    background: var(--color-fondo);
+    color: white;
+    border-radius: 9999px;
+  }
+  .reproductor__final .boton:hover {
+    background: var(--color-superficie);
   }
 
   /* Punto de urgencia del badge de cupos — el mismo tipo de indicador que

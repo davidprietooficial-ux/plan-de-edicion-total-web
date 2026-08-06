@@ -1,6 +1,7 @@
 /**
  * Reproductor de video a medida (estilo Vturb): botón grande de
- * play/pausa, barra de progreso solo visual y retomar desde localStorage.
+ * play/pausa (visible solo en pausa), barra de progreso solo visual,
+ * retomar desde localStorage y un banner de cierre al terminar el video.
  *
  * El <video> arranca con el atributo `controls` puesto en el HTML —
  * fail-open: si este módulo no llega a correr, el navegador muestra sus
@@ -56,6 +57,7 @@ export function iniciarReproductor(): void {
   const botonReiniciar = contenedor.querySelector<HTMLButtonElement>(
     '[data-reproductor-reiniciar]',
   );
+  const final = contenedor.querySelector<HTMLElement>('[data-reproductor-final]');
 
   if (!video || !boton || !iconoPlay || !iconoPausa || !barra || !relleno) return;
 
@@ -64,15 +66,21 @@ export function iniciarReproductor(): void {
   let saltoPermitido = false;
   let ultimoSegundoGuardado = -1;
 
-  // El atributo `hidden` no sirve acá: el preflight de Tailwind pone
-  // `svg { display: block }` a secas, y esa regla (por venir de la hoja
-  // de estilos, no del navegador) le gana al [hidden] nativo sin importar
-  // el layer — misma familia de bug que ya tuvo .contenedor con los
-  // max-w-[...] de Tailwind. Con display inline no hay ambigüedad posible.
-  const actualizarIcono = (): void => {
+  // El atributo `hidden` no sirve para los íconos: el preflight de
+  // Tailwind pone `svg { display: block }` a secas, y esa regla (por
+  // venir de la hoja de estilos, no del navegador) le gana al [hidden]
+  // nativo sin importar el layer — misma familia de bug que ya tuvo
+  // .contenedor con los max-w-[...] de Tailwind. Con display inline no
+  // hay ambigüedad posible.
+  //
+  // El botón entero se esconde mientras reproduce (clase en el
+  // contenedor, ver sitio.css) — no debe taparle la cara a la persona del
+  // video todo el rato. Cualquier clic en el video sigue pausando igual.
+  const actualizarBoton = (): void => {
     iconoPlay.style.display = video.paused ? '' : 'none';
     iconoPausa.style.display = video.paused ? 'none' : '';
     boton.setAttribute('aria-label', video.paused ? 'Reproducir video' : 'Pausar video');
+    contenedor.classList.toggle('reproductor--reproduciendo', !video.paused);
   };
 
   const alternarReproduccion = (): void => {
@@ -84,11 +92,12 @@ export function iniciarReproductor(): void {
   // acá) y en cualquier otra parte del video, sin duplicar el toggle.
   contenedor.addEventListener('click', () => {
     if (resumen && !resumen.hidden) return; // el diálogo de retomar manda mientras está abierto
+    if (final && !final.hidden) return; // terminado: el clic ya no reinicia, solo el enlace del banner manda
     alternarReproduccion();
   });
 
-  video.addEventListener('play', actualizarIcono);
-  video.addEventListener('pause', actualizarIcono);
+  video.addEventListener('play', actualizarBoton);
+  video.addEventListener('pause', actualizarBoton);
 
   video.addEventListener('timeupdate', () => {
     ultimoTiempoValido = video.currentTime;
@@ -119,7 +128,10 @@ export function iniciarReproductor(): void {
     }
   });
 
-  video.addEventListener('ended', () => borrarProgreso(id));
+  video.addEventListener('ended', () => {
+    borrarProgreso(id);
+    if (final) final.hidden = false;
+  });
 
   const progresoGuardado = leerProgresoGuardado(id);
   if (
@@ -154,6 +166,6 @@ export function iniciarReproductor(): void {
     });
   }
 
-  actualizarIcono();
+  actualizarBoton();
   video.removeAttribute('controls'); // recién ahora: el botón y la barra ya están enganchados
 }
