@@ -64,14 +64,14 @@ export function iniciarReproductor(): void {
   let saltoPermitido = false;
   let ultimoSegundoGuardado = -1;
 
+  // El atributo `hidden` no sirve acá: el preflight de Tailwind pone
+  // `svg { display: block }` a secas, y esa regla (por venir de la hoja
+  // de estilos, no del navegador) le gana al [hidden] nativo sin importar
+  // el layer — misma familia de bug que ya tuvo .contenedor con los
+  // max-w-[...] de Tailwind. Con display inline no hay ambigüedad posible.
   const actualizarIcono = (): void => {
-    if (video.paused) {
-      iconoPlay.removeAttribute('hidden');
-      iconoPausa.setAttribute('hidden', '');
-    } else {
-      iconoPlay.setAttribute('hidden', '');
-      iconoPausa.removeAttribute('hidden');
-    }
+    iconoPlay.style.display = video.paused ? '' : 'none';
+    iconoPausa.style.display = video.paused ? 'none' : '';
     boton.setAttribute('aria-label', video.paused ? 'Reproducir video' : 'Pausar video');
   };
 
