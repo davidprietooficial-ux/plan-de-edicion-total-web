@@ -234,8 +234,8 @@
           <!-- Formulario — el cliente pidió que viva AQUÍ, entre el
                contador de cupos y el botón, no al final de la página.
                Los cuatro estados los gestiona src/lib/formulario.ts. Al
-               enviar con éxito redirige a /gracias/, donde está el botón
-               de un solo clic al grupo de WhatsApp.
+               enviar con éxito redirige directo al grupo de WhatsApp
+               (sin página intermedia): un solo envío, un solo clic.
 
                El backend es un Google Apps Script, no PHP — GitHub Pages
                no ejecuta PHP y este formulario tenía que funcionar en el
@@ -250,7 +250,7 @@
             <form
               class="tarjeta"
               data-formulario
-              data-exito-redirige="/gracias/"
+              data-exito-redirige="https://chat.whatsapp.com/BNMWH5KbRQlHRmd76xXfYb?mode=gi_t"
               action="https://script.google.com/macros/s/AKfycbygsXv7vFBQpaDx58a4JIyVXRtvZ4HMj6p4ONjxgmXDHvtNK6ooCHarVAJnM0_Tczhjjw/exec"
               method="post"
               novalidate
