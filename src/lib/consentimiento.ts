@@ -5,9 +5,16 @@
  * sola petición de red antes de que el visitante acepte. Ni el píxel, ni la
  * analítica, ni los anuncios.
  *
- * Cómo funciona: los terceros no se cargan directamente. Se registran aquí
- * con `alConsentir()` y quedan en cola. Cuando el usuario acepta, se
- * ejecutan dentro de requestIdleCallback para no competir con el render.
+ * EXCEPCIÓN por decisión explícita del cliente (2026-08-06): el Meta Pixel
+ * quedó fuera de esta cola y va incrustado directo en el <head> de
+ * index.html, disparando sin esperar consentimiento — el verificador
+ * automático de Meta no aceptaba cookies y nunca lo detectaba en cola. El
+ * texto del banner se ajustó para no prometer lo contrario.
+ *
+ * Cómo funciona (para todo lo demás): los terceros no se cargan
+ * directamente. Se registran aquí con `alConsentir()` y quedan en cola.
+ * Cuando el usuario acepta, se ejecutan dentro de requestIdleCallback para
+ * no competir con el render.
  *
  * `npm run gate` (verificación 8) comprueba que no haya <script src> de
  * terceros directamente en el HTML, que es la forma de saltarse esto.
@@ -177,7 +184,7 @@ function construirBanner(): HTMLElement {
   const cuerpo = document.createElement('p');
   cuerpo.className = 'mt-1 max-w-[60ch] text-sm text-[var(--texto-secundario)]';
   cuerpo.textContent =
-    'Usamos cookies propias para que el sitio funcione, y de terceros para medir el tráfico y mostrar publicidad. Tú decides.';
+    'Usamos cookies propias para que el sitio funcione y el píxel de Meta para medir esta publicidad. Puedes decidir sobre las demás cookies de analítica.';
   const enlace = document.createElement('a');
   enlace.href = '/privacidad';
   enlace.className = 'text-sm underline underline-offset-2';

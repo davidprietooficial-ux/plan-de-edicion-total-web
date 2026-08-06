@@ -8,8 +8,13 @@
 import { alConsentir } from './consentimiento';
 
 // Vacío = no se carga.
+//
+// metaPixel NO está aquí: por decisión explícita del cliente (2026-08-06)
+// dispara sin esperar consentimiento, incrustado directo en el <head> de
+// index.html — Meta no lo detectaba en cola porque su verificador no
+// acepta cookies. Queda fuera de la cola de este archivo para no
+// duplicar el init() ni el PageView.
 export const IDS = {
-  metaPixel: '884471167722492',
   ga4: '',
   gtm: '',
   googleAds: '',
@@ -61,15 +66,6 @@ export function iniciarTracking(): void {
       window.dataLayer = window.dataLayer ?? [];
       window.dataLayer.push({ 'gtm.start': Date.now(), event: 'gtm.js' });
       await cargarScript(`https://www.googletagmanager.com/gtm.js?id=${IDS.gtm}`);
-    });
-  }
-
-  // ── Meta Pixel · marketing ──────────────────────────────────────────
-  if (IDS.metaPixel) {
-    alConsentir('marketing', 'Meta Pixel', async () => {
-      await cargarScript('https://connect.facebook.net/en_US/fbevents.js');
-      window.fbq?.('init', IDS.metaPixel);
-      window.fbq?.('track', 'PageView');
     });
   }
 
