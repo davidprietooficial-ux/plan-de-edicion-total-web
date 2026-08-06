@@ -22,14 +22,13 @@ export default defineConfig({
     // es lo que permite cachear un año con seguridad (ver public/.htaccess).
     assetsDir: 'assets',
 
-    // El registro, la confirmación de gracias tras el envío del formulario
-    // (redirige ahí src/lib/formulario.ts), y las 4 páginas legales que
-    // pidió el cliente en el pie — cada carpeta necesita su propia entrada
-    // de Vite para que el build genere su index.html.
+    // El registro y las 4 páginas legales que pidió el cliente en el pie —
+    // cada carpeta necesita su propia entrada de Vite para que el build
+    // genere su index.html. (La página de gracias se archivó: el envío del
+    // formulario redirige directo a WhatsApp, sin paso intermedio.)
     rollupOptions: {
       input: {
         inicio: r('index.html'),
-        gracias: r('gracias/index.html'),
         terminos: r('terminos-y-condiciones/index.html'),
         cookies: r('politica-de-cookies/index.html'),
         avisoLegal: r('aviso-legal/index.html'),

@@ -27,3 +27,4 @@ desktop.ini
 
 # Datos del formulario en local (el límite de tasa escribe aquí en desarrollo)
 datos-formulario/
+.vercel
