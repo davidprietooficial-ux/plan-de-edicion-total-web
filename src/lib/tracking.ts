@@ -9,7 +9,7 @@ import { alConsentir } from './consentimiento';
 
 // Vacío = no se carga.
 export const IDS = {
-  metaPixel: '719737230830855',
+  metaPixel: '884471167722492',
   ga4: '',
   gtm: '',
   googleAds: '',
