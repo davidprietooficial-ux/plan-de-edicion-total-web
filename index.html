@@ -1,29 +1,40 @@
 <!doctype html>
 <!--
-  BORRADOR T2 — landing CORTA de registro para la clase gratuita en vivo de
-  "Plan de Edición Total" (Juan Camilo Pérez Moreno), viernes, cupo
-  limitado. Quinta vuelta (2026-08-05): se arregló un bug real de cascada
-  CSS — .contenedor vivía SIN @layer en sitio.css, así que le ganaba a
-  cualquier max-w-[...] de Tailwind sin importar el orden (Tailwind v4
-  mete sus utilidades en @layer utilities, y una regla sin layer le gana
-  a CUALQUIER regla con layer). Por eso el formulario de registro se veía
-  a 1200px en vez de a su max-w declarado — no era un valor mal puesto,
-  era el layer. Ahora todo sitio.css vive en @layer components y las
-  utilidades de Tailwind vuelven a poder sobreescribirlo. Además: botones
-  del hero en fila (antes apilados), barra flotante con columnas
-  centradas y espacio regular (antes space-between con hueco enorme en
-  medio), video real de fondo en el hero, currícula corregida a solo
-  Premiere Pro y CapCut.
+  BORRADOR T2 — landing de registro para la clase gratuita en vivo de
+  "Plan de Edición Total" (Juan Camilo Pérez Moreno), lunes 6pm, cupo
+  limitado. Sexta vuelta (2026-08-05):
+    - Tipografía display: Special Gothic Expanded One (antes Anton).
+      De paso se arregló un bug real que llevaba varias vueltas sin
+      detectar — NUNCA existió una regla @font-face en el proyecto: los
+      archivos de fuente vivían en public/fuentes/, pero nada le decía al
+      navegador dónde cargarlos. El sitio entero venía cayendo al
+      genérico de reserva (Georgia o system-ui) desde el primer día.
+      Ahora se generan las reglas @font-face de verdad.
+    - El hero se reordena: cuenta regresiva + fecha arriba de todo (en el
+      lugar del icono que había), párrafo más corto y -30% de tipografía,
+      y el FORMULARIO vive ahora dentro del hero, entre el contador de
+      cupos y el botón — ya no está al final de la página. El único botón
+      que queda es "Más información".
+    - "Más información" vuelve a ser un desplegable (el cliente pidió
+      revertir la vuelta anterior, donde había pedido que el video
+      quedara siempre visible) — abre/cierra el video + la fila de
+      herramientas juntos.
+    - Video de presentación real integrado (INSTRUCCIONES PAG.mp4,
+      comprimido de 58MB a 3.5MB) con controles nativos por ahora — la
+      barra de progreso a medida (sin scrub, con retomar desde
+      localStorage y el efecto de avance/desaceleración) sigue
+      pendiente: necesita más trabajo de UI que no tiene sentido apurar.
+    - Carrusel de efectos a 9:16 real (antes 4:5 recortaba de más).
+    - Barra flotante: se oculta mientras el hero está en pantalla (el
+      formulario ya vive ahí, mostrarla encima duplicaba el CTA) y en
+      pantallas chicas (<480px) solo deja el contador y el botón.
 
   Pendiente real del cliente (no inventar, no adivinar):
     - Enlace del grupo de WhatsApp VIP (el flujo actual usa un enlace de
       chat individual — el cliente pidió un enlace de GRUPO de un solo
       clic). Placeholder: https://[ENLACE_GRUPO_WHATSAPP_PENDIENTE]
-    - Hora exacta de la clase del viernes (se puso 19:00 COP como
-      provisional en data-cuenta-hasta — solo confirmó "el día viernes").
+    - Reproductor a medida del video de presentación (ver detalle arriba).
     - Más videos de efectos por venir, para sumar al carrusel.
-    - Confirmar si "Accede a nuestro grupo de WhatsApp VIP" (columna 2 de
-      la barra flotante) es el texto exacto que quiere el cliente.
     - Textos legales de las 4 páginas del pie: son borrador, no revisión
       legal.
 
@@ -38,7 +49,7 @@
     <title>Plan de Edición Total · Masterclass gratis en vivo</title>
     <meta
       name="description"
-      content="Aprende a editar videos profesionales gratis. Clase en vivo el viernes, cupo limitado. Inscríbete y accede por WhatsApp."
+      content="Aprende a editar videos profesionales gratis. Clase en vivo el lunes, cupo limitado. Inscríbete y accede por WhatsApp."
     />
     <link rel="canonical" href="https://[DOMINIO]/" />
 
@@ -46,29 +57,28 @@
     <meta property="og:title" content="Plan de Edición Total · Masterclass gratis en vivo" />
     <meta
       property="og:description"
-      content="Aprende a editar videos profesionales gratis. Clase en vivo el viernes, cupo limitado."
+      content="Aprende a editar videos profesionales gratis. Clase en vivo el lunes, cupo limitado."
     />
     <meta property="og:url" content="https://[DOMINIO]/" />
     <meta property="og:image" content="https://[DOMINIO]/og.jpg" />
     <meta property="og:locale" content="es_CO" />
     <meta name="twitter:card" content="summary_large_image" />
 
-    <link rel="preload" href="/fuentes/anton-var.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="/fuentes/special-gothic-expanded-one.woff2" as="font" type="font/woff2" crossorigin />
 
     <meta name="theme-color" content="#0B0908" />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
 
     <script type="module" src="/src/main.ts"></script>
 
-    <!-- JSON-LD tipo Event. startDate provisional (viernes, 19:00 COP) —
-         confirmar hora exacta con el cliente. -->
+    <!-- JSON-LD tipo Event. startDate: lunes 2026-08-10, 18:00 COP. -->
     <script type="application/ld+json">
       {
         "@context": "https://schema.org",
         "@type": "Event",
         "name": "Plan de Edición Total — masterclass gratis en vivo",
         "description": "Clase en vivo y gratuita de edición de video. Cupo limitado.",
-        "startDate": "2026-08-07T19:00:00-05:00",
+        "startDate": "2026-08-10T18:00:00-05:00",
         "eventAttendanceMode": "https://schema.org/OnlineEventAttendanceMode",
         "eventStatus": "https://schema.org/EventScheduled",
         "location": { "@type": "VirtualLocation", "url": "https://[DOMINIO]/" },
@@ -92,7 +102,7 @@
          completa + qué es; columna 2 = el botón grande + a dónde lleva.
     -->
     <div class="cta-flotante" role="region" aria-label="Acciones rápidas">
-      <div class="cta-flotante__columna" data-cuenta-hasta="2026-08-07T19:00:00-05:00">
+      <div class="cta-flotante__columna" data-cuenta-hasta="2026-08-10T18:00:00-05:00">
         <div class="contador-cuenta contador-cuenta--mini">
           <div class="contador-unidad">
             <span class="contador-unidad__numero" data-cuenta-campo="dias">00</span>
@@ -134,30 +144,11 @@
           </video>
         </div>
         <div class="contenedor max-w-[55rem] text-center" data-motion="reveal">
-          <span class="icono-flotante mb-[var(--spacing-2xs)]" aria-hidden="true">
-            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
-              <path d="M4 8.5 19 5l1 4-15 3.5z" />
-              <path d="M4 8.5 20.5 12" />
-              <rect x="4" y="9" width="16" height="10.5" rx="1.5" />
-            </svg>
-          </span>
-          <p class="mb-[var(--spacing-sm)] text-sm font-semibold tracking-[0.14em] text-[var(--accion)] uppercase">
-            Masterclass de edición en vivo
-          </p>
-
-          <h1 class="font-display text-[1.7rem] leading-[1.05] uppercase md:text-[2.4rem] lg:text-[2.8rem]">
-            Aprende a editar <span class="text-[var(--accion)]">gratis</span> videos profesionales
-          </h1>
-
-          <p class="prosa mx-auto mt-[var(--spacing-md)] max-w-[34rem] text-lg text-[var(--texto-secundario)]">
-            Llena el formulario y accede a nuestro WhatsApp exclusivo para tu acceso a la clase en vivo —
-            <strong class="text-[var(--texto-principal)]">es el único medio de acceso</strong>. El material no se
-            guarda: es una clase única, en vivo, que no queda grabada en ningún lugar.
-          </p>
-
-          <!-- Cuenta regresiva gigante — dd:hh:mm:ss actualizada por
+          <!-- Cuenta regresiva gigante — ahora arriba de todo, en el lugar
+               donde antes iba el icono flotante (el cliente pidió que este
+               sea el primer elemento del hero). dd:hh:mm:ss actualizada por
                lib/motion.ts cada segundo desde data-cuenta-hasta. -->
-          <div class="mt-[var(--spacing-lg)]" data-cuenta-hasta="2026-08-07T19:00:00-05:00">
+          <div data-cuenta-hasta="2026-08-10T18:00:00-05:00">
             <div class="contador-cuenta">
               <div class="contador-unidad">
                 <span class="contador-unidad__numero" data-cuenta-campo="dias">00</span>
@@ -184,8 +175,24 @@
               ¡Estamos en vivo ahora — entra ya!
             </p>
           </div>
-          <p class="mt-[var(--spacing-2xs)] text-sm text-[var(--texto-secundario)]">
-            Viernes · En vivo · [HORA_PENDIENTE_DE_CONFIRMAR]
+          <p class="mt-[var(--spacing-2xs)] text-sm text-[var(--texto-secundario)]">Lunes · En vivo · 6:00 p. m.</p>
+
+          <p
+            class="mt-[var(--spacing-lg)] mb-[var(--spacing-sm)] text-sm font-semibold tracking-[0.14em] text-[var(--accion)] uppercase"
+          >
+            Masterclass de edición en vivo
+          </p>
+
+          <h1 class="font-display text-[1.7rem] leading-[1.05] uppercase md:text-[2.4rem] lg:text-[2.8rem]">
+            Aprende a editar <span class="text-[var(--accion)]">gratis</span> videos profesionales
+          </h1>
+
+          <!-- Párrafo más corto y tipografía -30% (1.125rem → 0.7875rem),
+               tal como pidió el cliente. -->
+          <p class="prosa mx-auto mt-[var(--spacing-md)] max-w-[34rem] text-[0.7875rem] text-[var(--texto-secundario)]">
+            Completa tus datos y recibe el acceso a nuestro WhatsApp exclusivo —
+            <strong class="text-[var(--texto-principal)]">el único medio para entrar a la clase en vivo</strong>. Es por
+            única vez y no queda grabada.
           </p>
 
           <p
@@ -198,62 +205,115 @@
             Quedan <span data-cupos>100</span> cupos disponibles
           </p>
 
-          <div
-            class="mt-[var(--spacing-lg)] flex flex-row flex-wrap items-center justify-center gap-[var(--spacing-sm)]"
-          >
-            <a href="#registro" class="boton boton-primario">Reservar mi cupo</a>
-            <a href="#video-instrucciones" class="boton boton-secundario">Más información</a>
+          <!-- Formulario — el cliente pidió que viva AQUÍ, entre el
+               contador de cupos y el botón, no al final de la página.
+               Los cuatro estados los gestiona src/lib/formulario.ts. Al
+               enviar con éxito redirige a /gracias/, donde está el botón
+               de un solo clic al grupo de WhatsApp. -->
+          <div id="registro" class="mx-auto mt-[var(--spacing-lg)] max-w-[26rem] text-left">
+            <form
+              class="tarjeta"
+              data-formulario
+              data-exito-redirige="/gracias/"
+              action="/formulario.php"
+              method="post"
+              novalidate
+            >
+              <!-- Trampa para robots. -->
+              <div class="solo-lectores" aria-hidden="true">
+                <label for="web">No rellenes este campo</label>
+                <input type="text" id="web" name="web" tabindex="-1" autocomplete="off" />
+              </div>
+
+              <div class="grid gap-[var(--spacing-sm)]">
+                <div>
+                  <label class="etiqueta-campo" for="nombre">Nombre completo</label>
+                  <input class="campo" type="text" id="nombre" name="nombre" autocomplete="name" required />
+                  <p class="error-campo" data-error-de="nombre" hidden></p>
+                </div>
+
+                <div>
+                  <label class="etiqueta-campo" for="email">Correo</label>
+                  <input class="campo" type="email" id="email" name="email" autocomplete="email" required />
+                  <p class="error-campo" data-error-de="email" hidden></p>
+                </div>
+
+                <div>
+                  <label class="etiqueta-campo" for="telefono">Tu WhatsApp</label>
+                  <input class="campo" type="tel" id="telefono" name="telefono" autocomplete="tel" required />
+                  <p class="error-campo" data-error-de="telefono" hidden></p>
+                </div>
+
+                <label class="casilla-campo">
+                  <input type="checkbox" name="autoriza_marketing" value="si" />
+                  Autorizo el envío de información de marketing y avisos sobre esta y futuras formaciones.
+                </label>
+
+                <button type="submit" class="boton boton-primario w-full text-[15.3px]" data-enviar>
+                  <span class="indicador-carga" aria-hidden="true"></span>
+                  Acceder al WhatsApp VIP
+                </button>
+
+                <p data-estado data-mensaje-exito="¡Listo! Te llevamos a WhatsApp." hidden></p>
+
+                <p class="text-center text-[0.7875rem] text-[var(--texto-secundario)]">
+                  Tus datos se usan solo para darte acceso a la clase.
+                  <br />
+                  <a href="/politica-de-privacidad/" class="underline underline-offset-2">Cómo los trato</a>.
+                </p>
+              </div>
+            </form>
+          </div>
+
+          <!-- Único botón que queda en el hero — vuelve a ser un toggle
+               (versión anterior a la que pidió el cliente esta vez):
+               despliega el video Y la fila de herramientas juntos. -->
+          <div class="mt-[var(--spacing-lg)]">
+            <button
+              type="button"
+              class="boton boton-secundario toggle-instrucciones"
+              data-toggle-video
+              aria-expanded="false"
+              aria-controls="video-instrucciones"
+            >
+              Más información
+              <span class="toggle-instrucciones__icono" aria-hidden="true">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M6 9l6 6 6-6" />
+                </svg>
+              </span>
+            </button>
           </div>
         </div>
       </section>
 
       <!-- ══ 2. Video de presentación + herramientas ═══════════════════
-           El cliente pidió que el video esté SIEMPRE visible (nada de
-           abrir/cerrar con JS) y que la fila de herramientas quede
-           integrada justo debajo, como un solo bloque — por eso viven en
-           la misma <section>, sin el padding-block completo de .seccion
-           entre ellos. "Más información" ya no es un botón que oculta o
-           muestra nada: es un ancla normal que baja con scroll suave
-           nativo del navegador, cero JS de por medio.
+           Vuelve a ser un desplegable: el cliente pidió revertir a la
+           versión anterior donde "Más información" muestra/oculta este
+           bloque completo (video + fila de herramientas juntos) — fue un
+           cambio de opinión explícito sobre la vuelta pasada, donde había
+           pedido que quedara siempre visible. data-panel-video es lo que
+           lee iniciarToggleVideo() en main.ts. Fail-open: si el JS no
+           llega a correr, el bloque se queda visible (nunca oculto sin
+           forma de abrirlo).
 
-           PENDIENTE — reproductor a medida, especificado por el cliente
-           el 2026-08-05, a construir en cuanto entregue el archivo real
-           (necesito el video para probar contra su duración real, no
-           tiene sentido programar la lógica de tiempos a ciegas):
-             1. Barra de progreso propia (no los controles nativos del
-                navegador) con play/pausa.
-             2. Sin scrub: la persona NO puede arrastrar la barra para
-                saltar de posición, solo ver cuánto lleva.
-             3. Retomar donde iba: guardar el avance en localStorage: al
-                recargar, preguntar "¿Reproducir de nuevo o continuar
-                donde ibas?" en vez de reiniciar solo.
-             4. Progreso psicológico: la barra corre ~20% más rápido que
-                el video real desde el inicio, así que a mitad de
-                reproducción ya se ve más avanzada de lo que realmente
-                va. Entre el 90% y el 100% desacelera para "pagar" esa
-                ventaja y llegar al final exactamente cuando el video
-                real termina — sensación de que dura menos de lo que
-                dura. (Mismo espíritu que el contador de cupos simulado:
-                documentado en el código como truco de percepción, no
-                un dato real.)
+           Video real: INSTRUCCIONES PAG.mp4, comprimido de 58MB (1080p,
+           20Mbps) a 3.5MB (720p, audio AAC 128kbps). Controles nativos
+           por ahora — la barra de progreso a medida (sin scrub, con
+           retomar desde localStorage y el efecto de avance/desaceleración
+           que pidió el cliente) sigue pendiente de construir, ver detalle
+           completo del pedido en git log de esta vuelta.
       -->
-      <section id="video-instrucciones" class="seccion">
+      <section id="video-instrucciones" class="seccion" data-panel-video>
         <div class="contenedor" data-motion="reveal">
-          <div
-            class="marco-offset relative w-full overflow-hidden rounded-[var(--radius-lg)] border border-[var(--linea)] bg-[var(--tarjeta-fondo)] pt-[56.25%]"
+          <video
+            class="marco-offset h-auto w-full rounded-[var(--radius-lg)] border border-[var(--linea)]"
+            controls
+            preload="none"
+            poster="/video-instrucciones.jpg"
           >
-            <div class="absolute inset-0 flex items-center justify-center">
-              <div class="flex flex-col items-center gap-[var(--spacing-2xs)]">
-                <span class="play-pulso" aria-hidden="true">
-                  <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z" /></svg>
-                </span>
-                <p class="text-sm font-semibold tracking-[0.1em] uppercase">Dale al play para conectarte</p>
-                <p class="text-xs text-[var(--texto-secundario)]">
-                  Video de presentación — pendiente de entrega del cliente
-                </p>
-              </div>
-            </div>
-          </div>
+            <source src="/video-instrucciones.mp4" type="video/mp4" />
+          </video>
         </div>
         <div class="contenedor mt-[var(--spacing-lg)]">
           <div class="marquee-pista py-[var(--spacing-md)]">
@@ -537,84 +597,6 @@
           <p class="contenedor mt-[var(--spacing-2xs)] text-center text-sm text-[var(--texto-secundario)]">
             Cupo único: es una clase en vivo que se dicta por única vez y no queda grabada en ningún lugar.
           </p>
-        </div>
-      </section>
-
-      <!-- ══ 5. Formulario de registro ══════════════════════════════
-           Los cuatro estados los gestiona src/lib/formulario.ts. Al
-           enviar con éxito redirige a /gracias/, donde está el botón de
-           un solo clic al grupo de WhatsApp.
-      -->
-      <section id="registro" class="seccion bg-[var(--tarjeta-fondo)]">
-        <div class="contenedor text-center" data-motion="reveal">
-          <h2 class="font-display text-[1.575rem] uppercase md:text-[2.025rem]">Reserva tu cupo gratis</h2>
-          <!-- Misma insignia de cupos del hero, no un párrafo aparte —
-               pedido explícito del cliente: replicar ese componente
-               justo debajo del título, en vez de la frase que había. -->
-          <p
-            class="mx-auto mt-[var(--spacing-sm)] inline-flex items-center gap-2 rounded-full border border-[var(--linea)] bg-[var(--pagina-fondo)] px-4 py-1.5 text-[0.7875rem] font-semibold text-[var(--accion)]"
-          >
-            <span class="punto-urgencia" aria-hidden="true"></span>
-            Quedan <span data-cupos>100</span> cupos disponibles
-          </p>
-        </div>
-
-        <!-- Solo el formulario va restringido — el título y la insignia de
-             arriba usan el ancho normal de sección. 37.752rem = 34.32rem
-             (ancho de la vuelta anterior) + 10% más, como pidió ahora. -->
-        <div class="contenedor max-w-[37.752rem]">
-          <form
-            class="tarjeta mt-[var(--spacing-lg)]"
-            data-formulario
-            data-exito-redirige="/gracias/"
-            action="/formulario.php"
-            method="post"
-            novalidate
-          >
-            <!-- Trampa para robots. -->
-            <div class="solo-lectores" aria-hidden="true">
-              <label for="web">No rellenes este campo</label>
-              <input type="text" id="web" name="web" tabindex="-1" autocomplete="off" />
-            </div>
-
-            <div class="grid gap-[var(--spacing-sm)]">
-              <div>
-                <label class="etiqueta-campo" for="nombre">Nombre completo</label>
-                <input class="campo" type="text" id="nombre" name="nombre" autocomplete="name" required />
-                <p class="error-campo" data-error-de="nombre" hidden></p>
-              </div>
-
-              <div>
-                <label class="etiqueta-campo" for="email">Correo</label>
-                <input class="campo" type="email" id="email" name="email" autocomplete="email" required />
-                <p class="error-campo" data-error-de="email" hidden></p>
-              </div>
-
-              <div>
-                <label class="etiqueta-campo" for="telefono">Tu WhatsApp</label>
-                <input class="campo" type="tel" id="telefono" name="telefono" autocomplete="tel" required />
-                <p class="error-campo" data-error-de="telefono" hidden></p>
-              </div>
-
-              <label class="casilla-campo">
-                <input type="checkbox" name="autoriza_marketing" value="si" />
-                Autorizo el envío de información de marketing y avisos sobre esta y futuras formaciones.
-              </label>
-
-              <button type="submit" class="boton boton-primario w-full text-[15.3px]" data-enviar>
-                <span class="indicador-carga" aria-hidden="true"></span>
-                Acceder al WhatsApp VIP
-              </button>
-
-              <p data-estado data-mensaje-exito="¡Listo! Te llevamos a WhatsApp." hidden></p>
-
-              <p class="text-center text-[0.7875rem] text-[var(--texto-secundario)]">
-                Tus datos se usan solo para darte acceso a la clase.
-                <br />
-                <a href="/politica-de-privacidad/" class="underline underline-offset-2">Cómo los trato</a>.
-              </p>
-            </div>
-          </form>
         </div>
       </section>
     </main>

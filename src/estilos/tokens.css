@@ -7,6 +7,29 @@
 @import 'tailwindcss';
 @import 'tailwind-animations';
 
+/* ── Fuentes autoalojadas ──────────────────────────────────── */
+@font-face {
+  font-family: 'Special Gothic Expanded One';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('/fuentes/special-gothic-expanded-one.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Inter Tight';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('/fuentes/inter-tight-400.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Inter Tight';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url('/fuentes/inter-tight-600.woff2') format('woff2');
+}
+
 @theme {
   /* ── Responsive en 3 etapas ──────────────────────────────────
    * Se borran TODOS los breakpoints por defecto y se declaran dos.
@@ -34,7 +57,7 @@
   --color-aviso: #FFB25C; /* Ámbar de aviso */
 
   /* ── Tipografía ───────────────────────────────────────────── */
-  --font-display: 'Anton', Georgia, serif;
+  --font-display: 'Special Gothic Expanded One', system-ui, sans-serif;
   --font-cuerpo: 'Inter Tight', system-ui, -apple-system, sans-serif;
 
   /* ── Forma · máximo 3 radios en todo el sistema ───────────── */

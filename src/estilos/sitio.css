@@ -127,12 +127,24 @@
     color: var(--texto-secundario);
   }
 
+  /* ── Toggle "Más información" ─────────────────────────────────────────
+   * Vuelve a existir (se había quitado la vuelta pasada, el cliente pidió
+   * revertir): la flecha gira al abrir el panel de video + herramientas.
+   */
+  .toggle-instrucciones[aria-expanded='true'] .toggle-instrucciones__icono {
+    transform: rotate(180deg);
+  }
+  .toggle-instrucciones__icono {
+    display: inline-flex;
+    transition: transform var(--mov-normal) var(--mov-curva);
+  }
+
   /* ── Carrusel de efectos ──────────────────────────────────────────────── */
   .tarjeta-efecto {
     position: relative;
     flex-shrink: 0;
-    width: 220px;
-    aspect-ratio: 4 / 5;
+    width: 180px;
+    aspect-ratio: 9 / 16; /* mismo ratio que los clips de origen — antes 4:5 recortaba de más */
     overflow: hidden;
     border-radius: var(--radius-lg);
     border: var(--borde-ancho) solid color-mix(in srgb, var(--accion) 35%, var(--linea));
@@ -141,7 +153,7 @@
   }
   /* El póster llena la tarjeta desde el HTML (fail-open: si el video no
    llega a reproducirse, la imagen ya cuenta el efecto). object-fit:cover
-   recorta el 9:16 original al 4:5 de la tarjeta sin deformarlo. */
+   ya no recorta nada — la tarjeta comparte el 9:16 real de los clips. */
   .tarjeta-efecto__video {
     height: 100%;
     width: 100%;
@@ -256,6 +268,25 @@
     box-shadow:
       0 0 28px color-mix(in srgb, var(--accion) 22%, transparent),
       0 8px 24px rgb(0 0 0 / 0.45);
+    transition:
+      transform var(--mov-normal) var(--mov-curva),
+      opacity var(--mov-normal) var(--mov-curva);
+  }
+  /* El formulario y el CTA ya viven dentro del hero — mostrar la barra
+   ENCIMA de eso duplica el mismo llamado a la acción. iniciarBarraFlotante
+   en main.ts añade esta clase mientras el hero está en pantalla. */
+  .cta-flotante--oculta {
+    transform: translateY(150%);
+    opacity: 0;
+    pointer-events: none;
+  }
+  /* En pantallas chicas el banner solo deja contador + botón — sin las
+   etiquetas de "Masterclass..." ni "Accede a nuestro WhatsApp VIP", que
+   ahí se sentían apretadas contra el resto. */
+  @media (max-width: 479px) {
+    .cta-flotante__etiqueta {
+      display: none;
+    }
   }
   /* Columnas centradas con un espacio fijo entre ellas — antes era
    space-between dentro de una barra de 640px, que las empujaba a los
@@ -543,26 +574,6 @@
   .fondo-resplandor > .contenedor {
     position: relative;
     z-index: 1;
-  }
-
-  /* ── Icono flotante ────────────────────────────────────────────────────
- * SVG propio, nunca emoji (regla anti-slop). Flota suave en bucle: un
- * detalle de vida cerca de titulares clave, no una animación por cada
- * icono de la página.
- */
-  .icono-flotante {
-    display: inline-flex;
-    color: var(--accion);
-    animation: flotar 3.2s ease-in-out infinite;
-  }
-  @keyframes flotar {
-    0%,
-    100% {
-      transform: translateY(0) rotate(-4deg);
-    }
-    50% {
-      transform: translateY(-8px) rotate(4deg);
-    }
   }
 
   /* ── Contenedores ────────────────────────────────────────────────────*/

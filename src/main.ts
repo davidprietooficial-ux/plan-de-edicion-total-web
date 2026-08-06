@@ -49,6 +49,51 @@ function iniciarVideosEfecto(): void {
   videos.forEach((v) => observador.observe(v));
 }
 
+// ── Toggle "Más información" ─────────────────────────────────────────────
+// Vuelve a ser desplegable (el cliente pidió revertir la vuelta anterior,
+// donde el video se dejó siempre visible): oculta el bloque de video +
+// herramientas hasta que se pulsa el botón. Fail-open: si el JS no llega a
+// correr, el panel se queda visible tal cual está en el HTML — nunca
+// atrapado detrás de un botón que no responde.
+function iniciarToggleVideo(): void {
+  const boton = document.querySelector<HTMLButtonElement>('[data-toggle-video]');
+  const panel = document.querySelector<HTMLElement>('[data-panel-video]');
+  if (!boton || !panel) return;
+
+  panel.hidden = true;
+  boton.setAttribute('aria-expanded', 'false');
+
+  boton.addEventListener('click', () => {
+    const abierto = boton.getAttribute('aria-expanded') === 'true';
+    boton.setAttribute('aria-expanded', String(!abierto));
+    panel.hidden = abierto;
+    if (!abierto) {
+      const sinMovimiento = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      panel.scrollIntoView({ behavior: sinMovimiento ? 'auto' : 'smooth', block: 'start' });
+    }
+  });
+}
+
+// ── Barra flotante — solo fuera del hero ─────────────────────────────────
+// El formulario y el CTA ya viven dentro del hero, así que mostrar la
+// barra flotante ENCIMA de eso es duplicar el mismo llamado a la acción a
+// la vista. Se oculta mientras el hero está en pantalla y aparece al bajar
+// — en cualquier tamaño de pantalla, no solo móvil, porque la duplicación
+// es la misma en cualquier ancho.
+function iniciarBarraFlotante(): void {
+  const barra = document.querySelector<HTMLElement>('.cta-flotante');
+  const hero = document.querySelector<HTMLElement>('.hero-video-seccion');
+  if (!barra || !hero || !('IntersectionObserver' in window)) return;
+
+  const observador = new IntersectionObserver(
+    ([entrada]) => {
+      barra.classList.toggle('cta-flotante--oculta', Boolean(entrada?.isIntersecting));
+    },
+    { threshold: 0.2 },
+  );
+  observador.observe(hero);
+}
+
 // ── Cupos disponibles — simulados ────────────────────────────────────────
 // El cliente pidió un contador de cupos que arranca ~100 y baja de forma
 // progresiva y aleatoria. Es urgencia simulada, no un inventario real —
@@ -100,6 +145,8 @@ function iniciar(): void {
   iniciarConsentimiento();
 
   iniciarMotion();
+  iniciarToggleVideo();
+  iniciarBarraFlotante();
   iniciarCuposSimulados();
   iniciarVideosEfecto();
   iniciarFormulario();
