@@ -38,21 +38,25 @@
       + correo de aviso + correo de bienvenida con el enlace al grupo):
       GitHub Pages no ejecuta PHP, así que el formulario del sitio en
       pruebas no estaba guardando nada — ver detalle completo abajo.
+      El script ya quedó implementado y el formulario apunta a la URL
+      real, probada con una petición de verdad antes de conectarla.
 
   Pendiente real del cliente (no inventar, no adivinar):
     - Enlace del grupo de WhatsApp VIP (el flujo actual usa un enlace de
       chat individual — el cliente pidió un enlace de GRUPO de un solo
       clic). Placeholder: https://[ENLACE_GRUPO_WHATSAPP_PENDIENTE]
       (usado tanto en gracias/index.html como en el correo de bienvenida
-      de automatizaciones/formulario-google-sheets.gs — hay que ponerlo
-      en los dos lugares).
-    - Correo real del cliente para las notificaciones de registro
-      (automatizaciones/formulario-google-sheets.gs, CORREO_ADMIN — sigue
-      con el placeholder hola@ejemplo.com).
-    - Implementar automatizaciones/formulario-google-sheets.gs como
-      Apps Script y pegar la URL real en el `action` del formulario de
-      abajo (sigue con el placeholder [ACTION_APPS_SCRIPT_PENDIENTE]).
-      Sin esto el formulario no guarda nada todavía.
+      del Apps Script — falta confirmar si ya se puso el real ahí, no
+      hay forma de verlo desde el código del sitio).
+    - Confirmar que CORREO_ADMIN en el Apps Script ya quedó con el correo
+      real del cliente y no con el placeholder — tampoco se puede ver
+      desde acá.
+    - El formulario YA está conectado a un Apps Script real (Google
+      Sheets + los dos correos) y probado con una petición real: guarda,
+      responde {ok:true}. El backend exige un token compartido (ver el
+      campo hidden "token" del <form> de abajo) que no es un secreto de
+      verdad — solo frena bots que le pegan directo a la URL sin pasar
+      por la página.
     - Efecto de avance/desaceleración del video (20% más rápido y
       frenando cerca del final) — confirmarlo antes de construirlo, ver
       detalle arriba.
@@ -238,17 +242,16 @@
                sitio en pruebas, no solo en el hosting final. Guarda cada
                registro en un Google Sheet, avisa por correo y le manda a
                quien se registra un correo de bienvenida con el botón al
-               grupo de WhatsApp. El código para pegar en Apps Script está
-               en automatizaciones/formulario-google-sheets.gs — no se
-               sube a este repo, no es parte del sitio que ve el cliente.
-               El `action` de abajo es un placeholder hasta que se
-               implemente el script y llegue la URL real. -->
+               grupo de WhatsApp. Ya implementado y verificado con una
+               petición real — la referencia local está en
+               automatizaciones/formulario-google-sheets.gs, no se sube a
+               este repo, no es parte del sitio que ve el cliente. -->
           <div id="registro" class="mx-auto mt-[var(--spacing-lg)] max-w-[26rem] text-left">
             <form
               class="tarjeta"
               data-formulario
               data-exito-redirige="/gracias/"
-              action="https://script.google.com/macros/s/[ACTION_APPS_SCRIPT_PENDIENTE]/exec"
+              action="https://script.google.com/macros/s/AKfycbygsXv7vFBQpaDx58a4JIyVXRtvZ4HMj6p4ONjxgmXDHvtNK6ooCHarVAJnM0_Tczhjjw/exec"
               method="post"
               novalidate
             >
@@ -257,6 +260,14 @@
                 <label for="web">No rellenes este campo</label>
                 <input type="text" id="web" name="web" tabindex="-1" autocomplete="off" />
               </div>
+
+              <!-- El backend exige este token o rechaza con "No autorizado."
+                   No es un secreto real — se ve en el código fuente, como
+                   cualquier dato que mande el navegador — pero frena a los
+                   bots que golpean la URL del Apps Script directamente sin
+                   pasar por la página. Tiene que ser igual al que compruebe
+                   el script (ver automatizaciones/formulario-google-sheets.gs). -->
+              <input type="hidden" name="token" value="PET2026-kaisen-x7Qm3vL9" />
 
               <div class="grid gap-[var(--spacing-sm)]">
                 <div>
