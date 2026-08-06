@@ -147,6 +147,12 @@ export function iniciarFormulario(): void {
       return;
     }
 
+    // Se dispara ya, síncrono y sin esperar a la respuesta del backend:
+    // un await antes de esta línea retrasaría el evento, y en el redirect
+    // de más abajo el pixel necesita haber salido antes de que la página
+    // cambie de sitio.
+    if (window.fbq) window.fbq('track', 'Lead');
+
     // El spinner solo aparece si de verdad tarda.
     temporizadorSpinner = window.setTimeout(
       () => ponerEstado('cargando', 'Enviando…'),
@@ -197,14 +203,15 @@ export function iniciarFormulario(): void {
         );
       }
 
-      // Si el formulario declara a dónde ir tras el éxito (p. ej. la página
-      // de gracias de un registro), se navega ahí. Con retraso corto para
-      // que el usuario alcance a leer la confirmación antes de saltar.
+      // Si el formulario declara a dónde ir tras el éxito (p. ej. el grupo
+      // de WhatsApp), se navega ahí. 400ms de margen: el mínimo para que
+      // el evento Lead del pixel salga antes de que la página cambie de
+      // sitio, sin que se note como espera.
       const redirigeA = form.dataset.exitoRedirige;
       if (redirigeA) {
         window.setTimeout(() => {
           window.location.href = redirigeA;
-        }, 700);
+        }, 400);
       }
     } catch (e) {
       window.clearTimeout(temporizadorSpinner);
