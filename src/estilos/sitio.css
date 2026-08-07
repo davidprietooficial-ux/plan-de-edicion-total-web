@@ -204,7 +204,8 @@
     color: white;
     text-wrap: balance;
   }
-  .reproductor__final .contador-unidad__numero {
+  .reproductor__final .contador-unidad__numero,
+  .reproductor__final .contador-separador {
     color: white;
     text-shadow: none;
   }
@@ -256,7 +257,8 @@
     align-items: center;
     gap: 2px;
   }
-  .contador-unidad__numero {
+  .contador-unidad__numero,
+  .contador-separador {
     font-family: var(--font-display);
     font-size: clamp(2.25rem, 6vw, 3.5rem);
     line-height: 1;
@@ -265,6 +267,12 @@
       0 0 12px color-mix(in srgb, var(--accion) 70%, transparent),
       0 0 32px color-mix(in srgb, var(--accion) 40%, transparent);
     font-variant-numeric: tabular-nums;
+  }
+
+  /* El separador solo marca el ritmo dd:hh:mm:ss del número — no lleva
+   etiqueta debajo, así que no participa del lector de pantalla. */
+  .contador-separador {
+    align-self: flex-start;
   }
   .contador-unidad__etiqueta {
     font-size: 11px;
@@ -471,7 +479,8 @@
   .contador-cuenta--mini .contador-unidad {
     min-width: auto;
   }
-  .contador-cuenta--mini .contador-unidad__numero {
+  .contador-cuenta--mini .contador-unidad__numero,
+  .contador-cuenta--mini .contador-separador {
     font-size: 1.25rem;
   }
   .contador-cuenta--mini .contador-unidad__etiqueta {
@@ -874,6 +883,31 @@
     font-weight: 600;
   }
 
+  /* País + WhatsApp van en la misma fila: el país es el prefijo del
+   número, no un campo aparte que rompa el flujo del formulario. Ancho
+   fijo angosto para el select ("Colombia +57" no necesita más espacio),
+   el input de teléfono se lleva el resto. */
+  .fila-telefono {
+    display: flex;
+    gap: var(--spacing-2xs);
+    align-items: flex-start;
+  }
+  .fila-telefono__pais {
+    flex: 0 0 8rem;
+  }
+  .fila-telefono__numero {
+    flex: 1 1 auto;
+    min-width: 0;
+  }
+
+  select.campo {
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23B3A99C' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right var(--spacing-3xs) center;
+    padding-right: calc(var(--spacing-xs) + 14px);
+  }
+
   /* El error va DEBAJO del campo y dice cómo arreglarlo, no solo que está mal. */
   .error-campo {
     margin-top: var(--spacing-3xs);
@@ -881,9 +915,11 @@
     color: var(--estado-error);
   }
 
-  /* Casilla de consentimiento de marketing — opcional a propósito: forzarla
-   marcada por defecto o como requerida no es un consentimiento libre
-   válido bajo la Ley 1581 de 2012 (Colombia). */
+  /* Casilla de consentimiento de marketing — el cliente pidió que sea
+   obligatoria para registrarse (a sabiendas de que la Ley 1581 de 2012
+   de Colombia exige consentimiento libre para el marketing en sí; forzar
+   el registro a cambio de esa autorización es una decisión suya, no
+   técnica). Sigue sin venir premarcada. */
   .casilla-campo {
     display: flex;
     align-items: flex-start;

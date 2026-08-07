@@ -38,6 +38,7 @@ interface Campo {
   input: HTMLInputElement | HTMLTextAreaElement;
   error: HTMLElement | null;
   validar: (v: string) => string | null;
+  leer: () => string;
 }
 
 // ── Validaciones ──────────────────────────────────────────────────────
@@ -56,12 +57,18 @@ const correo = (v: string): string | null => {
     : 'Revisa el correo: parece que falta algo.';
 };
 
-const telefono = (v: string): string | null => {
+// A diferencia de la mayoría de formularios de contacto, aquí el teléfono
+// ES el canal de entrega (el acceso a la clase llega por WhatsApp), así que
+// no puede quedar como opcional.
+const telefonoObligatorio = (v: string): string | null => {
   const limpio = v.replace(/[\s()\-.]/g, '');
-  if (limpio.length === 0) return null; // opcional
+  if (limpio.length === 0) return 'Tu WhatsApp hace falta para poder darte acceso.';
   // Tolerante con el formato: con guiones, con espacios, con o sin +.
   return /^\+?\d{7,15}$/.test(limpio) ? null : 'Ese teléfono no me cuadra. ¿Lo revisas?';
 };
+
+const consentimientoObligatorio = (v: string): string | null =>
+  v === 'si' ? null : 'Tienes que autorizar el envío de información para registrarte.';
 
 // ── Montaje ───────────────────────────────────────────────────────────
 
@@ -76,17 +83,24 @@ export function iniciarFormulario(): void {
   const campo = (nombre: string, validar: Campo['validar']): Campo | null => {
     const input = form.querySelector<HTMLInputElement>(`[name="${nombre}"]`);
     if (!input) return null;
+    // Los checkboxes se leen por .checked, no por .value (que es fijo,
+    // marcados o no — aquí siempre "si").
+    const leer =
+      input.type === 'checkbox' ? () => (input.checked ? 'si' : '') : () => input.value;
     return {
       input,
       error: form.querySelector<HTMLElement>(`[data-error-de="${nombre}"]`),
       validar,
+      leer,
     };
   };
 
   const campos = [
     campo('nombre', obligatorio('Tu nombre')),
     campo('email', correo),
-    campo('telefono', telefono),
+    campo('pais', obligatorio('Tu país')),
+    campo('telefono', telefonoObligatorio),
+    campo('autoriza_marketing', consentimientoObligatorio),
     campo('mensaje', obligatorio('Contarme qué necesitas')),
   ].filter((c): c is Campo => c !== null);
 
@@ -120,11 +134,11 @@ export function iniciarFormulario(): void {
   };
 
   for (const c of campos) {
-    c.input.addEventListener('blur', () => mostrarError(c, c.validar(c.input.value)));
+    c.input.addEventListener('blur', () => mostrarError(c, c.validar(c.leer())));
     // Al corregir se limpia en vivo, pero no se marca error mientras escribe:
     // señalar un correo incompleto en la tercera letra es hostil.
     c.input.addEventListener('input', () => {
-      if (c.input.getAttribute('aria-invalid') === 'true' && !c.validar(c.input.value)) {
+      if (c.input.getAttribute('aria-invalid') === 'true' && !c.validar(c.leer())) {
         mostrarError(c, null);
       }
     });
@@ -137,7 +151,7 @@ export function iniciarFormulario(): void {
 
     let primerFallo: Campo | null = null;
     for (const c of campos) {
-      const error = c.validar(c.input.value);
+      const error = c.validar(c.leer());
       mostrarError(c, error);
       if (error && !primerFallo) primerFallo = c;
     }
