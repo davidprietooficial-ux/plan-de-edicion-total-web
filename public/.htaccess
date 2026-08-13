@@ -57,15 +57,34 @@
   # Se construye permitiendo SOLO lo necesario, no quitando cosas de una
   # lista permisiva. Cada dominio de terceros va con su motivo al lado.
   #
-  # 'sha256-...' son los hashes de los scripts inline. Si editas un inline,
-  # el hash cambia: `npm run gate` los recalcula y avisa. Por eso los
-  # inline con hash están en .prettierignore — si Prettier los reformatea,
-  # el navegador los bloquea sin decir nada en la interfaz.
+  # 'sha256-...' es el hash del ÚNICO script inline del sitio: el snippet
+  # del Meta Pixel en el <head> de index.html. Si se edita ese snippet —
+  # aunque sea un espacio — el hash cambia y el navegador lo bloquea sin
+  # decir nada en la interfaz: el pixel deja de medir y nadie se entera.
+  # Para recalcularlo:  npm run build && npm run csp:hash
   #
-  # Con monetización activa hay que abrir script-src y frame-src a Google
-  # y a Outpush. Eso es una concesión real: queda documentada, no
-  # disimulada. Ver docs/monetizacion.md.
-  Header always set Content-Security-Policy "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self'; connect-src 'self'; media-src 'self'; object-src 'none'; frame-src 'none'; frame-ancestors 'none'; base-uri 'self'; form-action 'self'; upgrade-insecure-requests"
+  # OJO — esta CSP no se estaba aplicando en Vercel (no lee .htaccess).
+  # Empieza a mandar de verdad al mover el sitio a Hostinger/Apache, así
+  # que los permisos de abajo son los que el sitio necesita HOY:
+  #   connect.facebook.net       → el fbevents.js del pixel
+  #   www.facebook.com           → los beacons del pixel (img) y el
+  #                                <noscript> de reserva
+  #   script.google.com          → el fetch del formulario al Apps Script
+  #   script.googleusercontent.com → a donde redirige Apps Script para
+  #                                devolver el JSON de respuesta
+  # Quitar cualquiera de las dos primeras de Google rompe el registro
+  # entero.
+  #
+  # googletagmanager.com + google-analytics.com → GA4 y Google Tag
+  # Manager. Van puestos aunque los IDs de src/lib/tracking.ts estén
+  # todavía vacíos: sin ID no se carga nada, y así el día que se rellenen
+  # no hay que acordarse de volver aquí (que es justo lo que se olvida, y
+  # el síntoma es "GA no registra nada" sin ningún error visible).
+  #
+  # El modo Vista previa de GTM NO funciona con esta CSP: necesita además
+  # tagmanager.google.com y frame-src para su superposición. Es a
+  # propósito — se abre solo mientras se depura, no se deja abierto.
+  Header always set Content-Security-Policy "default-src 'self'; script-src 'self' 'sha256-U+VXup+MR3lfzmeLR4KTANKpsw2EFzA4JwOKRRiTss8=' https://connect.facebook.net https://www.googletagmanager.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https://www.facebook.com https://www.googletagmanager.com https://www.google-analytics.com; font-src 'self'; connect-src 'self' https://script.google.com https://script.googleusercontent.com https://www.facebook.com https://www.googletagmanager.com https://www.google-analytics.com https://analytics.google.com https://*.analytics.google.com https://*.google-analytics.com; media-src 'self'; object-src 'none'; frame-src 'none'; frame-ancestors 'none'; base-uri 'self'; form-action 'self'; upgrade-insecure-requests"
 
   # Se quita la firma del servidor: menos información gratis para quien
   # esté buscando versiones con vulnerabilidades conocidas.

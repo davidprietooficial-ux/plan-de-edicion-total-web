@@ -7,6 +7,8 @@
     "dev": "vite",
     "build": "tsc --noEmit && vite build",
     "preview": "vite preview --port 4173",
+    "csp:hash": "node scripts/csp-hash.mjs",
+    "empaquetar": "npm run build && cd dist && COPYFILE_DISABLE=1 zip -r -X ../pet-hostinger.zip . -x '.DS_Store' '._*' '*/._*' '__MACOSX/*' && cd ..",
     "formato": "prettier --write .",
     "formato:check": "prettier --check ."
   },

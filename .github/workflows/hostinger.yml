@@ -1,0 +1,75 @@
+# Publica el sitio en Hostinger sin subir nada a mano.
+#
+# Hostinger, en hosting compartido, NO compila: clona una rama del repo y
+# sirve lo que haya dentro, tal cual. Este proyecto es Vite — lo que hay
+# que servir es dist/, no el código fuente. Por eso el flujo es en dos
+# tiempos:
+#
+#   main       ← el código, como siempre. dist/ sigue en .gitignore.
+#   hostinger  ← SOLO el resultado del build, en la raíz de la rama.
+#                La reescribe esta Action en cada push a main.
+#
+# En hPanel se apunta el despliegue Git a la rama `hostinger`, no a main.
+# Si se apunta a main, el subdominio acaba sirviendo package.json y la
+# carpeta src/ en vez de la landing.
+#
+# La rama `hostinger` es desechable y se reescribe entera cada vez
+# (push --force sobre una rama huérfana): no se edita a mano, no guarda
+# historial y no hay nada ahí que se pueda perder.
+name: Publicar en Hostinger
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+# Escribir en el repo es lo único que necesita: crear/mover la rama.
+permissions:
+  contents: write
+
+# Dos pushes seguidos a main no pueden pisarse: el segundo espera, no
+# cancela. Cancelarlo dejaría la rama `hostinger` a medio escribir.
+concurrency:
+  group: hostinger
+  cancel-in-progress: false
+
+jobs:
+  publicar:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - run: npm ci
+
+      # Sin VITE_BASE_PATH: el subdominio sirve desde su propia raíz, así
+      # que la base '/' del vite.config es la correcta. (Lo de /<repo>/ es
+      # cosa de GitHub Pages, ver pages.yml.)
+      - run: npm run build
+
+      # Red de seguridad: el .htaccess trae la CSP, el HTTPS obligatorio y
+      # las cabeceras de seguridad. Si Vite dejara de copiar public/ a
+      # dist/, el sitio se publicaría igual pero sin nada de eso — y en
+      # producción no se nota hasta que alguien mira las cabeceras.
+      - name: Comprobar que el .htaccess viajó al build
+        run: test -f dist/.htaccess
+
+      - name: Reescribir la rama hostinger con el build
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          cd dist
+          git init -q
+          git checkout -q -b hostinger
+          git add -A
+          git -c user.name='github-actions[bot]' \
+              -c user.email='41898282+github-actions[bot]@users.noreply.github.com' \
+              commit -q -m "Build de ${GITHUB_SHA::7}"
+          git push -q --force \
+            "https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" \
+            hostinger

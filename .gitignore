@@ -4,6 +4,9 @@ dist/
 .vite/
 *.tsbuildinfo
 
+# El zip que se sube a Hostinger — se regenera con `npm run empaquetar`
+pet-hostinger.zip
+
 # Credenciales — nunca, bajo ningún concepto
 .env
 .env.*

@@ -41,13 +41,33 @@
       El script ya quedó implementado y el formulario apunta a la URL
       real, probada con una petición de verdad antes de conectarla.
 
+  Segundo webinar (2026-08-13):
+    - Fecha: lunes 2026-08-17, 6:00 p. m. COP. Cambiada en los CUATRO
+      [data-cuenta-hasta] (barra flotante, hero, banner final del
+      reproductor) y en el startDate del JSON-LD. Si se corre otra vez,
+      hay que tocar los cuatro o los contadores se desincronizan entre sí.
+    - Tema: CapCut. Se refleja en el <title>, la meta description, el par
+      og:title/og:description, el JSON-LD, el antetítulo y el <h1> del
+      hero, y CapCut pasa a ir primero en la fila de herramientas. La
+      marca sigue enseñando Premiere Pro — no se borró de ningún lado,
+      solo dejó de ir de primero.
+    - Grupo de WhatsApp nuevo (ver abajo) y pestaña propia en el libro de
+      Google para los contactos de esta convocatoria.
+
   Pendiente real del cliente (no inventar, no adivinar):
-    - Enlace del grupo de WhatsApp VIP: YA es el real
-      (chat.whatsapp.com/BNMWH5KbRQlHRmd76xXfYb), puesto en
-      gracias/index.html. Falta ponerlo TAMBIÉN dentro del Apps Script
-      real (ENLACE_GRUPO_WHATSAPP, en el correo de bienvenida) — eso no
-      se puede hacer desde este repo, hay que editarlo en el editor de
-      Apps Script y volver a implementar.
+    - Enlace del grupo de WhatsApp VIP: cambiado al grupo del SEGUNDO
+      webinar (chat.whatsapp.com/EQAWmcD5FOh1w4Hq1uwEuD), puesto en el
+      data-exito-redirige del formulario de abajo. El grupo del primer
+      webinar (…BNMWH5KbRQlHRmd76xXfYb) queda solo en la página de
+      gracias archivada, como registro histórico. Falta ponerlo TAMBIÉN
+      dentro del Apps Script real (ENLACE_GRUPO_WHATSAPP, en el correo
+      de bienvenida) — eso no se puede hacer desde este repo, hay que
+      editarlo en el editor de Apps Script y volver a implementar.
+    - Cada webinar escribe en su propia pestaña del libro de Google
+      ("Registros Webinar 2"), que el Apps Script crea solo. La pestaña
+      la elige la constante WEBINAR_ACTUAL, así que al cambiar de webinar
+      hay que cambiarla ANTES de abrir inscripciones — ver
+      formulario-google-sheets.gs.
     - Confirmar que CORREO_ADMIN en el Apps Script ya quedó con el correo
       real del cliente y no con el placeholder — tampoco se puede ver
       desde acá.
@@ -95,21 +115,28 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Plan de Edición Total · Masterclass gratis en vivo</title>
+    <title>Plan de Edición Total · Masterclass gratis de CapCut en vivo</title>
     <meta
       name="description"
-      content="Aprende a editar videos profesionales gratis. Clase en vivo el lunes, cupo limitado. Inscríbete y accede por WhatsApp."
+      content="Aprende a editar videos profesionales en CapCut, gratis. Clase en vivo el lunes, cupo limitado. Inscríbete y accede por WhatsApp."
     />
-    <link rel="canonical" href="https://[DOMINIO]/" />
+    <link rel="canonical" href="https://form-webinar.planediciontotal.com/" />
 
     <meta property="og:type" content="website" />
-    <meta property="og:title" content="Plan de Edición Total · Masterclass gratis en vivo" />
+    <meta property="og:title" content="Plan de Edición Total · Masterclass gratis de CapCut en vivo" />
     <meta
       property="og:description"
-      content="Aprende a editar videos profesionales gratis. Clase en vivo el lunes, cupo limitado."
+      content="Aprende a editar videos profesionales en CapCut, gratis. Clase en vivo el lunes, cupo limitado."
     />
-    <meta property="og:url" content="https://[DOMINIO]/" />
-    <meta property="og:image" content="https://[DOMINIO]/og.jpg" />
+    <meta property="og:url" content="https://form-webinar.planediciontotal.com/" />
+    <!-- Apuntaba a /og.jpg, que nunca existió: al compartir el enlace por
+         WhatsApp o Facebook salía sin miniatura. Se usa el póster del
+         video del hero, que sí está y mide 1280x720 — proporción válida
+         para una tarjeta grande. Si el cliente manda una portada hecha a
+         propósito, se cambia por esa. -->
+    <meta property="og:image" content="https://form-webinar.planediciontotal.com/video-hero.jpg" />
+    <meta property="og:image:width" content="1280" />
+    <meta property="og:image:height" content="720" />
     <meta property="og:locale" content="es_CO" />
     <meta name="twitter:card" content="summary_large_image" />
 
@@ -120,17 +147,18 @@
 
     <script type="module" src="/src/main.ts"></script>
 
-    <!-- JSON-LD tipo Event. startDate: lunes 2026-08-10, 18:00 COP. -->
+    <!-- JSON-LD tipo Event. startDate: lunes 2026-08-17, 18:00 COP
+         (segundo webinar; el primero fue el lunes 2026-08-10). -->
     <script type="application/ld+json">
       {
         "@context": "https://schema.org",
         "@type": "Event",
-        "name": "Plan de Edición Total — masterclass gratis en vivo",
-        "description": "Clase en vivo y gratuita de edición de video. Cupo limitado.",
-        "startDate": "2026-08-10T18:00:00-05:00",
+        "name": "Plan de Edición Total — masterclass gratis de CapCut en vivo",
+        "description": "Clase en vivo y gratuita de edición de video en CapCut. Cupo limitado.",
+        "startDate": "2026-08-17T18:00:00-05:00",
         "eventAttendanceMode": "https://schema.org/OnlineEventAttendanceMode",
         "eventStatus": "https://schema.org/EventScheduled",
-        "location": { "@type": "VirtualLocation", "url": "https://[DOMINIO]/" },
+        "location": { "@type": "VirtualLocation", "url": "https://form-webinar.planediciontotal.com/" },
         "organizer": { "@type": "Person", "name": "Juan Camilo Pérez Moreno" },
         "offers": {
           "@type": "Offer",
@@ -161,7 +189,7 @@
          completa + qué es; columna 2 = el botón grande + a dónde lleva.
     -->
     <div class="cta-flotante" role="region" aria-label="Acciones rápidas">
-      <div class="cta-flotante__columna" data-cuenta-hasta="2026-08-10T18:00:00-05:00">
+      <div class="cta-flotante__columna" data-cuenta-hasta="2026-08-17T18:00:00-05:00">
         <div class="contador-cuenta contador-cuenta--mini">
           <div class="contador-unidad">
             <span class="contador-unidad__numero" data-cuenta-campo="dias">00</span>
@@ -210,7 +238,7 @@
                donde antes iba el icono flotante (el cliente pidió que este
                sea el primer elemento del hero). dd:hh:mm:ss actualizada por
                lib/motion.ts cada segundo desde data-cuenta-hasta. -->
-          <div data-cuenta-hasta="2026-08-10T18:00:00-05:00">
+          <div data-cuenta-hasta="2026-08-17T18:00:00-05:00">
             <div class="contador-cuenta">
               <div class="contador-unidad">
                 <span class="contador-unidad__numero" data-cuenta-campo="dias">00</span>
@@ -245,11 +273,16 @@
           <p
             class="mt-[var(--spacing-lg)] mb-[var(--spacing-sm)] text-sm font-semibold tracking-[0.14em] text-[var(--accion)] uppercase"
           >
-            Masterclass de edición en vivo
+            Masterclass de edición en CapCut, en vivo
           </p>
 
+          <!-- Segundo webinar: el tema es CapCut, no "edición" en
+               general. El titular lo dice explícito porque el anuncio y
+               el grupo de WhatsApp prometen eso mismo — si la landing
+               habla más ancho que la clase, el registro llega esperando
+               otra cosa. -->
           <h1 class="font-display text-[1.7rem] leading-[1.05] uppercase md:text-[2.4rem] lg:text-[2.8rem]">
-            Aprende a editar <span class="text-[var(--accion)]">gratis</span> videos profesionales
+            Aprende <span class="text-[var(--accion)]">gratis</span> a editar videos profesionales en CapCut
           </h1>
 
           <!-- Párrafo más corto y tipografía -30% (1.125rem → 0.7875rem),
@@ -289,7 +322,7 @@
             <form
               class="tarjeta"
               data-formulario
-              data-exito-redirige="https://chat.whatsapp.com/BNMWH5KbRQlHRmd76xXfYb?mode=gi_t"
+              data-exito-redirige="https://chat.whatsapp.com/EQAWmcD5FOh1w4Hq1uwEuD?mode=gi_t"
               action="https://script.google.com/macros/s/AKfycbzuTVmmX6nllyDPQfGf0avwvTD0pX_UeEMosbSWOp0YJo5xZQ02H1ucgZQ02GeWmRVVZA/exec"
               method="post"
               novalidate
@@ -352,7 +385,14 @@
                   </div>
                   <div class="fila-telefono__numero">
                     <label class="etiqueta-campo" for="telefono">Tu WhatsApp</label>
-                    <input class="campo" type="tel" id="telefono" name="telefono" autocomplete="tel-national" required />
+                    <input
+                      class="campo"
+                      type="tel"
+                      id="telefono"
+                      name="telefono"
+                      autocomplete="tel-national"
+                      required
+                    />
                     <p class="error-campo" data-error-de="telefono" hidden></p>
                   </div>
                 </div>
@@ -501,7 +541,7 @@
                  están ocultos en ese momento. -->
             <div class="reproductor__final" data-reproductor-final hidden>
               <p class="reproductor__final-texto">No esperes más y accede hoy a la clase</p>
-              <div class="contador-cuenta contador-cuenta--mini" data-cuenta-hasta="2026-08-10T18:00:00-05:00">
+              <div class="contador-cuenta contador-cuenta--mini" data-cuenta-hasta="2026-08-17T18:00:00-05:00">
                 <div class="contador-unidad">
                   <span class="contador-unidad__numero" data-cuenta-campo="dias">00</span>
                   <span class="contador-unidad__etiqueta">Días</span>
@@ -529,16 +569,16 @@
         <div class="contenedor mt-[var(--spacing-lg)]">
           <div class="marquee-pista py-[var(--spacing-md)]">
             <div class="marquee-fila">
-              <span class="etiqueta-herramienta">Premiere Pro</span>
               <span class="etiqueta-herramienta">CapCut</span>
+              <span class="etiqueta-herramienta">Premiere Pro</span>
               <span class="etiqueta-herramienta">Montaje</span>
               <span class="etiqueta-herramienta">Edición de sonido</span>
               <span class="etiqueta-herramienta">Textos y motion graphics</span>
               <span class="etiqueta-herramienta">Efectos visuales</span>
               <span class="etiqueta-herramienta">Efectos sonoros</span>
               <span class="etiqueta-herramienta">Exportación</span>
-              <span class="etiqueta-herramienta" aria-hidden="true">Premiere Pro</span>
               <span class="etiqueta-herramienta" aria-hidden="true">CapCut</span>
+              <span class="etiqueta-herramienta" aria-hidden="true">Premiere Pro</span>
               <span class="etiqueta-herramienta" aria-hidden="true">Montaje</span>
               <span class="etiqueta-herramienta" aria-hidden="true">Edición de sonido</span>
               <span class="etiqueta-herramienta" aria-hidden="true">Textos y motion graphics</span>

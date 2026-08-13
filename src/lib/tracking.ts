@@ -14,6 +14,19 @@ import { alConsentir } from './consentimiento';
 // index.html — Meta no lo detectaba en cola porque su verificador no
 // acepta cookies. Queda fuera de la cola de este archivo para no
 // duplicar el init() ni el PageView.
+//
+// ── GA4 y GTM: rellena UNO de los dos, no los dos ────────────────────
+// Si se ponen los dos Y el contenedor de GTM lleva dentro una etiqueta
+// de GA4, cada visita se cuenta DOS veces: una por el gtag de aquí y
+// otra por la que dispara GTM. No da ningún error — simplemente los
+// números salen al doble y la tasa de conversión, a la mitad.
+//
+//   Solo GA4  → ga4: 'G-XXXXXXXXXX', gtm: ''
+//   Con GTM   → gtm: 'GTM-XXXXXXX',  ga4: ''   y la etiqueta de GA4 se
+//               configura dentro del contenedor de GTM.
+//
+// La CSP de public/.htaccess ya tiene abiertos los dominios de Google,
+// así que con poner el ID aquí y volver a desplegar basta.
 export const IDS = {
   ga4: '',
   gtm: '',
