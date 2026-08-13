@@ -46,11 +46,17 @@
       [data-cuenta-hasta] (barra flotante, hero, banner final del
       reproductor) y en el startDate del JSON-LD. Si se corre otra vez,
       hay que tocar los cuatro o los contadores se desincronizan entre sí.
-    - Tema: CapCut. Se refleja en el <title>, la meta description, el par
-      og:title/og:description, el JSON-LD, el antetítulo y el <h1> del
-      hero, y CapCut pasa a ir primero en la fila de herramientas. La
-      marca sigue enseñando Premiere Pro — no se borró de ningún lado,
-      solo dejó de ir de primero.
+    - Tema: SIN herramienta concreta. Se llegó a poner CapCut en el
+      title, la meta description, el og y el hero, y se revirtió el mismo
+      día: el cliente todavía no sabe si la clase será en CapCut, en
+      Premiere o en otra cosa. Una tarjeta compartida que promete CapCut
+      y una clase que acaba siendo de Premiere es la peor versión de este
+      error, porque el enlace ya circuló por WhatsApp y no se puede
+      recoger. Mientras no esté decidido, la copia dice "edición de
+      video" y la fila de herramientas las nombra todas sin destacar
+      ninguna. Si se decide, hay que tocar: title, description,
+      og:title, og:description, name y description del JSON-LD,
+      antetítulo y <h1>.
     - Grupo de WhatsApp nuevo (ver abajo) y pestaña propia en el libro de
       Google para los contactos de esta convocatoria.
 
@@ -115,28 +121,34 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Plan de Edición Total · Masterclass gratis de CapCut en vivo</title>
+    <title>Plan de Edición Total · Masterclass de edición en vivo, gratis</title>
     <meta
       name="description"
-      content="Aprende a editar videos profesionales en CapCut, gratis. Clase en vivo el lunes, cupo limitado. Inscríbete y accede por WhatsApp."
+      content="Aprende a editar videos profesionales, gratis. Clase en vivo el lunes, cupo limitado. Inscríbete y accede por WhatsApp."
     />
     <link rel="canonical" href="https://form-webinar.planediciontotal.com/" />
 
     <meta property="og:type" content="website" />
-    <meta property="og:title" content="Plan de Edición Total · Masterclass gratis de CapCut en vivo" />
+    <meta property="og:title" content="Plan de Edición Total · Masterclass de edición en vivo, gratis" />
     <meta
       property="og:description"
-      content="Aprende a editar videos profesionales en CapCut, gratis. Clase en vivo el lunes, cupo limitado."
+      content="Aprende a editar videos profesionales, gratis. Clase en vivo el lunes, cupo limitado."
     />
     <meta property="og:url" content="https://form-webinar.planediciontotal.com/" />
-    <!-- Apuntaba a /og.jpg, que nunca existió: al compartir el enlace por
-         WhatsApp o Facebook salía sin miniatura. Se usa el póster del
-         video del hero, que sí está y mide 1280x720 — proporción válida
-         para una tarjeta grande. Si el cliente manda una portada hecha a
-         propósito, se cambia por esa. -->
-    <meta property="og:image" content="https://form-webinar.planediciontotal.com/video-hero.jpg" />
-    <meta property="og:image:width" content="1280" />
-    <meta property="og:image:height" content="720" />
+    <!-- og.jpg se genera desde public/video-hero.jpg (el póster del video
+         del hero) con `npm run og`: recorte a 1200x630 — la medida exacta
+         que piden WhatsApp, Facebook y LinkedIn, y la que evita que la
+         miniatura salga recortada por sitios distintos en cada uno —,
+         oscurecido progresivo en la franja inferior y la barra naranja de
+         marca abajo. Sin texto encima a propósito: el título y la
+         descripción ya salen debajo de la imagen en la tarjeta, y
+         repetirlos dentro compite y se corta en pantallas pequeñas.
+         Si el cliente manda una portada hecha a propósito, se sustituye
+         el archivo y ya. -->
+    <meta property="og:image" content="https://form-webinar.planediciontotal.com/og.jpg" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="Línea de tiempo de un montaje de video en pantalla" />
     <meta property="og:locale" content="es_CO" />
     <meta name="twitter:card" content="summary_large_image" />
 
@@ -153,8 +165,8 @@
       {
         "@context": "https://schema.org",
         "@type": "Event",
-        "name": "Plan de Edición Total — masterclass gratis de CapCut en vivo",
-        "description": "Clase en vivo y gratuita de edición de video en CapCut. Cupo limitado.",
+        "name": "Plan de Edición Total — masterclass gratis de edición de video en vivo",
+        "description": "Clase en vivo y gratuita de edición de video. Cupo limitado.",
         "startDate": "2026-08-17T18:00:00-05:00",
         "eventAttendanceMode": "https://schema.org/OnlineEventAttendanceMode",
         "eventStatus": "https://schema.org/EventScheduled",
@@ -273,16 +285,11 @@
           <p
             class="mt-[var(--spacing-lg)] mb-[var(--spacing-sm)] text-sm font-semibold tracking-[0.14em] text-[var(--accion)] uppercase"
           >
-            Masterclass de edición en CapCut, en vivo
+            Masterclass de edición en vivo
           </p>
 
-          <!-- Segundo webinar: el tema es CapCut, no "edición" en
-               general. El titular lo dice explícito porque el anuncio y
-               el grupo de WhatsApp prometen eso mismo — si la landing
-               habla más ancho que la clase, el registro llega esperando
-               otra cosa. -->
           <h1 class="font-display text-[1.7rem] leading-[1.05] uppercase md:text-[2.4rem] lg:text-[2.8rem]">
-            Aprende <span class="text-[var(--accion)]">gratis</span> a editar videos profesionales en CapCut
+            Aprende a editar <span class="text-[var(--accion)]">gratis</span> videos profesionales
           </h1>
 
           <!-- Párrafo más corto y tipografía -30% (1.125rem → 0.7875rem),
@@ -569,16 +576,16 @@
         <div class="contenedor mt-[var(--spacing-lg)]">
           <div class="marquee-pista py-[var(--spacing-md)]">
             <div class="marquee-fila">
-              <span class="etiqueta-herramienta">CapCut</span>
               <span class="etiqueta-herramienta">Premiere Pro</span>
+              <span class="etiqueta-herramienta">CapCut</span>
               <span class="etiqueta-herramienta">Montaje</span>
               <span class="etiqueta-herramienta">Edición de sonido</span>
               <span class="etiqueta-herramienta">Textos y motion graphics</span>
               <span class="etiqueta-herramienta">Efectos visuales</span>
               <span class="etiqueta-herramienta">Efectos sonoros</span>
               <span class="etiqueta-herramienta">Exportación</span>
-              <span class="etiqueta-herramienta" aria-hidden="true">CapCut</span>
               <span class="etiqueta-herramienta" aria-hidden="true">Premiere Pro</span>
+              <span class="etiqueta-herramienta" aria-hidden="true">CapCut</span>
               <span class="etiqueta-herramienta" aria-hidden="true">Montaje</span>
               <span class="etiqueta-herramienta" aria-hidden="true">Edición de sonido</span>
               <span class="etiqueta-herramienta" aria-hidden="true">Textos y motion graphics</span>
