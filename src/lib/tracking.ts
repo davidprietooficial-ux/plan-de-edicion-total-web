@@ -48,7 +48,7 @@ export const IDS = {
   gtm: '',
   googleAds: '',
   tiktokPixel: '',
-  clarity: '',
+  clarity: 'y1tp72wjj8',
 } as const;
 
 /**
