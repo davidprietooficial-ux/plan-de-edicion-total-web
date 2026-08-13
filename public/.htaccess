@@ -84,7 +84,12 @@
   # El modo Vista previa de GTM NO funciona con esta CSP: necesita además
   # tagmanager.google.com y frame-src para su superposición. Es a
   # propósito — se abre solo mientras se depura, no se deja abierto.
-  Header always set Content-Security-Policy "default-src 'self'; script-src 'self' 'sha256-U+VXup+MR3lfzmeLR4KTANKpsw2EFzA4JwOKRRiTss8=' https://connect.facebook.net https://www.googletagmanager.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https://www.facebook.com https://www.googletagmanager.com https://www.google-analytics.com; font-src 'self'; connect-src 'self' https://script.google.com https://script.googleusercontent.com https://www.facebook.com https://www.googletagmanager.com https://www.google-analytics.com https://analytics.google.com https://*.analytics.google.com https://*.google-analytics.com; media-src 'self'; object-src 'none'; frame-src 'none'; frame-ancestors 'none'; base-uri 'self'; form-action 'self'; upgrade-insecure-requests"
+  #
+  # clarity.ms + c.bing.com → Microsoft Clarity (mapas de calor y
+  # grabaciones de sesión). Mismo criterio que con GA: los dominios van
+  # abiertos aunque IDS.clarity siga vacío en src/lib/tracking.ts, para
+  # que rellenar el ID sea lo único que haga falta.
+  Header always set Content-Security-Policy "default-src 'self'; script-src 'self' 'sha256-U+VXup+MR3lfzmeLR4KTANKpsw2EFzA4JwOKRRiTss8=' https://connect.facebook.net https://www.googletagmanager.com https://www.clarity.ms; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https://www.facebook.com https://www.googletagmanager.com https://www.google-analytics.com; font-src 'self'; connect-src 'self' https://script.google.com https://script.googleusercontent.com https://www.facebook.com https://www.googletagmanager.com https://www.google-analytics.com https://analytics.google.com https://*.analytics.google.com https://*.google-analytics.com https://*.clarity.ms https://c.bing.com; media-src 'self'; object-src 'none'; frame-src 'none'; frame-ancestors 'none'; base-uri 'self'; form-action 'self'; upgrade-insecure-requests"
 
   # Se quita la firma del servidor: menos información gratis para quien
   # esté buscando versiones con vulnerabilidades conocidas.

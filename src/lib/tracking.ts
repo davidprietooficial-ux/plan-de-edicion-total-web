@@ -27,11 +27,28 @@ import { alConsentir } from './consentimiento';
 //
 // La CSP de public/.htaccess ya tiene abiertos los dominios de Google,
 // así que con poner el ID aquí y volver a desplegar basta.
+//
+// ── clarity: mapas de calor y grabaciones ────────────────────────────
+// Microsoft Clarity. Está aquí y no en GTM porque GTM NO hace mapas de
+// calor: GTM solo inyecta scripts de otros, y el mapa de calor lo tiene
+// que dar la herramienta que se inyecte. Clarity es gratis y sin límite
+// de sesiones, así que no hace falta meter GTM por el medio.
+//
+// El ID es el del proyecto de Clarity (10 caracteres, p. ej. 'q7x2m9k4p1'),
+// no una URL. La CSP ya lo tiene contemplado.
+//
+// OJO con lo que graba: Clarity guarda vídeo de la sesión, y el
+// formulario de esta página pide nombre, correo y teléfono. Por defecto
+// Clarity enmascara el contenido de los campos, pero eso hay que dejarlo
+// confirmado en su panel (Settings → Masking → Balanced o Strict) antes
+// de abrir inscripciones. Va en la categoría 'analitica', así que solo
+// graba a quien acepta en el banner.
 export const IDS = {
   ga4: 'G-QKYH7ZEGHQ',
   gtm: '',
   googleAds: '',
   tiktokPixel: '',
+  clarity: '',
 } as const;
 
 /**
@@ -79,6 +96,16 @@ export function iniciarTracking(): void {
       window.dataLayer = window.dataLayer ?? [];
       window.dataLayer.push({ 'gtm.start': Date.now(), event: 'gtm.js' });
       await cargarScript(`https://www.googletagmanager.com/gtm.js?id=${IDS.gtm}`);
+    });
+  }
+
+  // ── Microsoft Clarity · categoría analítica ─────────────────────────
+  // Se carga por src en vez de con el snippet inline que da Clarity: un
+  // inline nuevo obligaría a recalcular el hash de la CSP en cada cambio,
+  // y el fallo sería silencioso. El tag de Clarity se arranca solo.
+  if (IDS.clarity) {
+    alConsentir('analitica', 'Microsoft Clarity', async () => {
+      await cargarScript(`https://www.clarity.ms/tag/${IDS.clarity}`);
     });
   }
 
