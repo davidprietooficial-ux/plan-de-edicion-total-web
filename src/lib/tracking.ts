@@ -28,7 +28,7 @@ import { alConsentir } from './consentimiento';
 // La CSP de public/.htaccess ya tiene abiertos los dominios de Google,
 // así que con poner el ID aquí y volver a desplegar basta.
 export const IDS = {
-  ga4: '',
+  ga4: 'G-QKYH7ZEGHQ',
   gtm: '',
   googleAds: '',
   tiktokPixel: '',
