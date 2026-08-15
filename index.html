@@ -35,11 +35,36 @@
       pausa igual), banner naranja al terminar con contador + botón al
       formulario.
     - Backend del formulario cambiado de PHP a Google Apps Script (Sheets
-      + correo de aviso + correo de bienvenida con el enlace al grupo):
+      + correo de aviso + correo de bienvenida con el enlace al canal):
       GitHub Pages no ejecuta PHP, así que el formulario del sitio en
       pruebas no estaba guardando nada — ver detalle completo abajo.
       El script ya quedó implementado y el formulario apunta a la URL
       real, probada con una petición de verdad antes de conectarla.
+
+  Cambio de grupo a canal de WhatsApp (2026-08-15):
+    - El cliente pasó de un GRUPO de WhatsApp a un CANAL
+      (whatsapp.com/channel/0029Vb8zBzM3wtb7GhuNTP1I). No es solo cambiar
+      la URL: un canal es difusión de un solo sentido — quien se registra
+      "sigue" el canal, no "se une" a un chat, y no puede responder ahí
+      dentro (solo reaccionar). Se revisó CADA sitio del repo que decía
+      "grupo" para no dejar una promesa que el producto ya no cumple; el
+      texto del hero y de los botones del sitio nunca llegó a nombrar
+      "grupo" explícitamente (decía "WhatsApp VIP" / "WhatsApp
+      exclusivo", genérico), así que ahí no hizo falta tocar nada. Sí se
+      tocó: el data-exito-redirige de abajo, ENLACE_GRUPO_WHATSAPP en el
+      Apps Script (queda con ese nombre por no romper el resto del
+      código, pero el valor ya es el canal), el botón y el texto del
+      correo de bienvenida, y las 3 menciones en términos-y-condiciones +
+      las 2 en política-de-privacidad. La página de gracias archivada NO
+      se tocó — es un registro histórico del primer webinar, con su
+      propio enlace de grupo (BNMWH5KbRQ…), que además ya ni siquiera es
+      el actual (ese se reemplazó por el canal de arriba).
+    - Se añadió a las 4 páginas legales que el único número autorizado
+      para contacto es +57 323 715 8237 y el único canal oficial el de
+      arriba — con la aclaración de que el titular no responde por lo que
+      pase en cualquier otro número o cuenta que se presente en su
+      nombre. Pedido explícito del cliente, no inventado: hay estafas
+      conocidas de cuentas falsas suplantando webinars gratuitos.
 
   Segundo webinar (2026-08-13):
     - Fecha: lunes 2026-08-17, 6:00 p. m. COP. Cambiada en los CUATRO
@@ -57,18 +82,18 @@
       ninguna. Si se decide, hay que tocar: title, description,
       og:title, og:description, name y description del JSON-LD,
       antetítulo y <h1>.
-    - Grupo de WhatsApp nuevo (ver abajo) y pestaña propia en el libro de
-      Google para los contactos de esta convocatoria.
+    - Canal de WhatsApp del segundo webinar (ver nota de 2026-08-15, más
+      abajo) y pestaña propia en el libro de Google para los contactos de
+      esta convocatoria.
 
   Pendiente real del cliente (no inventar, no adivinar):
-    - Enlace del grupo de WhatsApp VIP: cambiado al grupo del SEGUNDO
-      webinar (chat.whatsapp.com/EQAWmcD5FOh1w4Hq1uwEuD), puesto en el
-      data-exito-redirige del formulario de abajo. El grupo del primer
-      webinar (…BNMWH5KbRQlHRmd76xXfYb) queda solo en la página de
-      gracias archivada, como registro histórico. Falta ponerlo TAMBIÉN
-      dentro del Apps Script real (ENLACE_GRUPO_WHATSAPP, en el correo
-      de bienvenida) — eso no se puede hacer desde este repo, hay que
-      editarlo en el editor de Apps Script y volver a implementar.
+    - El canal de WhatsApp del formulario y del correo de bienvenida YA
+      es el actual (whatsapp.com/channel/0029Vb8zBzM3wtb7GhuNTP1I) — pero
+      eso solo cambia lo que hace ESTE repo. Falta implementarlo TAMBIÉN
+      en el Apps Script real (ENLACE_GRUPO_WHATSAPP) — eso no se puede
+      hacer desde aquí, hay que editarlo en el editor de Apps Script y
+      volver a implementar (Nueva versión), o el correo de bienvenida
+      sigue mandando al canal viejo.
     - Cada webinar escribe en su propia pestaña del libro de Google
       ("Registros Webinar 2"), que el Apps Script crea solo. La pestaña
       la elige la constante WEBINAR_ACTUAL, así que al cambiar de webinar
@@ -313,7 +338,7 @@
           <!-- Formulario — el cliente pidió que viva AQUÍ, entre el
                contador de cupos y el botón, no al final de la página.
                Los cuatro estados los gestiona src/lib/formulario.ts. Al
-               enviar con éxito redirige directo al grupo de WhatsApp
+               enviar con éxito redirige directo al canal de WhatsApp
                (sin página intermedia): un solo envío, un solo clic.
 
                El backend es un Google Apps Script, no PHP — GitHub Pages
@@ -321,7 +346,7 @@
                sitio en pruebas, no solo en el hosting final. Guarda cada
                registro en un Google Sheet, avisa por correo y le manda a
                quien se registra un correo de bienvenida con el botón al
-               grupo de WhatsApp. Ya implementado y verificado con una
+               canal de WhatsApp. Ya implementado y verificado con una
                petición real — la referencia local está en
                automatizaciones/formulario-google-sheets.gs, no se sube a
                este repo, no es parte del sitio que ve el cliente. -->
@@ -329,7 +354,7 @@
             <form
               class="tarjeta"
               data-formulario
-              data-exito-redirige="https://chat.whatsapp.com/EQAWmcD5FOh1w4Hq1uwEuD?mode=gi_t"
+              data-exito-redirige="https://whatsapp.com/channel/0029Vb8zBzM3wtb7GhuNTP1I"
               action="https://script.google.com/macros/s/AKfycbzuTVmmX6nllyDPQfGf0avwvTD0pX_UeEMosbSWOp0YJo5xZQ02H1ucgZQ02GeWmRVVZA/exec"
               method="post"
               novalidate

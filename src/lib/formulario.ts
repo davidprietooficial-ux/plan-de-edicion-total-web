@@ -217,7 +217,7 @@ export function iniciarFormulario(): void {
         );
       }
 
-      // Si el formulario declara a dónde ir tras el éxito (p. ej. el grupo
+      // Si el formulario declara a dónde ir tras el éxito (p. ej. el canal
       // de WhatsApp), se navega ahí. 400ms de margen: el mínimo para que
       // el evento Lead del pixel salga antes de que la página cambie de
       // sitio, sin que se note como espera.
