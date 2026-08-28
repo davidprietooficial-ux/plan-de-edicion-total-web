@@ -14,7 +14,7 @@
  *   > 10 s  barra de progreso
  *
  * La validación de aquí es cortesía para el usuario. La de verdad está en
- * el backend (automatizaciones/formulario-google-sheets.gs, un Google Apps
+ * el backend (apps-script/Código.js, un Google Apps
  * Script), y se repite entera.
  *
  * Apps Script no puede devolver un status HTTP distinto de 200 — así que

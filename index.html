@@ -99,9 +99,9 @@
       esta convocatoria. Tocado en: data-exito-redirige del <form>,
       aviso-legal (el único legal que trae la URL escrita; los otros tres
       hablan del canal en genérico y no hizo falta tocarlos) y
-      ENLACE_CANAL_WHATSAPP del formulario-google-sheets.gs local.
+      ENLACE_CANAL_WHATSAPP en apps-script/Código.js.
     - Hoja nueva en el libro de Google: WEBINAR_ACTUAL pasó a 'Webinar 3'
-      en formulario-google-sheets.gs, así que los registros caen en
+      en apps-script/Código.js, así que los registros caen en
       "Registros Webinar 3" — pestaña que el Apps Script crea solo la
       primera vez. Los del webinar 2 se quedan donde están, sin mezclar.
     - Tema: sigue SIN herramienta concreta, igual que el segundo (ver
@@ -118,11 +118,11 @@
       deployment nuevo trae una URL /macros/s/… distinta, y la vieja es
       la que está escrita en el action del formulario y ya desplegada en
       Hostinger. Verificado descargando la versión 5 publicada.
-    - Ojo con formulario-google-sheets.gs (raíz del repo padre): quedó
-      como segunda copia del mismo código. La fuente de verdad es
-      apps-script/Código.js; ese otro archivo conviene borrarlo o dejarlo
-      claramente marcado como histórico antes de que alguien edite el
-      equivocado.
+    - Ya no existe formulario-google-sheets.gs: era la copia que se
+      pegaba a mano en el editor de Google y quedó duplicando el clon de
+      clasp byte por byte (mismo sha256). Se borró para que nadie edite
+      el archivo que no se publica. La fuente de verdad, la única, es
+      apps-script/Código.js.
     - CORREO_ADMIN: ya estaba con el correo real del cliente en el script
       publicado (proyectos.ediciontotal@gmail.com). Lo que tenía el
       placeholder 'hola@ejemplo.com' era la copia local, que llevaba
@@ -132,7 +132,7 @@
       ("Registros Webinar 3"), que el Apps Script crea solo. La pestaña
       la elige la constante WEBINAR_ACTUAL, así que al cambiar de webinar
       hay que cambiarla ANTES de abrir inscripciones — ver
-      formulario-google-sheets.gs.
+      apps-script/Código.js.
     - Confirmar que CORREO_ADMIN en el Apps Script ya quedó con el correo
       real del cliente y no con el placeholder — tampoco se puede ver
       desde acá.
@@ -382,7 +382,7 @@
                quien se registra un correo de bienvenida con el botón al
                canal de WhatsApp. Ya implementado y verificado con una
                petición real — la referencia local está en
-               automatizaciones/formulario-google-sheets.gs, no se sube a
+               apps-script/Código.js, no se sube a
                este repo, no es parte del sitio que ve el cliente. -->
           <div id="registro" class="mx-auto mt-[var(--spacing-lg)] max-w-[26rem] text-left">
             <form
@@ -404,7 +404,7 @@
                    cualquier dato que mande el navegador — pero frena a los
                    bots que golpean la URL del Apps Script directamente sin
                    pasar por la página. Tiene que ser igual al que compruebe
-                   el script (ver automatizaciones/formulario-google-sheets.gs). -->
+                   el script (ver apps-script/Código.js). -->
               <input type="hidden" name="token" value="PET2026-kaisen-x7Qm3vL9" />
 
               <div class="grid gap-[var(--spacing-sm)]">
