@@ -108,14 +108,26 @@
       arriba). No se tocó nada de la copia.
 
   Pendiente real del cliente (no inventar, no adivinar):
-    - URGENTE antes de abrir inscripciones del tercer webinar: el
-      formulario-google-sheets.gs de este repo es solo una COPIA. Hay que
-      llevar los dos cambios al Apps Script real, en el editor de Google,
-      y volver a implementar (Nueva versión) — desde aquí no se puede:
-        · ENLACE_CANAL_WHATSAPP → 0029Vb9BgSRDzgT96hIClU2M, o el correo
-          de bienvenida sigue mandando al canal del webinar 2.
-        · WEBINAR_ACTUAL → 'Webinar 3', o los registros nuevos caen en la
-          pestaña del webinar anterior y se mezclan las dos listas.
+    - RESUELTO (2026-08-28): el Apps Script real ya quedó actualizado y
+      republicado. Dejó de hacer falta el editor de Google — el proyecto
+      ahora se maneja con clasp desde la carpeta apps-script/ del repo
+      padre, que es un clon de verdad del script (clasp clone), no una
+      copia suelta. El ciclo es: editar apps-script/Código.js → clasp
+      push → clasp redeploy <deploymentId>. Se actualizó el deployment
+      que ya existía (@4 → @5) EN VEZ de crear uno nuevo, a propósito: un
+      deployment nuevo trae una URL /macros/s/… distinta, y la vieja es
+      la que está escrita en el action del formulario y ya desplegada en
+      Hostinger. Verificado descargando la versión 5 publicada.
+    - Ojo con formulario-google-sheets.gs (raíz del repo padre): quedó
+      como segunda copia del mismo código. La fuente de verdad es
+      apps-script/Código.js; ese otro archivo conviene borrarlo o dejarlo
+      claramente marcado como histórico antes de que alguien edite el
+      equivocado.
+    - CORREO_ADMIN: ya estaba con el correo real del cliente en el script
+      publicado (proyectos.ediciontotal@gmail.com). Lo que tenía el
+      placeholder 'hola@ejemplo.com' era la copia local, que llevaba
+      tiempo mintiendo — el pendiente que estaba anotado aquí nunca
+      existió de verdad en producción.
     - Cada webinar escribe en su propia pestaña del libro de Google
       ("Registros Webinar 3"), que el Apps Script crea solo. La pestaña
       la elige la constante WEBINAR_ACTUAL, así que al cambiar de webinar
