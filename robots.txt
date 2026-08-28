@@ -1,0 +1,10 @@
+User-agent: *
+Allow: /
+
+# No hay Sitemap: esto es una landing de una sola página con cuatro
+# legales colgando. Una línea Sitemap: apuntando a un archivo que no
+# existe es peor que no ponerla — el rastreador se lleva un 404.
+
+# Tampoco hay ya un /formulario.php que ocultar: el backend del
+# formulario es un Apps Script en el dominio de Google, no un archivo de
+# este servidor.
