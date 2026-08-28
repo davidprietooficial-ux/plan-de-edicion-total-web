@@ -43,7 +43,8 @@
 
   Cambio de grupo a canal de WhatsApp (2026-08-15):
     - El cliente pasó de un GRUPO de WhatsApp a un CANAL
-      (whatsapp.com/channel/0029Vb8zBzM3wtb7GhuNTP1I). No es solo cambiar
+      (entonces 0029Vb8zBzM3wtb7GhuNTP1I; hoy ya es otro, ver nota del
+      tercer webinar). No es solo cambiar
       la URL: un canal es difusión de un solo sentido — quien se registra
       "sigue" el canal, no "se une" a un chat, y no puede responder ahí
       dentro (solo reaccionar). Se revisó CADA sitio del repo que decía
@@ -86,16 +87,37 @@
       abajo) y pestaña propia en el libro de Google para los contactos de
       esta convocatoria.
 
+  Tercer webinar (2026-08-28):
+    - Fecha: lunes 2026-08-31, 6:00 p. m. COP. Cambiada otra vez en los
+      CUATRO sitios de siempre (los tres [data-cuenta-hasta] — barra
+      flotante, hero, banner final del reproductor — y el startDate del
+      JSON-LD). El contador de "estamos en vivo" ya estaba construido: al
+      llegar la hora los cuatro contadores pasan solos al estado en vivo,
+      no hay nada que activar a mano.
+    - Canal de WhatsApp NUEVO: 0029Vb9BgSRDzgT96hIClU2M. Reemplaza al del
+      segundo webinar (0029Vb8zBzM3wtb7GhuNTP1I), que queda muerto para
+      esta convocatoria. Tocado en: data-exito-redirige del <form>,
+      aviso-legal (el único legal que trae la URL escrita; los otros tres
+      hablan del canal en genérico y no hizo falta tocarlos) y
+      ENLACE_CANAL_WHATSAPP del formulario-google-sheets.gs local.
+    - Hoja nueva en el libro de Google: WEBINAR_ACTUAL pasó a 'Webinar 3'
+      en formulario-google-sheets.gs, así que los registros caen en
+      "Registros Webinar 3" — pestaña que el Apps Script crea solo la
+      primera vez. Los del webinar 2 se quedan donde están, sin mezclar.
+    - Tema: sigue SIN herramienta concreta, igual que el segundo (ver
+      arriba). No se tocó nada de la copia.
+
   Pendiente real del cliente (no inventar, no adivinar):
-    - El canal de WhatsApp del formulario y del correo de bienvenida YA
-      es el actual (whatsapp.com/channel/0029Vb8zBzM3wtb7GhuNTP1I) — pero
-      eso solo cambia lo que hace ESTE repo. Falta implementarlo TAMBIÉN
-      en el Apps Script real (ENLACE_GRUPO_WHATSAPP) — eso no se puede
-      hacer desde aquí, hay que editarlo en el editor de Apps Script y
-      volver a implementar (Nueva versión), o el correo de bienvenida
-      sigue mandando al canal viejo.
+    - URGENTE antes de abrir inscripciones del tercer webinar: el
+      formulario-google-sheets.gs de este repo es solo una COPIA. Hay que
+      llevar los dos cambios al Apps Script real, en el editor de Google,
+      y volver a implementar (Nueva versión) — desde aquí no se puede:
+        · ENLACE_CANAL_WHATSAPP → 0029Vb9BgSRDzgT96hIClU2M, o el correo
+          de bienvenida sigue mandando al canal del webinar 2.
+        · WEBINAR_ACTUAL → 'Webinar 3', o los registros nuevos caen en la
+          pestaña del webinar anterior y se mezclan las dos listas.
     - Cada webinar escribe en su propia pestaña del libro de Google
-      ("Registros Webinar 2"), que el Apps Script crea solo. La pestaña
+      ("Registros Webinar 3"), que el Apps Script crea solo. La pestaña
       la elige la constante WEBINAR_ACTUAL, así que al cambiar de webinar
       hay que cambiarla ANTES de abrir inscripciones — ver
       formulario-google-sheets.gs.
@@ -192,7 +214,7 @@
         "@type": "Event",
         "name": "Plan de Edición Total — masterclass gratis de edición de video en vivo",
         "description": "Clase en vivo y gratuita de edición de video. Cupo limitado.",
-        "startDate": "2026-08-17T18:00:00-05:00",
+        "startDate": "2026-08-31T18:00:00-05:00",
         "eventAttendanceMode": "https://schema.org/OnlineEventAttendanceMode",
         "eventStatus": "https://schema.org/EventScheduled",
         "location": { "@type": "VirtualLocation", "url": "https://form-webinar.planediciontotal.com/" },
@@ -226,7 +248,7 @@
          completa + qué es; columna 2 = el botón grande + a dónde lleva.
     -->
     <div class="cta-flotante" role="region" aria-label="Acciones rápidas">
-      <div class="cta-flotante__columna" data-cuenta-hasta="2026-08-17T18:00:00-05:00">
+      <div class="cta-flotante__columna" data-cuenta-hasta="2026-08-31T18:00:00-05:00">
         <div class="contador-cuenta contador-cuenta--mini">
           <div class="contador-unidad">
             <span class="contador-unidad__numero" data-cuenta-campo="dias">00</span>
@@ -275,7 +297,7 @@
                donde antes iba el icono flotante (el cliente pidió que este
                sea el primer elemento del hero). dd:hh:mm:ss actualizada por
                lib/motion.ts cada segundo desde data-cuenta-hasta. -->
-          <div data-cuenta-hasta="2026-08-17T18:00:00-05:00">
+          <div data-cuenta-hasta="2026-08-31T18:00:00-05:00">
             <div class="contador-cuenta">
               <div class="contador-unidad">
                 <span class="contador-unidad__numero" data-cuenta-campo="dias">00</span>
@@ -354,7 +376,7 @@
             <form
               class="tarjeta"
               data-formulario
-              data-exito-redirige="https://whatsapp.com/channel/0029Vb8zBzM3wtb7GhuNTP1I"
+              data-exito-redirige="https://whatsapp.com/channel/0029Vb9BgSRDzgT96hIClU2M"
               action="https://script.google.com/macros/s/AKfycbzuTVmmX6nllyDPQfGf0avwvTD0pX_UeEMosbSWOp0YJo5xZQ02H1ucgZQ02GeWmRVVZA/exec"
               method="post"
               novalidate
@@ -573,7 +595,7 @@
                  están ocultos en ese momento. -->
             <div class="reproductor__final" data-reproductor-final hidden>
               <p class="reproductor__final-texto">No esperes más y accede hoy a la clase</p>
-              <div class="contador-cuenta contador-cuenta--mini" data-cuenta-hasta="2026-08-17T18:00:00-05:00">
+              <div class="contador-cuenta contador-cuenta--mini" data-cuenta-hasta="2026-08-31T18:00:00-05:00">
                 <div class="contador-unidad">
                   <span class="contador-unidad__numero" data-cuenta-campo="dias">00</span>
                   <span class="contador-unidad__etiqueta">Días</span>
